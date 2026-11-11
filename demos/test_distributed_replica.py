@@ -3,7 +3,7 @@
 """distributed_replica 测试套件（13 项）：python -m unittest test_distributed_replica -v
 守卫规模化路线的确定性基础：无状态 worker / 命名空间 RNG / 排序施加 / 并行==串行 / 检查点续跑。
 R36 硬化：续跑 focal_period 不匹配拒绝 / 损坏检查点拒绝 / 量级上限。
-R37 硬化：键齐全但值类型损坏拒绝（bool 不算整数）/ schema_version 读取校验。"""
+R37 硬化：键齐全但值类型损坏拒绝（bool 不算整数）/ schema_version 读取校验 / focal_period 严格整数化（封 True==1、10.0==10 等值陷阱）。"""
 import copy
 import json
 import os
@@ -100,14 +100,26 @@ class TestDistributedReplica(unittest.TestCase):
             self.assertEqual(cm.exception.code, 2)
 
     def test_resume_focal_period_mismatch(self):
-        """R36 MINOR-1：续跑 focal_period 不匹配须拒绝（防混合轨迹）。"""
+        """R36 MINOR-1：续跑 focal_period 不匹配须拒绝（防混合轨迹）；v3.31：bool/float 不算整数。"""
         with tempfile.TemporaryDirectory() as d:
             dr.main(["--seed", "7", "--agents", "20", "--ticks", "10", "--focal-period", "10",
                      "--checkpoint-dir", d, "--mode", "sequential", "--out", os.path.join(d, "a.json")])
-            with self.assertRaises(SystemExit) as cm:
-                dr.main(["--seed", "7", "--agents", "20", "--ticks", "20", "--focal-period", "5",
-                         "--checkpoint-dir", d, "--resume", "--mode", "sequential", "--out", os.path.join(d, "b.json")])
-            self.assertEqual(cm.exception.code, 2)
+            ck = os.path.join(d, "dist_ckpt.json")
+            with open(ck, encoding="utf-8") as f:
+                good = json.load(f)
+            # (检查点 fp, 额外 CLI 参数)：不匹配 / True==1 bool 陷阱 / 10.0==10 float 陷阱
+            forms = [(10, ["--focal-period", "5"]), (True, ["--focal-period", "1"]), (10.0, [])]
+            for fp, extra in forms:
+                snap = copy.deepcopy(good)
+                snap["focal_period"] = fp
+                with open(ck, "w", encoding="utf-8") as f:
+                    json.dump(snap, f)
+                with self.subTest(focal_period=repr(fp)):
+                    with self.assertRaises(SystemExit) as cm:
+                        dr.main(["--seed", "7", "--agents", "20", "--ticks", "20",
+                                 "--checkpoint-dir", d, "--resume", "--mode", "sequential",
+                                 "--out", os.path.join(d, "b.json")] + extra)
+                    self.assertEqual(cm.exception.code, 2)
 
     def test_resume_corrupt_checkpoint(self):
         """R36 O-1：损坏检查点干净拒绝（rc=2，无裸 traceback）。"""
@@ -150,19 +162,19 @@ class TestDistributedReplica(unittest.TestCase):
                     self.assertEqual(cm.exception.code, 2)
 
     def test_resume_schema_version_unsupported(self):
-        """R37 O-1c：schema_version 读取校验（999/缺失 → rc=2，不再只写不读）。"""
+        """R37 O-1c：schema_version 读取校验（999/缺失/True/1.0/"1" → rc=2，bool/float 不算整数）。"""
         base = {"focal_period": 10,
                 "world": {"seed": 7, "n": 20, "tick": 5,
                           "residents": [{"id": "r-0000", "role": "resident", "energy": 60}]}}
         with tempfile.TemporaryDirectory() as d:
             ck = os.path.join(d, "dist_ckpt.json")
-            for sv in (999, None):
+            for sv in (999, None, True, 1.0, "1"):
                 snap = copy.deepcopy(base)
                 if sv is not None:
                     snap["schema_version"] = sv
                 with open(ck, "w", encoding="utf-8") as f:
                     json.dump(snap, f)
-                with self.subTest(schema_version=sv):
+                with self.subTest(schema_version=repr(sv)):
                     with self.assertRaises(SystemExit) as cm:
                         dr.main(["--seed", "7", "--agents", "20", "--ticks", "20",
                                  "--checkpoint-dir", d, "--resume", "--out", os.path.join(d, "b.json")])

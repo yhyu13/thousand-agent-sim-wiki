@@ -175,8 +175,9 @@ def main(argv=None):
             p.error(f"--resume：检查点读取失败（{ck}）：{e}")
         if not isinstance(snap, dict) or not isinstance(snap.get("world"), dict):
             p.error("--resume：检查点格式错误（缺 world 对象）")
-        if snap.get("schema_version") != 1:
-            p.error(f"--resume：不支持的检查点 schema_version={snap.get('schema_version')}（仅支持 1）")
+        sv = snap.get("schema_version")
+        if type(sv) is not int or sv != 1:
+            p.error(f"--resume：不支持的检查点 schema_version={sv!r}（仅支持整数 1；bool/float 不算整数）")
         world = snap["world"]
         if not all(k in world for k in ("seed", "n", "tick", "residents")):
             p.error("--resume：检查点 world 缺必需字段（seed/n/tick/residents）")
@@ -187,8 +188,9 @@ def main(argv=None):
             p.error("--resume：检查点字段类型错误（seed/n/tick 须为整数，residents 须为列表；bool 不算整数）")
         if world["seed"] != a.seed or world["n"] != a.agents:
             p.error(f"--resume 配置不匹配：检查点 seed={world['seed']}/n={world['n']}，当前 seed={a.seed}/agents={a.agents}")
-        if snap.get("focal_period") != a.focal_period:
-            p.error(f"--resume 配置不匹配：检查点 focal_period={snap.get('focal_period')}，当前 {a.focal_period}（焦点周期改变会产生混合轨迹，须一致）")
+        fp = snap.get("focal_period")
+        if type(fp) is not int or fp != a.focal_period:
+            p.error(f"--resume 配置不匹配：检查点 focal_period={fp!r}，当前 {a.focal_period}（焦点周期改变会产生混合轨迹，须一致；bool/float 不算整数）")
         start_tick = world["tick"]
         if a.ticks < start_tick:
             p.error(f"--resume：ticks={a.ticks} 小于检查点进度 {start_tick}")
