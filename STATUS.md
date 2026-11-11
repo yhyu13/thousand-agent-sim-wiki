@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-11（v3.33，critic 迭代轮 40；R39 REQUEST_CHANGES 域内深嵌套反例，轮 40 未知键闸门 + 顶层兜底闭合）
+更新：2026-11-11（v3.34，critic 迭代轮 41；R40 ACCEPT 闸门+兜底闭合，轮 41 顶层兜底扩四家族对齐主 demo）
 
 ## 迭代模式
 
@@ -55,7 +55,8 @@
 | 37 | **ACCEPT**（硬化复核全部成立，0 BLOCKER/MAJOR）：R36 六项修复逐项代码在位 + 独立实弹 52 断言全过（focal_period 9/9 含反向与旧格式、损坏检查点约定 4 形态+逐键缺失+6 加测共 13/13 干净 rc=2 无 Traceback、量级上限拒绝/接受边界双向 13/13 含真实 10⁶ 代理初始化与 64 进程池实跑）；核心声称零回归（w1/2/8 并行==串行且跨进程数哈希逐位、四段续跑链 15→30→45→60==全程、段 focal_total 之和==全程 240、R35 基线 ec4a48e9… 逐位复现、worker 纯函数 1000 次）；66 测试+38 冒烟+6/6 AA+标准跑 31 字段逐位+events 63222B 逐字节+双哈希不变；diff 范围核验计算内核零改动、overnight_town 零变更、仓库零污染。+3 域外观察项（非阻断，超出 R36「最小 schema」约定）：O-1a residents 字符串键齐全穿透→focal_ids 裸 TypeError rc=1 / O-1b tick 字符串→比较处裸 TypeError rc=1 / O-1c schema_version 只写不读（999 亦接受） | wiki v3.31：分布式复刻值类型硬化——**resume 值类型校验**（seed/n/tick 须 int，type() is int 排除 bool；residents 须 list；键齐全但值损坏干净 rc=2，O-1a/b）、**schema_version 读取校验**（仅支持整数 1，999/缺失/True/1.0/"1" rc=2，O-1c）、**focal_period 严格整数化**（封 True==1/10.0==10 等值陷阱，与值类型校验同口径）；域外说明注：residents 元素内部结构不逐条深校验（教学复刻，检查点由本程序自身写出）；test_distributed_replica 11→**13 测试**（值类型 7 形态 + schema_version 5 形态 + focal_period 不匹配/bool/float 3 形态，subTest） | overnight_town 55/55 + distributed_replica 13/13（合 68）+ 38/38 + 6/6 AA；标准跑 47 平铺字段逐位 + events 63222B 逐字节 + 双哈希不变；25 实弹探针全过（15 损坏形态 rc=2 无 Traceback 含 sv/fp bool/float 陷阱 + 双 fp 独立续跑链==全程） |
 | 38 | **ACCEPT**（0 BLOCKER/MAJOR，2 MINOR+2 观察项均域外）：106 独立探针（83 期望 rc=2 形态全 PASS+6 正对照 rc=0，自建基线不复用作者测试）覆盖 O-1a/b/c 全族+结构/编码（BOM/非法 UTF-8/NaN/Infinity/重复键/路径是目录）+CLI 面（4301 位 seed 拒/4000 位接受/workers 64 真实进程池）；**域内零穿透**；域外 residents 元素垃圾 6 形态裸崩与文档明示一致（不计缺陷）；核心声称 10 跑全 PASS（w1/2/4/8 跨进程数哈希 ec4a48e9… 全同/focal 14400、fp=10 链 ckpt@72→resume@144==全程段 7200+7200、fp=1 独立链 8e6ee6ea…）；68 测试+38 冒烟+6/6 AA+标准跑 47 字段+events 63222B+双哈希；diff 仅 main() 单 hunk、AST 10 函数 IDENTICAL、overnight_town 零变更；声称诚实（AST 13+55=68 与文档一致）。+MINOR N-1（200000 层语法合法 JSON→RecursionError 裸崩 rc=1，与 overnight R13 同型）/N-2（tick 无下限：-3 静默多跑、-(10^400) 挂死绕过 ticks 上限意图）+O-1（len(residents) 不与 n 交叉校验，措辞一致）/O-2（写路径 OSError 未捕：--out 目录不存在/checkpoint-dir 是文件→rc=1） | wiki v3.32：四项闭合——**except 增补 RecursionError**（深嵌套合法 JSON 干净 rc=2，N-1）、**tick<0 拒绝**（封负值无界多跑/挂死，N-2）、**len(residents)!=n 拒绝**（数量交叉校验，O-1；域外注更新为「仅数量与 n 交叉校验，元素内部结构不深校验」）、**检查点/报告写路径 try/except OSError→干净 rc=2**（O-2，与主 demo R6 OSError 统一口径）；test_distributed_replica 13→**17 测试**（+深嵌套/负 tick 2 形态含 -(10^400)/数量 3 形态/写路径 2 形态） | overnight_town 55/55 + distributed_replica 17/17（合 72）+ 38/38 + 6/6 AA；标准跑 47 平铺字段逐位 + events 63222B 逐字节 + 双哈希不变；15 实弹探针全过（critic 原挂死形态 -(10^400) 现 rc=2 不挂、200000 层 rc=2、R35 基线 ec4a48e9… 复现） |
 | 39 | **REQUEST_CHANGES**（MINOR，域内反例）：四项窄声称全部实证（59/59 探针：深嵌套多深度/多位置/BOM/非法 UTF-8/重复键、负 tick -(10^400) 0.15s 返回不挂、数量自洽篡改语义正确、写路径 9 形态含不存在盘、边界 E 组 4301 位 seed 拒/4000 位接受/workers 64 真实池）；核心声称 14/14（R35 哈希逐位、w1/2/4/8 跨进程数全同、fp=10/1 双链续跑==全程）；72 测试+38 冒烟+6/6 AA+标准跑 47 字段+events 逐字节（sha256 325d61c4…）；AST 10 函数 IDENTICAL、overnight_town blob 不变。**但证伪搜寻命中域内反例**：world 层**额外键**携带可解析深嵌套通过全部校验后裸崩——W1（深度 498–994，仅 both）copy.deepcopy RecursionError rc=1 / W2（995–2996，全模式）写盘 json.dump RecursionError 逃出 except OSError rc=1；根因：仅解析点捕 RecursionError，未复刻主 demo main() 顶层兜底，且三递归上限不对称（json.load C 扫描器~2996 / json.dump iterencode~994 / deepcopy~497）；README/STATUS「深嵌套均干净拒绝」无限定措辞被证伪。+观察项：写失败留 tmp 残留（原检查点恒完整，原子 replace 未到达，无数据丢失） | wiki v3.33：**snap/world 双层未知键闸门**（set 差集非空→rc=2，一行封 W1+W2；合法检查点恒无额外键，零误拒）+ **main() 顶层 RecursionError 兜底**（与 overnight_town R13 同模式：deepcopy/world_hash/写盘各消费点未知深嵌套干净拒绝；residents 元素内深嵌套属域外——超递归上限 rc=2、未超原样携带 rc=0，均无裸崩）+ 措辞对齐（解析层/未知键/兜底三层限定）；test_distributed_replica 17→**19 测试**（未知键 3 形态含深 800 both + 元素深 1500 兜底 both/sequential） | overnight_town 55/55 + distributed_replica 19/19（合 74）+ 38/38 + 6/6 AA；标准跑 47 平铺字段逐位 + events 63222B 逐字节 + 双哈希不变；36 实弹探针全过（**critic 深度矩阵 497/498/800/994/995/1500/2996/2997 × both/sequential/parallel 全 rc=2** + 元素深 800/1500/2500 无裸崩 + 合法续跑不误拒 + R35 基线复现）；探针预期修正注：800 sequential rc=0 系域外合法携带（无消费点超限），契约为无 rc=1 裸崩 |
-| 40 | 已派出：R40 critic 复核 v3.33 未知键闸门 + 顶层兜底（W1/W2 闭合 + 措辞对齐 + 无回归） | 待报告 | — |
+| 40 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，234 探针 + ~70 次上限二分 + 全量回归，域内零反例）：W1/W2 封死（world/snap 额外键 8 深度×3 模式 48 例全 rc=2：≤2996 闸门/2997 解析点）；三上限实测 deepcopy 495/496、world_hash dumps 999/1000、写盘 dump 993/994、load ~2998、repr≥load（**sv/fp 深值 repr 逃逸假设被实验证伪**）；元素深嵌套 44 例 rc∈{0,2} 零裸崩（rc=0 检查点深度逐位==输入，原样携带实证）；零误拒 48/48（fp1/10×agents1/1000×3 模式×fresh/resume）；R35 基线 w1/2/4/8 逐位 + 双 fp 链（ec4a48e9/8e6ee6ea）；新逃逸搜寻 84 例仅命中域外（巨整数 4301 位拒/4300 携带、NaN/Inf rc=0、宽列表 30 万 rc=0、BOM/非法 UTF-8/重复键 rc=2）；OverflowError 无域内路径/MemoryError 需 GB 级域外/json.dump ValueError 不可达；74 测试+38+6/6 AA+47 字段+events sha256 325d61c4…+双哈希；AST 10 内核 IDENTICAL、overnight_town blob 恒等；措辞三层限定逐句吻合。+O-1（域外非缺陷：孤立代理对 \ud800 经元素字符串→world_hash .encode UnicodeEncodeError rc=1 全模式，既有行为不被声称覆盖；建议扩顶层兜底四家族对齐主 demo）/O-2（措辞精度：「R13 同模式」对 RecursionError 增量准确，主 demo 四家族 vs 复刻单家族不对称提示） | wiki v3.34：**顶层兜底扩四家族**（ValueError/OSError/OverflowError/RecursionError，对齐 overnight_town main()；UnicodeEncodeError ⊂ ValueError → 孤立代理对全模式干净 rc=2；域外元素垃圾 TypeError/KeyError 不在兜底家族，保持 rc=1 文档行为不变）+ 域外注/README 措辞精化（编码类错误归兜底、TypeError/KeyError 明示域外）；test_distributed_replica 19→**20 测试**（孤立代理对 note 载体 both/sequential/parallel 3 模式） | overnight_town 55/55 + distributed_replica 20/20（合 75）+ 38/38 + 6/6 AA；标准跑 47 平铺字段逐位 + events 63222B 逐字节 + 双哈希不变；10 实弹探针全过（代理对 note/id 载体×3 模式 rc=2 无 Traceback + 垃圾元素 rc=1 域外行为不变 + 闸门 994 both rc=2 + 合法续跑==全程 + R35 基线复现） |
+| 41 | 已派出：R41 critic 复核 v3.34 四家族兜底（代理对闭合 + 域外行为不变 + 无回归） | 待报告 | — |
 
 ## 进度
 
@@ -108,7 +109,8 @@
 - [x] 轮 37 critic（**ACCEPT**，硬化复核 52 断言全过 + 核心声称零回归 + 三层回归全绿）→ 轮 38 硬化（v3.31：值类型校验 + schema_version 读取校验，test 11→13）
 - [x] 轮 38 critic（**ACCEPT**，106 探针域内零穿透 + 核心声称 10 跑全 PASS + 三层回归全绿）→ 轮 39 硬化（v3.32：深嵌套 RecursionError/负 tick/数量交叉/写路径 OSError 四项闭合，test 13→17）
 - [x] 轮 39 critic（**REQUEST_CHANGES** MINOR，域内反例：world 额外键深嵌套 W1 deepcopy/W2 写盘裸崩，三递归上限不对称）→ 轮 40 修复（v3.33：snap/world 未知键闸门 + 顶层 RecursionError 兜底 + 措辞对齐，test 17→19）
-- [ ] 轮 40 critic（v3.33 闸门 + 兜底复核）
+- [x] 轮 40 critic（**ACCEPT**，234 探针域内零反例，W1/W2 封死 + 三上限实测 + 零误拒 48/48）→ 轮 41 硬化（v3.34：顶层兜底扩四家族对齐主 demo，孤立代理对干净拒绝，test 19→20）
+- [ ] 轮 41 critic（v3.34 四家族兜底复核）
 - [ ] 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务
 
 ## 核验日志
@@ -123,23 +125,23 @@
 | 2026-11-11 轮3 | demo v3 存档相位 BLOCKER 修复（先体检后存档）；33/33 测试；标准跑数字逐位不变 |
 | 2026-11-11 轮4 | 07 两 MAJOR 修复（每夜 token 25.4k/5.9k、Ollama /v1 端点）；**DeepSeek 峰谷计价核验（S26）：北京夜间全 off-peak 半价——通宵天然 ROI 杠杆**；Qwen 现役模型换代确认（S27，qwen-plus/max 已 legacy，单价 ⏳ console） |
 
-## demo 运行记录（v3.33，2026-11-11，Python 3.13.12）
+## demo 运行记录（v3.34，2026-11-11，Python 3.13.12）
 
 | 项 | 结果 |
 | --- | --- |
-| 测试套件 | overnight_town Ran 55 tests OK + distributed_replica Ran 19 tests OK（合 74）+ vis_smoke.js 38/38（node）+ contrast_check.py 6/6 AA（Chromium 实测含 RED，需 playwright） |
+| 测试套件 | overnight_town Ran 55 tests OK + distributed_replica Ran 20 tests OK（合 75）+ vis_smoke.js 38/38（node）+ contrast_check.py 6/6 AA（Chromium 实测含 RED，需 playwright） |
 | 分布式复刻（R35） | 1000 代理×144 ticks 焦点 1/10：并行==串行（哈希 ec4a48e9…一致）、确定性双跑一致、检查点续跑==全程（resumed_from 72）；焦点调度 14400/144000 |
 | critic BLOCKER 复现案例（--corrupt-frac 0.2066，相位 X≡5 mod 6） | v2 RED → **v3 GREEN**（288/288，人口 200/200，回滚 1） |
 | 标准通宵（1000×3 夜，全注入） | GREEN ~2s；崩溃恢复1（重放≤6tick）/回滚1；335 次调用覆盖率 0.0775%；$0.205012 |
-| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.33 逐位不变） |
+| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.34 逐位不变） |
 | final_hash（v3.3） | ff7c76832d6e1145…（schema_version=2 所致；v3.2 为 736e8318…、v3 为 594f4f85…，历史记录） |
 | 30 夜×200 人增长跑 | GREEN 70s；记忆 6804（人均34）；检查点 2.09MB；对话 2520+反思 1200；$2.90；熔断开4关1 |
 | 剪枝跑（ttl=7×30 夜） | GREEN；剪枝 4548、存留 2256（-67%）；检查点 1.22MB（-42%）；$2.9013 |
 | ROI 估算器 | qwen-max ≈¥370.42（历史口径）；Haiku $2.01→缓存+Batch $0.50；DeepSeek Flash 谷时 $2.90→70%命中 $1.24 [S26]；Qwen 现价（轮 24，北京区）qwen3.8-max $30.56→Batch $15.28 / qwen3.7-flash $0.54（04 §1.5） |
 
-## 下一步（轮 41）
+## 下一步（轮 42）
 
-1. 轮 40 critic 报告 → 修复（v3.33 未知键闸门 + 顶层兜底复核）；
+1. 轮 41 critic 报告 → 修复（v3.34 四家族兜底复核）；
 2. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
 3. 可选深化：分布式最小复刻（Ray 路线 [S08]）、可视化增强（居民详情/记忆查看器）；
 4. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。

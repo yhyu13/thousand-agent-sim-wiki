@@ -188,7 +188,8 @@ def main(argv=None):
             p.error("--resume：检查点 world 含未知键（仅允许 seed/n/tick/residents；封额外键深嵌套崩溃窗 R39）")
         # 值类型校验（R37 O-1a/b）：键齐全但值损坏也须干净拒绝；type() is int 排除 bool。
         # 域外说明：residents 元素内部结构不做逐条深校验（仅数量与 n 交叉校验；教学复刻，检查点由本程序自身写出）；
-        # 元素内未知深嵌套形态由 main() 顶层 RecursionError 兜底干净拒绝（与 overnight_town R13 同模式）。
+        # 元素内未知深嵌套/编码类错误（UnicodeEncodeError ⊂ ValueError，如孤立代理对）由 main() 顶层四家族兜底干净拒绝；
+        # 元素垃圾 TypeError/KeyError 不在兜底家族，保持 rc=1（域外，文档明示）。
         if (type(world["seed"]) is not int or type(world["n"]) is not int
                 or type(world["tick"]) is not int or not isinstance(world["residents"], list)):
             p.error("--resume：检查点字段类型错误（seed/n/tick 须为整数，residents 须为列表；bool 不算整数）")
@@ -207,9 +208,10 @@ def main(argv=None):
     else:
         world = init_world(a.seed, a.agents)
 
-    # 顶层 RecursionError 兜底（与 overnight_town main() 同模式，R39）：三个递归上限不对称
-    # （json.load C 扫描器 ~3000 / json.dump iterencode ~1000 / copy.deepcopy ~500），
-    # 解析点捕获之外，计算/序列化点（deepcopy/world_hash/写盘）遇未知深嵌套形态亦干净拒绝。
+    # 顶层四家族兜底（对齐 overnight_town main()；R39 引入 RecursionError，R40 扩家族）：
+    # 三个递归上限不对称（json.load C 扫描器 ~3000 / json.dump iterencode ~1000 / copy.deepcopy ~500），
+    # 解析点捕获之外，计算/序列化点（deepcopy/world_hash/写盘）遇未知深嵌套形态亦干净拒绝；
+    # UnicodeEncodeError ⊂ ValueError（孤立代理对等域外元素字符串）同被干净拒绝。
     try:
         remaining = a.ticks - start_tick
         report = {"seed": a.seed, "agents": a.agents, "ticks_planned": a.ticks,
@@ -272,8 +274,8 @@ def main(argv=None):
             except OSError as e:
                 p.error(f"报告写入失败（{a.out}）：{e}")
         return 0
-    except RecursionError as e:
-        p.error(f"状态嵌套过深，无法处理（干净拒绝）：{e}")
+    except (ValueError, OSError, OverflowError, RecursionError) as e:
+        p.error(f"状态无法处理（干净拒绝）：{e}")
 
 
 if __name__ == "__main__":
