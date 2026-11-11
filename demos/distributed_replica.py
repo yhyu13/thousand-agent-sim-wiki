@@ -36,6 +36,8 @@ def _atomic_replace(tmp: str, target: str, attempts: int = 5):
     """原子替换 + Windows 瞬时文件锁短重试（R59 硬化，与 overnight_town 同模式）。
     杀软/索引器短暂持有目标致 os.replace 抛 PermissionError(WinError 5)时退避重试，
     永久失败仍抛出（调用方 except OSError 转干净 rc=2）；无锁时行为同 os.replace。"""
+    if attempts < 1:
+        raise ValueError("attempts 须 >= 1（防静默丢检查点，军规 4/5）")
     for i in range(attempts):
         try:
             os.replace(tmp, target)

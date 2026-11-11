@@ -41,6 +41,8 @@ def _atomic_replace(tmp: str, target: str, attempts: int = 5):
     杀软/索引器可能短暂持有目标文件致 os.replace 抛 PermissionError(WinError 5)；
     掉电安全语义不变（调用前已 fsync 落盘），仅对瞬时 PermissionError 退避重试，
     永久失败（最后一次）仍抛出。无锁时首次即成功，行为与 os.replace 一致。"""
+    if attempts < 1:
+        raise ValueError("attempts 须 >= 1（防静默丢检查点，军规 4/5）")
     for i in range(attempts):
         try:
             os.replace(tmp, target)

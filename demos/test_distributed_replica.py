@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""distributed_replica 测试套件（23 项）：python -m unittest test_distributed_replica -v
+"""distributed_replica 测试套件（24 项）：python -m unittest test_distributed_replica -v
 守卫规模化路线的确定性基础：无状态 worker / 命名空间 RNG / 排序施加 / 并行==串行 / 检查点续跑。
 R36 硬化：续跑 focal_period 不匹配拒绝 / 损坏检查点拒绝 / 量级上限。
 R37 硬化：键齐全但值类型损坏拒绝（bool 不算整数）/ schema_version 读取校验 / focal_period 严格整数化（封 True==1、10.0==10 等值陷阱）。
 R38 硬化：深嵌套合法 JSON RecursionError 拒绝 / 负 tick 拒绝（防无界多跑）/ residents 数量与 n 交叉校验 / 写路径 OSError 干净拒绝。
 R39 硬化：snap/world 未知键拒绝（封额外键深嵌套崩溃窗 W1/W2）/ 顶层 RecursionError 兜底（计算/序列化点未知深嵌套干净拒绝）。
 R40 硬化：顶层兜底扩四家族对齐主 demo（ValueError/OSError/OverflowError/RecursionError；孤立代理对 UnicodeEncodeError ⊂ ValueError 干净拒绝）。
-R59 硬化：检查点原子替换 Windows 瞬时文件锁短重试（_atomic_replace，与 overnight_town 同模式；瞬时 PermissionError 退避重试/永久失败抛出/happy path，3 项）。"""
+R59 硬化：检查点原子替换 Windows 瞬时文件锁短重试（_atomic_replace，与 overnight_town 同模式；瞬时 PermissionError 退避重试/永久失败抛出/happy path，3 项）。
+R60 硬化：_atomic_replace attempts<1 守卫（raise ValueError 防静默丢检查点，+1 项）。"""
 import copy
 import json
 import os
@@ -363,6 +364,14 @@ class TestAtomicReplaceRetry(unittest.TestCase):
                 with self.assertRaises(PermissionError):
                     dr._atomic_replace(tmp, target, attempts=3)
             self.assertTrue(os.path.exists(tmp))
+
+    def test_attempts_guard_rejects_nonpositive(self):
+        for bad in (0, -3):
+            with self.subTest(attempts=bad):
+                with mock.patch.object(dr.os, "replace") as rep:
+                    with self.assertRaises(ValueError):
+                        dr._atomic_replace("a", "b", attempts=bad)
+                    rep.assert_not_called()
 
 
 if __name__ == "__main__":

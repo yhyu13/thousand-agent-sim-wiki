@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""overnight_town 测试套件 v3.48（59 项）：python -m unittest test_overnight_town -v
+"""overnight_town 测试套件 v3.49（60 项）：python -m unittest test_overnight_town -v
 v2：别名污染回归、检查点隔离、from_dict 等价、边界、计划违例实弹、半开探针、审计顺序、
 体面停机、meta 崩溃安全；v3：存档相位 BLOCKER、回滚后崩溃窗口、分散注入、抽样互质、
 resume 五连、Config 校验；v3.2：语义损坏 ckpt、NaN/CLI 拒绝、记忆剪枝 TTL×3；
@@ -55,6 +55,7 @@ v3.45：R53（ACCEPT 零 MINOR，恒等式独立推导为代码定理、11 配�
 v3.46：R55（ACCEPT，证据层 13 产物全逐字节可复现+跨报告不变量全闭合+双哈希 ckpt 独立重算）观察项①衍生消歧——04 §3.1/demos README「干净跑」改「干净浸泡跑（growth_1000x30，--no-crash 保留风暴；非 clean_* 零失败跑——去风暴改变失败历史故 world_hash 不同）」，消除命名混淆（跨干预不变量限定同风暴配置）。**代码无变更、哈希不变**。
 v3.47：R56（REQUEST_CHANGES 2 MINOR）修复——术语全库清扫（README TL;DR#2 + STATUS 运行记录表「干净跑」→「干净浸泡跑」，活体零残留）；不变量限定收紧「同风暴配置」→「同失败配置（风暴窗口+基线 p_rate/p_bad/p_invalid 均同）」（04/demos README/05 §4），clean_* 差异改二维说明（既去风暴又零化基线概率）；probeB/C 作者独立复现（0fba076d/23ff455c）。**代码无变更、哈希不变**。
 v3.48：R58（ACCEPT 跨文档完整性终审）后验证发现 Windows os.replace 瞬时文件锁（杀软/索引器，PermissionError WinError 5）致 resume 测试间歇 errors——R55 观察项②建议的硬化被实证触发：**save() 原子替换短重试**（_atomic_replace：瞬时 PermissionError 退避重试 5 次、永久失败仍抛、非 PermissionError 不重试，掉电安全语义不变，军规 4/5 通宵检查点可靠性）；test 55→59（+重试 4 项）；distributed_replica 同模式硬化 20→23。**happy path 不变、双哈希/成本/调用数逐位不变**。
+v3.49：R59（ACCEPT，51 断言+4 变异击杀+A/B 反证硬化承重）2 MINOR 修复——_atomic_replace 增 **attempts<1 守卫**（raise ValueError，封静默丢检查点边界，当前调用图不可达但防未来接线隐患）；test 59→60（+守卫）；distributed_replica 23→24；STATUS 运行记录表头 v3.47→v3.49 补同步（MINOR-1）。**happy path 不变、哈希不变**。
 可视化冒烟另见 vis_smoke.js（node vis_smoke.js .，38 项）；对比度实测 contrast_check.py（6 项含 RED）。"""
 import copy
 import json
@@ -841,6 +842,14 @@ class TestAtomicReplaceRetry(unittest.TestCase):
             with self.assertRaises(FileNotFoundError):
                 ot._atomic_replace("a", "b")
         self.assertEqual(calls["n"], 1)  # 非 PermissionError 立即抛出不重试
+
+    def test_attempts_guard_rejects_nonpositive(self):
+        for bad in (0, -1, -5):
+            with self.subTest(attempts=bad):
+                with mock.patch.object(ot.os, "replace") as rep:
+                    with self.assertRaises(ValueError):
+                        ot._atomic_replace("a", "b", attempts=bad)
+                    rep.assert_not_called()  # 守卫先于任何 replace（防静默丢检查点）
 
 
 if __name__ == "__main__":

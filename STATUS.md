@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-11（v3.48，critic 迭代轮 59；R58 ACCEPT 跨文档终审全绿，轮 59 披露补全 + 验证发现 Windows 检查点瞬时锁 → save() 原子替换短重试硬化）
+更新：2026-11-12（v3.49，critic 迭代轮 60；R59 ACCEPT 硬化承重实证，轮 60 attempts<1 守卫 + 运行记录表头补同步）
 
 ## 迭代模式
 
@@ -76,7 +76,8 @@
 | 56 | **REQUEST_CHANGES**（0 BLOCKER/MAJOR，2 MINOR+2 零动作观察项）：fresh clone（HEAD 7a83dd5）核心消歧**正确且强证实**——growth42 浸泡自跑 world==inject_s42 78320489 成本 2.903219/调用 3665 逐位（全 JSON 逐键仅 7 干预/审计字段异）、growth18 与入库双口径逐字节（证实 growth 命令 --no-crash 无 --no-storm 括注准确）；代码机理链核实（:630-634 风暴窗 p_rate0.8/p_bad0.6、:273-274 限流提前 return 跳过 :276 out 抽样→RNG 移位、:1065 --no-crash 只关注入崩溃、:1067 storm 独立开关）；**证伪探针**：probeB（风暴开+p_*=0）0fba076d≠78320489 证「同风暴配置」非充分限定、probeC（风暴关+默认 p_*）23ff455c 证去风暴单独变哈希、clean_s42≠probeC 证零化 p_* 亦变哈希（二维差异）；全量闸门 75/38/6AA/三产物双口径逐字节（TEMP 受控首次即过无 WinError5）；v3.46 活体一致/轮号自洽；diff 恰 6 文件 blob+AST 双证 ZERO_CODE_CHANGE_PROVEN；工作副本零污染。**+MINOR-1（术语清扫不完整）：「干净跑」活体残留 2 处——README:10 TL;DR#2（冷读者第一接触最显眼处）+ STATUS:172 运行记录表**，违反全库消歧目的（陈述为真且链向已消歧 04 缓解，但 brief 判据全库零残留）；**+MINOR-2（限定语欠完整有反例）：04「同风暴配置」非充分（probeB），完整应为「同失败配置（风暴窗口+基线 p_rate/p_bad/p_invalid 均同）」；clean_* 差异二维（去风暴+零化基线概率）文本仅归因一维（真实但不完整，04 同段已列全 clean_* 命令故非错误属简写）；沿袭 05 §4:64 既有「相同风暴配置」表述宜一并收紧**。+观察项（零动作）：①测试 stderr 宿主真实路径系 junction 映射环境虚拟化非缺陷②05 §4:64 与 04 共用「同风暴」简写宜同步 | wiki v3.47：2 MINOR 修复——**术语全库清扫**（README:10 TL;DR + STATUS:172 运行记录表「干净跑」→「干净浸泡跑」，活体零残留）；**不变量限定收紧**（04 §3.1/demos README/05 §4:63-64「同风暴配置」→「**同失败配置（风暴窗口+基线 p_rate/p_bad/p_invalid 均同）**」，clean_* 差异说明改二维「既去风暴又零化基线概率」）；probeB/C 作者独立复现精确吻合（0fba076d/23ff455c）入文 | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
 | 57 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，4 零动作观察项）：fresh clone（HEAD 264eaab）**术语清扫通过**（全库 grep 7 命中全历史/元描述豁免，活体零残留，新术语四处落位 README:10/04:127/demos README:96/STATUS:174）；**限定收紧准确完整**（自跑 growth42/probeB/probeC 精确吻合 78320489/0fba076d/23ff455c，四者互异 four_all_distinct=True，二维差异闭合）；**证伪探针判定限定适切**：--batch world==base3（计价不改 world_hash，:285-286 仅 c*=0.5，补「同计价模式」反错）、--budget0.05 world 变（降级写规则记忆，军规 11 治理+对照非绑定）、--memory-ttl1/--agents200 world 变（ceteris paribus 隐含）→「同失败配置」对跨干预目的准确完整，要求补人口/TTL/计价属过度限定；回归闸门 75/38/6AA/三产物逐字节；v3.47 活体一致/轮号自洽；diff 恰 7 文件 blob+AST 双证 ZERO_CODE_CHANGE；工作副本零污染。+观察项（零动作）：①预算系失败配置枚举外改世界维度但限定适切、计价不改 world_hash②STATUS:76 摘要把 demos README 归入短语替换实为二维说明（元描述简写豁免）③stderr WinError183 系检查点写失败演练+junction 虚拟化非缺陷④inject 行 172→174 轮表增长内容正确 | —（零缺陷，v3.47 不变） | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
 | 58 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，2 零动作观察项；全库跨文档完整性终审，程序化扫描 1491 行报告 + 逐命中语境判定）：fresh clone（HEAD eba62c9，33 tracked）**引用完整性全绿**（543 处 [Sxx]/27 键，S01–S27 连续无缺无重无越界，未定义引用 0/孤儿定义 0；§ 交叉引用全解析；页面 ID 01–07 全在；5 个测试名实存；07 契约草图签名与 :270 一致）；**链接解析全绿**（相对链接断链 0、46 处内联仓库路径悬空 0、外部 URL 抽查 10/10 可达 + 关键登记事实复核一致 S23/S13/S26/S27/S03、visualize 自包含、.gitignore 33 tracked 零误排除）；**跨文档数字全绿**（双哈希/events 63222B 333 行 sha256/标准跑 0.205012/335/0.0775%/10.25%/token 档/测试 75(55+20)/38/6 AST+实跑/千人浸泡 9204/3.04MB/三种子成本调用审计记忆哈希/TTL 4548/2.18MB/-28.5%/200 人 2256/1.22MB/-42% 全活体文档与权威 JSON 逐值吻合；核算式三 inject 独立代入精确 + 成本分解闭合；ROI 估算器 14 行实跑与 04 逐值 + 手算全对；数百旧数字命中全历史豁免活体矛盾 0）；**版本轮号全绿**（v3.47 活体一致含运行记录表头/范围标签、轮表 1–57 全填+58 派出、复选框 57[x]/58[ ]、下一步轮 59、迭代轮 58、轮号口径自洽、demos README 轮 1–56 修复 vs README 轮 1–41 回归点口径不同均准确 R43 判例）；**活体 stale 零**（干净跑/旧测试计数/旧冒烟计数/旧外推/旧归因/±20%/精确估算/10.2%/旧 cd/旧轮范围全历史豁免）；回归闸门 75/38/6AA/标准+对照覆写 out/ 三产物 sha256 前后全 OK 逐字节复现；diff 仅 README+STATUS 代码零变更；工作副本零污染。+观察项（零动作）：①README:46 本地底稿披露列举未含 ../meta.json（S17，类别已披露不构成误解）②events.jsonl blob CRLF 63222B 与文档/fresh run 精确一致 + visualize 双口径 R55 已确立非不一致 | wiki v3.48：①观察项①完整性——README:46 本地底稿披露补 `../meta.json`（S17）+ 注明视频为公开外源（commit 0a60ff5，v3.47 内）；②**诚实纠正：0a60ff5 闸门实际 errors=2 被 tail 管道掩码，「75 全绿」声称过早**——复跑暴露 Windows os.replace 瞬时文件锁（杀软/索引器持目标致 PermissionError WinError 5，junction 映射真实用户 temp），R55 观察项②建议的硬化此时被实证触发（当时按环境瞬时搁置）→ **save() 原子替换短重试硬化**：overnight_town + distributed_replica 各增 `_atomic_replace`（瞬时 PermissionError 退避重试 5 次 0.05·(i+1)s、永久失败仍抛、非 PermissionError 立即抛不重试，fsync 掉电安全语义不变，军规 4/5 通宵检查点可靠性）；test 55→**59** / 20→**23**（合 **82**，+瞬时锁重试/永久失败/非 PermissionError 不重试/happy path） | 82/82 **双跑 OK exit=0**（重试吸收瞬时锁，对照硬化前 errors=2/4）+ 38/38 + 6/6 AA；标准跑逐字节不变（重试不改 happy path）；双哈希/成本/调用数不变 |
-| 59 | 已派出：R59 critic 复核 v3.48（_atomic_replace 重试硬化独立证伪 + 82 测试稳定性 + 披露补全 + 无回归） | 待报告 | — |
+| 59 | **ACCEPT**（0 BLOCKER/MAJOR，2 MINOR+4 零动作观察项；51 独立断言 + 4 变异击杀 + A/B 反证）：fresh clone（HEAD d04c190）_atomic_replace 两文件逐字一致；**逻辑证伪 51 断言全过**（瞬时 N=1..4 后成功恰 N+1 调用/N sleep 退避值精确、永久失败恰 attempts 次/attempts-1 sleep 后 bare raise 同实例、旧目标完好 tmp 保留新内容、attempts=1 首败即 raise 零 sleep、非 PermissionError 五类立即传播按类匹配、PermissionError 子类重试、sleep 被 KeyboardInterrupt/SystemExit 打断立即传播、真实永久失败 0.53s 有界退出无无限循环、重试不改快照 sha256 逐位）；save() 集成确认（fsync with 内/replace with 外文件已关闭、检查点写路径无残留裸 os.replace、端到端永久失败 replica/overnight 均 rc=2 干净无 traceback）；**82 测试 3 连跑全绿 exit=0**（91/75/90s，AST 59+23=82）；**A/B 反证硬化承重**（硬化前四文件同环境双跑 errors=6/8 全 WinError5 裸 os.replace，硬化后 3×82 全绿；计数随杀软时机漂移现象根因一致）；**4 变异击杀**（M1 去重试/M2 捕 OSError 全重试/M3 末次不 raise/M4 提前 raise 全杀）；happy path 三产物逐字节 + 带 ckpt 双跑逐字节 + resume 双哈希==标准 + 38 冒烟 + 6/6 AA；披露 ../meta.json + S17 吻合；计数活体一致；变更范围恰 10 文件无意外；工作副本零污染。**+MINOR-1（活体版本标签遗漏）：STATUS:166 运行记录表头仍 v3.47**（表内容已 v3.48，R58 判例表头属活体，与 R56 MINOR-1 同族）；**+MINOR-2（边界缺陷域外不可达）：_atomic_replace attempts<=0 静默返回不替换**（两模块实证，当前调用图均默认 5 不可达，未来接线传 0 将静默丢检查点，建议一行守卫）。+观察项（零动作）：①replica 永久失败测试未断言调用/sleep 次数无非 PermissionError 用例（联合闸门全杀，可选补对称）②attempts 浮点 TypeError 域外③硬化前 errors 6/8 vs 作者 2/4 时机漂移预期④沙箱耗时 74–91s junction 开销非缺陷 | wiki v3.49：2 MINOR 修复——**_atomic_replace attempts<1 守卫**（raise ValueError「attempts 须 >= 1」防静默丢检查点，两模块；探针实证 0/-1→ValueError 且 replace 零调用、happy path 不变）；test 59→**60** / 23→**24**（合 **84**，+守卫各 1）；**STATUS:166 运行记录表头 v3.47→v3.49 补同步**（MINOR-1）；版本/计数全库同步 v3.49 | 84/84 OK exit=0 + 守卫探针（0/-1→ValueError 两模块、happy path 文件正确移动）；38/38 + 6/6 AA；标准跑逐字节不变；双哈希/成本/调用数不变 |
+| 60 | 已派出：R60 critic 复核 v3.49（attempts 守卫独立证伪 + 表头同步 + 84 测试 + 无回归） | 待报告 | — |
 
 ## 进度
 
@@ -148,7 +149,8 @@
 - [x] 轮 56 critic（**REQUEST_CHANGES** 2 MINOR：TL;DR/运行记录表「干净跑」残留 + 「同风暴配置」限定欠完整 probeB 反例）→ 轮 57（v3.47：术语全库清扫 + 限定收紧为同失败配置 + 二维差异说明）
 - [x] 轮 57 critic（**ACCEPT**，零 MINOR，清扫活体零残留 + 限定准确完整 + probeB/C 精确吻合 + batch 不改 world_hash 证伪判定限定适切）→ 无缺陷修复（v3.47 不变）
 - [x] 轮 58 critic（**ACCEPT**，跨文档完整性终审四维全绿：543 引用零悬空/链接零断/数字逐值吻合/版本轮号自洽/活体零 stale/13 产物逐字节）→ 轮 59（v3.48：披露补 ../meta.json + 验证发现 Windows 检查点瞬时锁 → save() 原子替换短重试硬化，test 55→59/20→23 合 82）
-- [ ] 轮 59 critic（v3.48 重试硬化复核）
+- [x] 轮 59 critic（**ACCEPT**，51 断言+4 变异击杀+A/B 反证硬化承重，82 三连跑稳定；2 MINOR：STATUS 表头 v3.47 遗漏 + attempts<=0 静默返回边界）→ 轮 60（v3.49：attempts<1 守卫 + 表头补同步，test 59→60/23→24 合 84）
+- [ ] 轮 60 critic（v3.49 守卫与表头复核）
 - [ ] 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务
 
 ## 核验日志
@@ -163,15 +165,15 @@
 | 2026-11-11 轮3 | demo v3 存档相位 BLOCKER 修复（先体检后存档）；33/33 测试；标准跑数字逐位不变 |
 | 2026-11-11 轮4 | 07 两 MAJOR 修复（每夜 token 25.4k/5.9k、Ollama /v1 端点）；**DeepSeek 峰谷计价核验（S26）：北京夜间全 off-peak 半价——通宵天然 ROI 杠杆**；Qwen 现役模型换代确认（S27，qwen-plus/max 已 legacy，单价 ⏳ console） |
 
-## demo 运行记录（v3.47，2026-11-11，Python 3.13.12）
+## demo 运行记录（v3.49，2026-11-12，Python 3.13.12）
 
 | 项 | 结果 |
 | --- | --- |
-| 测试套件 | overnight_town Ran 59 tests OK + distributed_replica Ran 23 tests OK（合 82）+ vis_smoke.js 38/38（node）+ contrast_check.py 6/6 AA（Chromium 实测含 RED，需 playwright） |
+| 测试套件 | overnight_town Ran 60 tests OK + distributed_replica Ran 24 tests OK（合 84）+ vis_smoke.js 38/38（node）+ contrast_check.py 6/6 AA（Chromium 实测含 RED，需 playwright） |
 | 分布式复刻（R35） | 1000 代理×144 ticks 焦点 1/10：并行==串行（哈希 ec4a48e9…一致）、确定性双跑一致、检查点续跑==全程（resumed_from 72）；焦点调度 14400/144000 |
 | critic BLOCKER 复现案例（--corrupt-frac 0.2066，相位 X≡5 mod 6） | v2 RED → **v3 GREEN**（288/288，人口 200/200，回滚 1） |
 | 标准通宵（1000×3 夜，全注入） | GREEN ~2s；崩溃恢复1（重放≤6tick）/回滚1；335 次调用覆盖率 0.0775%；$0.205012 |
-| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.48 逐位不变） |
+| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.49 逐位不变） |
 | final_hash（v3.3） | ff7c76832d6e1145…（schema_version=2 所致；v3.2 为 736e8318…、v3 为 594f4f85…，历史记录） |
 | 30 夜×200 人增长跑 | GREEN 70s；记忆 6804（人均34）；检查点 2.09MB；对话 2520+反思 1200；$2.90；熔断开4关1 |
 | 千人 30 夜浸泡跑（v3.37） | GREEN；4320 ticks 人口 1000/1000；记忆 9204（人均9.2，ckpt 计数）；检查点 3.04MB（3044477B）；3672 调用/0.0850%；$2.8983；审计 1131；熔断开4关1；world_hash 770fa4f6…/final_hash 62f736e0…；**证伪 10MB 外推**（事件派生记忆 6204 与 200 人跑恰相等，夜数驱动）；报告 out/growth_1000x30_report.json |
@@ -181,9 +183,9 @@
 | 剪枝跑（ttl=7×30 夜） | GREEN；剪枝 4548、存留 2256（-67%）；检查点 1.22MB（-42%）；$2.9013 |
 | ROI 估算器 | qwen-max ≈¥370.42（历史口径）；Haiku $2.01→缓存+Batch $0.50；DeepSeek Flash 谷时 $2.90→70%命中 $1.24 [S26]；Qwen 现价（轮 24，北京区）qwen3.8-max $30.56→Batch $15.28 / qwen3.7-flash $0.54（04 §1.5） |
 
-## 下一步（轮 60）
+## 下一步（轮 61）
 
-1. 轮 59 critic 报告 → 修复（v3.48 重试硬化复核）；
+1. 轮 60 critic 报告 → 修复（v3.49 守卫与表头复核）；
 2. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
 3. 可选深化：**Ray 版**分布式复刻（[S08]；stdlib 教学复刻 R35 已落地、R41 收敛，居民记忆查看器 R30 已落地、R32 收敛——两者不再列为待做）；
 4. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。
