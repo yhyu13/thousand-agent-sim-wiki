@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""overnight_town 测试套件 v3.42（55 项）：python -m unittest test_overnight_town -v
+"""overnight_town 测试套件 v3.43（55 项）：python -m unittest test_overnight_town -v
 v2：别名污染回归、检查点隔离、from_dict 等价、边界、计划违例实弹、半开探针、审计顺序、
 体面停机、meta 崩溃安全；v3：存档相位 BLOCKER、回滚后崩溃窗口、分散注入、抽样互质、
 resume 五连、Config 校验；v3.2：语义损坏 ckpt、NaN/CLI 拒绝、记忆剪枝 TTL×3；
@@ -49,6 +49,7 @@ v3.39：R47（ACCEPT，三不变量证伪失败+机理代码逐行吻合+字节�
 v3.40：R48（ACCEPT，13 复跑+177 断言，记忆公式边界定位 TTL）MINOR-1 修正——04 §3.1 成本归因改「prompt token 差与失败/重试叠加」（零失败反事实证伪单独归因：纯 prompt −0.013417 量级大于净差 +0.004870 且反号），作者独立复跑核实，两 clean 报告入库；STATUS 记忆公式行补 TTL 边界注。**代码无变更、哈希不变**。
 v3.41：R49（ACCEPT，反事实逐值命中+独立成本重算+调用核算 3720−降级+重试 三种子精确）MINOR-1 修正——归因标签精化：零失败种子差主导项是 **output 响应长度采样**（−0.013901，out=OUT_BASE+rng.randint(40) 纯种子派生 :276/:727），prompt 输入差仅 +0.000484 微小反号（R49 分解、作者独立复核）；「失败/重试」改「失败总效应差」（含跳过/降级，两跑均净降本）。数字与分解算式不变。**代码无变更、哈希不变**。
 v3.42：R50（ACCEPT，seed-only 重放探针证实 output 零 prompt 信息+唯一整数解成本重解）MINOR-1 修正——核算式内联定义（llm_calls=3720−降级事件+限流尝试+坏JSON尝试，三种子算例；坏JSON不重试仍计费须入式，「重试」仅指限流）；「重试加价」改「限流不计费、坏JSON仍计费」；三联数注种子顺序；STATUS 96.6% 补绝对贡献和口径。**代码无变更、哈希不变**。
+v3.43：R51（ACCEPT 零 MINOR，新式独立可复现+旧式确不可复现+基数推导核实）观察项落实——核算式键名全称 + **适用前提 budget_degradations=0 注**（ok-but-degraded 机理，实证 286/220/66 作者独立复现）+ 基数 3720 推导入文（6×14+40=124/夜×30）+ 句法重构。**代码无变更、哈希不变**。
 可视化冒烟另见 vis_smoke.js（node vis_smoke.js .，38 项）；对比度实测 contrast_check.py（6 项含 RED）。"""
 import copy
 import json
