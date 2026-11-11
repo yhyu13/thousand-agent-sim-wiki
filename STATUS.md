@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-11（v3.36，critic 迭代轮 45；R44 冷读者审计 ACCEPT 确认立项目标达成，轮 45 落实 3 MINOR + 3 观察项编辑性修复）
+更新：2026-11-11（v3.37，critic 迭代轮 46；R45 ACCEPT，轮 46 .gitignore 对齐 + 千人 30 夜浸泡实测**证伪并纠正 10MB 线性外推**）
 
 ## 迭代模式
 
@@ -62,7 +62,8 @@
 | 42 | **ACCEPT**（发布产物端到端审计，0 BLOCKER/MAJOR，2 MINOR+5 观察项）：公开 wiki fresh clone（HEAD 3ca0991，26 tracked 文件）实跑 75 测试 OK+38 冒烟+6/6 AA+标准跑双哈希/events 63222B sha256 325d61c4…/成本 0.205012/335 调用/0.0775% 全命中+47 字段对照+对照跑逐字节+R35 基线 ec4a48e9…+续跑链 18597c46…+ROI 14 行；文件完整性（18 链接全解析/out/ 6 产物齐全/.gitignore 零误排除/visualize.html 28176B 零外部引用自包含）；**SimCity --recurse-submodules fresh clone**（HEAD 4ce517e，.gitmodules 指向公开 repo，submodule 3ca0991，从 submodule checkout 实跑 75 OK；首次 DNS 瞬时失败 git 自动重试成功如实记录）；跨文档 v3.34 六处活体一致/轮号自洽/S01–S27 连续无缺；发布卫生（敏感模式零命中/私有路径零命中/Assisted-by 8/8）。+MINOR-1（01:64「8 测试守卫」初始提交固化漏网，现行 20）/MINOR-2（README:39「轮 1–28」轮范围滞后，计数本身当前）+观察项（STATUS:66 初始快照 24 项无轮号注/本地底稿锚点发布上下文不可解析属固有边界/.gitmodules SSH 非缺陷/test_replica 无版本标签系约定差异/DNS 瞬时） | wiki v3.35（编辑性，代码无变更）：01:64「8 测试」→**20 测试**（MINOR-1）；README:39「55 测试…轮 1–28」→**75 测试（主 55+复刻 20）…轮 1–41**（MINOR-2）；README 使用约定补**本地底稿不随公开 repo 分发**说明（观察项 2）；STATUS:66 初始快照行加「R32 演进至 38 项」注记（观察项 1）；版本标签全量同步 v3.35 | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变（代码零变更）；哈希/成本/调用数不变；活体 stale 计数全库 sweep 清零 |
 | 43 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，5 信息性观察项无需动作）：fresh clone 回归闸门全数实跑（HEAD 0fe6ad6，75 测试 OK 零 Warning+38 冒烟+6/6 AA 真实 Chromium+标准跑 47 字段 0 diff 整份 deep-equal+双哈希+events 63222B sha256 325d61c4…+成本/调用/覆盖率/10.25% 全命中+R35 基线 ec4a48e9…+focal 14400）；2 MINOR 修复实证含证伪角度（01:64=20 与 AST 一致；README:39=75（55+20）/轮 1–41 三方吻合，**「覆盖 1–41」口径恰当**——R41 零发现回归点集==1–40，R42 文档 MINOR 非代码回归点不应计入）；观察项落实核对（README:46 本地底稿条目与 git ls-files 26 文件无 PRD/source 实证一致、STATUS:67「R32 演进至 38」与轮表 24→33→36→38 两种轮号读法均一致）；**独立 16 组模式全库 sweep 316 行逐命中语境判定**（旧计数/旧轮范围/120 处旧版本标签全历史豁免，v3.35 共 16 处一致，活体零 stale）；代码零变更 diff 实证（demos 唯一 diff=test docstring 两处，SimCity 仅 gitlink）；SimCity fresh clone（首次瞬时断连重试成功如实记录）submodule 0fe6ad6 树逐文件相同+实跑 75 OK；发布卫生（私有路径/email 零命中，api_key='ollama' 系文档占位符误报）；工作副本前后零变化 | —（零缺陷，v3.35 不变） | 75/75 + 38/38 + 6/6 AA；fresh clone 标准跑逐字节不变；哈希/成本/调用数不变 |
 | 44 | **ACCEPT · 冷读者任务式可用性审计：立项目标达成**（0 BLOCKER/MAJOR，3 MINOR+6 观察项）：全新 agent 仅凭公开 fresh clone（HEAD e3eb556）——冷读导航全通（[Sxx] 26 键零未定义、页面 ID/§ 交叉引用全解析、前置概念无缺失）；**实跑 30+ 指标零失配**（标准跑逐值+产物 cmp 逐字节+对照跑双哈希语义+75 测试+R35 基线+续跑链+ROI 14 行逐值+38 冒烟+6/6 AA+增长跑 6804/2.09MB/$2.8979+TTL -67%/-42%+预算演练 67/0/235 与 295/1/251+RED 体面停机相位+Batch 恰 0.5×+p-invalid 全拒留痕；**自加真实 kill -9 冷重启：final_hash d2dd51a8… 与无中断全程逐位相同**，比文档演练更严酷）；**仅用 wiki 产出完整通宵运行计划**（路线 B+事件级认知选型/13 军规逐条落地/ROI 算式 $1.84/模拟天→$3.68/夜+保守界+限流核算+价值侧盈亏平衡/05 检查单/07 混合路线 Q-01 决策，每个决策有出处）；**grounding 8 条直抓全属实**（Sid §5.3/GA scratch.py/Anthropic 缓存含 0.05× 例外/限流全档位含 spend-cap 双语义/OASIS 上游表非线性/AI Town crons.ts/DeepSeek 12 价格点/结构化输出三失效）；S16 经公开仓库 URL 外部核验 resident.js:29/287-295/sketch.js:217/daily-clock.js 全属实（行号微小漂移）。+MINOR-1（三处快速开始 cd bw-town/wiki/demos 系作者布局，冷读者第一条命令必失败）/MINOR-2（STATUS 下一步仍列已落地的查看器为可选深化）/MINOR-3（demos README 运行节缺分布式复刻命令）+观察项（02 §7 Ray 版歧义/S16 缺公开 URL/记忆计数读取位置未注/02:100 审计史术语/轮范围口径 R43 已裁定/DeepSeek SPA 站点特性）。信息缺口诚实记录：本地向量存储选型/T1 I/O 并发 recipe 无具体推荐（标准工程可补，非 wiki 错误）；⏳ 项标注清楚不构成决策障碍 | wiki v3.36（编辑性，代码无变更）：三处 cd 改 **`<repo>/demos`**（MINOR-1）；demos README 运行节补**分布式复刻 4 命令**（both/落检查点/续跑/测试，MINOR-3）；STATUS 可选深化更正为「Ray 版复刻」（stdlib 复刻/查看器已落地收敛不再列待做，MINOR-2）；02 §7 加「**Ray 版**」限定 + stdlib 已落地注（观察项）；S16 补**公开 GitHub URL** + 行号漂移注（观察项）；增长记忆计数注明 **ckpt.json residents[].memories 读取位置**（观察项）；版本标签全量同步 v3.36 | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变（代码零变更）；哈希/成本/调用数不变 |
-| 45 | 已派出：R45 critic 复核 v3.36 冷读者摩擦修复（3 MINOR + 3 观察项落实 + 新命令实跑 + 无回归） | 待报告 | — |
+| 45 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，4 零动作观察项）：fresh clone（HEAD e99d4a4）**README 快速开始块逐字执行成功**（冷读者第一条命令修复实证）+ demos README 新补 4 命令逐字实跑（R35 基线 ec4a48e9… 复现、resume288==full288 哈希 18597c46… 逐位）+ 05 §2 块逐字实跑产物 cmp 逐字节复现已提交权威产物；3 MINOR+3 观察项逐条实证（旧 cd 路径全库唯一命中 STATUS 历史行引文豁免、STATUS 第 3 项与轮表 R30–R32/R35–R41 历史一致、02 §7 Ray 版限定与 01:64 不再矛盾、**S16 URL 直抓可达 resident.js:29 精确命中**、本地底稿与公开 HEAD 逐字相同仅 CRLF/LF 差——漂移注审慎准确、**自跑 30 夜×200 增长 ckpt 计数 6804/2092414B 与增长报告 49 字段零差异**、morning_report 确无 memories_total 键）；新措辞证伪角度全过（submodule 读者路径 fresh clone 实证 75 OK、out/dist 相对路径正确、unittest -I 警示在位、D2/D3 默认值与 D1 一致经 resume 配置校验实证）；回归闸门 75/38/6 AA/47 字段/双哈希/63222B 全命中；diff 恰 8 文件 test 仅 docstring；v3.36 活体一致/轮号自洽；SimCity gitlink e99d4a4 + fresh clone submodule 75 OK；工作副本零污染 | wiki v3.37：观察项 1 顺手落实——**.gitignore 补 demos/out/ckpt/ 与 out/dist/**（对齐既有 growth_*_ckpt 排除模式，git check-ignore 对 tracked 零命中）；**主动研究迭代：千人 30 夜浸泡实测证伪线性外推**——1000×30 --no-crash GREEN（4320 ticks，人口 1000/1000），记忆 9,204（人均 9.2）/检查点 3.04MB/成本 $2.8983（3672 调用/0.0850%）/审计 1131/熔断开 4 关 1，**原外推 10MB/3.4 万记忆高估 ~3.3×**；机理：事件派生记忆两跑恰相等（6804−200×3=9204−1000×3=6204）→ 固定事件配额下记忆/成本由夜数驱动、人口只加 3 条人格记忆+~1.19KB/人基座；04 §3.1/03 军规 10/demos README 三处外推声称纠正为实测锚点 + 口径告诫（真实系统扩大事件配额须按 §3 公式重算）；报告入库 out/growth_1000x30_report.json（2681B，大检查点留 temp 不入库） | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
+| 46 | 已派出：R46 critic 复核 v3.37（浸泡实测独立复跑 + .gitignore 对齐 + 外推→实测措辞 + 收敛 sweep） | 待报告 | — |
 
 ## 进度
 
@@ -120,7 +121,8 @@
 - [x] 轮 42 critic（**ACCEPT**，发布产物 fresh clone 端到端真正可用：双 clone 75 测试全绿 + 全部哈希/字节不变量 + 零敏感信息）→ 轮 43 编辑性修复（v3.35：01 页 8→20 测试、README 轮范围 1–28→1–41 + 75 口径、本地底稿边界说明、初始快照注记）
 - [x] 轮 43 critic（**ACCEPT**，零 BLOCKER/MAJOR/MINOR，fresh clone 闸门全过 + 独立 16 组 sweep 活体零 stale + 措辞证伪角度审查准确）→ 无缺陷修复（v3.35 不变）
 - [x] 轮 44 critic（**ACCEPT · 冷读者审计立项目标达成**：30+ 指标零失配 + kill -9 实证 + 8 grounding 全属实 + 独立产出通宵运行计划）→ 轮 45 编辑性修复（v3.36：cd 路径/复刻命令收录/过期 TODO + Ray 版限定/S16 公开 URL/记忆计数位置）
-- [ ] 轮 45 critic（v3.36 冷读者摩擦修复复核）
+- [x] 轮 45 critic（**ACCEPT**，零 BLOCKER/MAJOR/MINOR，冷读者入口逐字可跑 + 新命令续跑==全程 + S16 公开锚点精确命中 + 记忆计数自跑复核）→ 轮 46（v3.37：.gitignore 对齐 + 千人 30 夜浸泡实测**证伪并纠正 10MB 外推**，三处声称改实测锚点）
+- [ ] 轮 46 critic（v3.37 浸泡实测复核 + .gitignore + 收敛 sweep）
 - [ ] 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务
 
 ## 核验日志
@@ -135,7 +137,7 @@
 | 2026-11-11 轮3 | demo v3 存档相位 BLOCKER 修复（先体检后存档）；33/33 测试；标准跑数字逐位不变 |
 | 2026-11-11 轮4 | 07 两 MAJOR 修复（每夜 token 25.4k/5.9k、Ollama /v1 端点）；**DeepSeek 峰谷计价核验（S26）：北京夜间全 off-peak 半价——通宵天然 ROI 杠杆**；Qwen 现役模型换代确认（S27，qwen-plus/max 已 legacy，单价 ⏳ console） |
 
-## demo 运行记录（v3.36，2026-11-11，Python 3.13.12）
+## demo 运行记录（v3.37，2026-11-11，Python 3.13.12）
 
 | 项 | 结果 |
 | --- | --- |
@@ -143,15 +145,16 @@
 | 分布式复刻（R35） | 1000 代理×144 ticks 焦点 1/10：并行==串行（哈希 ec4a48e9…一致）、确定性双跑一致、检查点续跑==全程（resumed_from 72）；焦点调度 14400/144000 |
 | critic BLOCKER 复现案例（--corrupt-frac 0.2066，相位 X≡5 mod 6） | v2 RED → **v3 GREEN**（288/288，人口 200/200，回滚 1） |
 | 标准通宵（1000×3 夜，全注入） | GREEN ~2s；崩溃恢复1（重放≤6tick）/回滚1；335 次调用覆盖率 0.0775%；$0.205012 |
-| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.36 逐位不变） |
+| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.37 逐位不变） |
 | final_hash（v3.3） | ff7c76832d6e1145…（schema_version=2 所致；v3.2 为 736e8318…、v3 为 594f4f85…，历史记录） |
 | 30 夜×200 人增长跑 | GREEN 70s；记忆 6804（人均34）；检查点 2.09MB；对话 2520+反思 1200；$2.90；熔断开4关1 |
+| 千人 30 夜浸泡跑（v3.37） | GREEN；4320 ticks 人口 1000/1000；记忆 9204（人均9.2，ckpt 计数）；检查点 3.04MB（3044477B）；3672 调用/0.0850%；$2.8983；审计 1131；熔断开4关1；world_hash 770fa4f6…/final_hash 62f736e0…；**证伪 10MB 外推**（事件派生记忆 6204 与 200 人跑恰相等，夜数驱动）；报告 out/growth_1000x30_report.json |
 | 剪枝跑（ttl=7×30 夜） | GREEN；剪枝 4548、存留 2256（-67%）；检查点 1.22MB（-42%）；$2.9013 |
 | ROI 估算器 | qwen-max ≈¥370.42（历史口径）；Haiku $2.01→缓存+Batch $0.50；DeepSeek Flash 谷时 $2.90→70%命中 $1.24 [S26]；Qwen 现价（轮 24，北京区）qwen3.8-max $30.56→Batch $15.28 / qwen3.7-flash $0.54（04 §1.5） |
 
-## 下一步（轮 46）
+## 下一步（轮 47）
 
-1. 轮 45 critic 报告 → 修复（v3.36 冷读者摩擦修复复核）；
+1. 轮 46 critic 报告 → 修复（v3.37 浸泡实测复核）；
 2. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
 3. 可选深化：**Ray 版**分布式复刻（[S08]；stdlib 教学复刻 R35 已落地、R41 收敛，居民记忆查看器 R30 已落地、R32 收敛——两者不再列为待做）；
 4. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。

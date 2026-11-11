@@ -7,6 +7,9 @@ __pycache__/
 demos/out/growth_ckpt/
 demos/out/growth_ttl7_ckpt/
 demos/out/growth_ttl_ckpt/
+# 文档命令产生的检查点目录（--checkpoint-dir out/ckpt / out/dist，R45 观察项 1 对齐）
+demos/out/ckpt/
+demos/out/dist/
 
 # OS / editor / misc
 .DS_Store
