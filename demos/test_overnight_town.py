@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""overnight_town 测试套件 v3.37（55 项）：python -m unittest test_overnight_town -v
+"""overnight_town 测试套件 v3.38（55 项）：python -m unittest test_overnight_town -v
 v2：别名污染回归、检查点隔离、from_dict 等价、边界、计划违例实弹、半开探针、审计顺序、
 体面停机、meta 崩溃安全；v3：存档相位 BLOCKER、回滚后崩溃窗口、分散注入、抽样互质、
 resume 五连、Config 校验；v3.2：语义损坏 ckpt、NaN/CLI 拒绝、记忆剪枝 TTL×3；
@@ -44,6 +44,7 @@ v3.34：R40（ACCEPT，234 探针域内零反例）O-1/O-2 落实——分布式
 v3.35：R42（发布产物 fresh clone 端到端审计 ACCEPT）2 MINOR 编辑性修复——01 页分布式复刻「8 测试」→20、README 回归覆盖轮范围 1–28→1–41 并补 75 测试口径；README 补本地底稿不随公开 repo 分发说明、STATUS 初始快照行加轮号注记。**代码无变更、哈希不变**。
 v3.36：R44（冷读者任务式可用性审计 ACCEPT，30+ 指标零失配 + 8 grounding 直抓全属实 + 独立产出通宵运行计划）3 MINOR + 3 观察项编辑性落实——三处快速开始 cd 改 <repo>/demos、demos README 运行节补分布式复刻命令、STATUS 过期可选深化 TODO 更正（查看器/stdlib 复刻已落地）；02 §7 加「Ray 版」限定、S16 补公开 URL + 行号漂移注、增长记忆计数注明 ckpt 读取位置。**代码无变更、哈希不变**。
 v3.37：R45（ACCEPT 零缺陷）观察项落实 + 主动研究迭代——.gitignore 补 out/ckpt/ 与 out/dist/（对齐 growth_*_ckpt 模式）；**千人 30 夜浸泡实测证伪 10MB 线性外推**（实测 3.04MB/9204 记忆/$2.8983；事件派生记忆 6204 与 200 人跑恰相等→固定配额下夜数驱动），04 §3.1/03 军规 10/demos README 三处纠正 + 口径告诫，报告入库 out/growth_1000x30_report.json。**代码无变更、哈希不变**。
+v3.38：R46（ACCEPT，独立复跑逐值命中+机理加固：6204 精确分解/配额硬常数/拒绝不写记忆）后主动研究迭代续——**千人 30 夜全注入跑 GREEN**（崩溃恢复1+回滚1 全吸收，world_hash/成本/调用数与干净跑逐位一致，重放不膨胀计费）+ **千人 TTL=7 剪枝跑**（剪枝 4548 与 200 人跑逐位相同，检查点 -28.5%）；07:57 交叉注记（112/夜 3 夜口径 vs 浸泡 122/夜）；README TL;DR#2 补实测锚点；两报告入库。**代码无变更、哈希不变**。
 可视化冒烟另见 vis_smoke.js（node vis_smoke.js .，38 项）；对比度实测 contrast_check.py（6 项含 RED）。"""
 import copy
 import json

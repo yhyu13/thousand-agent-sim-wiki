@@ -1,0 +1,104 @@
+{
+  "status": "GREEN",
+  "seed": 20260818,
+  "nights_planned": 30,
+  "agents": 1000,
+  "ticks_completed": 4320,
+  "ticks_planned": 4320,
+  "resumed_from_tick": 0,
+  "sim_days": 30.0,
+  "population_final": 1000,
+  "counters": {
+    "conversations_llm": 2347,
+    "conversations_degraded": 173,
+    "reflections_accepted": 1090,
+    "reflections_rejected": 36,
+    "reflections_degraded": 74,
+    "rate_limit_hits": 75,
+    "malformed_hits": 124,
+    "breaker_opens": 4,
+    "breaker_skips": 51,
+    "breaker_closes": 1,
+    "backoff_skips": 67,
+    "budget_degradations": 0,
+    "budget_refusals": 0,
+    "memories_pruned": 4548
+  },
+  "conversations_total": 2520,
+  "reflections_total": 1200,
+  "llm_calls": 3672,
+  "llm_coverage_pct": 0.085,
+  "tokens": {
+    "T1": [
+      1484471,
+      194264
+    ],
+    "T2": [
+      1110066,
+      254119
+    ]
+  },
+  "cost_usd": 2.893932,
+  "memory_ttl": 7,
+  "memories_pruned": 4548,
+  "budget_cap_usd": 20.0,
+  "budget_used_pct": 14.47,
+  "cost_per_event_usd": 0.000778,
+  "cost_per_llm_event_usd": 0.000842,
+  "interventions_rollbacks": 0,
+  "violations_detected": 0,
+  "violations_unresolved": [],
+  "audit_summary": {
+    "plan_patch": 1090,
+    "patch_rejected": 36,
+    "breaker_open": 2,
+    "breaker_reopen": 2,
+    "breaker_close": 1
+  },
+  "audit_entries": 1131,
+  "sample_events": [
+    {
+      "type": "conversation",
+      "day": 0,
+      "minute": 720,
+      "a": "nurse-026",
+      "b": "nurse-044",
+      "loc": "park",
+      "mode": "llm",
+      "text": "nurse-026 对 nurse-044 说：「nurse……让我想想。」"
+    },
+    {
+      "type": "conversation",
+      "day": 0,
+      "minute": 720,
+      "a": "guard-029",
+      "b": "nurse-017",
+      "loc": "park",
+      "mode": "llm",
+      "text": "guard-029 对 nurse-017 说：「guard……让我想想。」"
+    },
+    {
+      "type": "conversation",
+      "day": 29,
+      "minute": 1290,
+      "a": "child-043",
+      "b": "fisher-032",
+      "loc": "restaurant",
+      "mode": "llm",
+      "text": "child-043 对 fisher-032 说：「说起restaurant，我昨天也遇到了。」"
+    },
+    {
+      "type": "conversation",
+      "day": 29,
+      "minute": 1290,
+      "a": "merchant-043",
+      "b": "farmer-038",
+      "loc": "restaurant",
+      "mode": "llm",
+      "text": "merchant-043 对 farmer-038 说：「关于merchant，我同意一半。」"
+    }
+  ],
+  "world_hash": "28f6e2c8777b3e5dc9c87fa1d28967be710612a0d48a171e81892e1466c79a6d",
+  "final_hash": "70fb17d136b83c34d967320525e5aeae4f57cace68e8e1b825dea2d2c35c2285",
+  "crashes_recovered": 0
+}

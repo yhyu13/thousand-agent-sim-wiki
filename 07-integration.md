@@ -54,7 +54,7 @@ def call(tier: str, prompt: str) -> tuple: ...  # 接口契约草图（非实现
 - token bucket 连续补充（非整分钟重置）；短突发可触发（60 RPM 可能按 1/秒执行）；**acceleration limits：用量陡增会额外 429 → 流量渐进爬坡** [S23]。
 - Batch 独立限额：处理队列 Start 200k / Build 300k / Scale 500k 请求；批 API RPM 1k/2k/4k [S23]。
 - **两种 429 必须区分** [S23]：普通限流带 `retry-after` 头 → 退避重试（军规 6）；**月 spend cap 的 429 无 retry-after**（`error_code=enforced_spend_limit_reached`）→ 重试无效，governor 应停机告警等下月/提档（军规 11 的真实扩展）。自设 spend limit 触发的是 400（invalid_request_error），同样不可重试。
-- 千人配额估算（demo 口径外推，**估算**）：~112 次调用/夜，T2 约 **25.4k in / 5.9k out 每夜**（三夜合计 76.2k / 17.6k，见 demos/out/morning_report.json）→ Start 档余量巨大。**焦点激活下瓶颈是成本与质量，不是限流**；全量激活（军规 1 反例）才会撞限流。
+- 千人配额估算（demo 口径外推，**估算**）：~112 次调用/夜（3 夜跑口径 335/3；30 夜浸泡实测 122/夜=3672/30，熔断/退避历史不同所致，同量级，见 04 §3.1），T2 约 **25.4k in / 5.9k out 每夜**（三夜合计 76.2k / 17.6k，见 demos/out/morning_report.json）→ Start 档余量巨大。**焦点激活下瓶颈是成本与质量，不是限流**；全量激活（军规 1 反例）才会撞限流。
 - **新账户注意**：新组织可能从 Evaluation tier 起步（限额低于 Start 表值），随用量历史自动升档——首夜前先在 Console 查实际档位与限额 [S23]。
 
 ## §4 结构化输出：schema 保证 ≠ 免校验
