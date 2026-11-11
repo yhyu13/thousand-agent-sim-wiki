@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""distributed_replica 测试套件（13 项）：python -m unittest test_distributed_replica -v
+"""distributed_replica 测试套件（17 项）：python -m unittest test_distributed_replica -v
 守卫规模化路线的确定性基础：无状态 worker / 命名空间 RNG / 排序施加 / 并行==串行 / 检查点续跑。
 R36 硬化：续跑 focal_period 不匹配拒绝 / 损坏检查点拒绝 / 量级上限。
-R37 硬化：键齐全但值类型损坏拒绝（bool 不算整数）/ schema_version 读取校验 / focal_period 严格整数化（封 True==1、10.0==10 等值陷阱）。"""
+R37 硬化：键齐全但值类型损坏拒绝（bool 不算整数）/ schema_version 读取校验 / focal_period 严格整数化（封 True==1、10.0==10 等值陷阱）。
+R38 硬化：深嵌套合法 JSON RecursionError 拒绝 / 负 tick 拒绝（防无界多跑）/ residents 数量与 n 交叉校验 / 写路径 OSError 干净拒绝。"""
 import copy
 import json
 import os
@@ -179,6 +180,67 @@ class TestDistributedReplica(unittest.TestCase):
                         dr.main(["--seed", "7", "--agents", "20", "--ticks", "20",
                                  "--checkpoint-dir", d, "--resume", "--out", os.path.join(d, "b.json")])
                     self.assertEqual(cm.exception.code, 2)
+
+    def test_resume_deep_nested_json(self):
+        """R38 N-1：深嵌套*语法合法* JSON → RecursionError 捕获转干净 rc=2（与 overnight_town R13 同型）。"""
+        with tempfile.TemporaryDirectory() as d:
+            ck = os.path.join(d, "dist_ckpt.json")
+            payload = '{"schema_version":1,"focal_period":10,"world":' + "[" * 5000 + "0" + "]" * 5000 + "}"
+            with open(ck, "w", encoding="utf-8") as f:
+                f.write(payload)
+            with self.assertRaises(SystemExit) as cm:
+                dr.main(["--seed", "7", "--agents", "20", "--ticks", "20",
+                         "--checkpoint-dir", d, "--resume", "--out", os.path.join(d, "b.json")])
+            self.assertEqual(cm.exception.code, 2)
+
+    def test_resume_negative_tick(self):
+        """R38 N-2：负 tick 拒绝（防无界多跑/挂死，绕过 ticks 上限意图）；巨负整数亦干净拒绝。"""
+        base = {"schema_version": 1, "focal_period": 10, "world": dr.init_world(7, 20)}
+        with tempfile.TemporaryDirectory() as d:
+            ck = os.path.join(d, "dist_ckpt.json")
+            for bad in (-3, -(10**400)):
+                snap = copy.deepcopy(base)
+                snap["world"]["tick"] = bad
+                with open(ck, "w", encoding="utf-8") as f:
+                    json.dump(snap, f)
+                with self.subTest(tick=bad if bad > -10**6 else "-10**400"):
+                    with self.assertRaises(SystemExit) as cm:
+                        dr.main(["--seed", "7", "--agents", "20", "--ticks", "20",
+                                 "--checkpoint-dir", d, "--resume", "--out", os.path.join(d, "b.json")])
+                    self.assertEqual(cm.exception.code, 2)
+
+    def test_resume_residents_count_mismatch(self):
+        """R38 O-1：residents 数量与 n 交叉校验（空/少/多均拒绝）。"""
+        world = dr.init_world(7, 20)
+        forms = [[], world["residents"][:3],
+                 world["residents"] + [{"id": f"x-{i}", "role": "resident", "energy": 60} for i in range(5)]]
+        with tempfile.TemporaryDirectory() as d:
+            ck = os.path.join(d, "dist_ckpt.json")
+            for residents in forms:
+                snap = {"schema_version": 1, "focal_period": 10,
+                        "world": {"seed": 7, "n": 20, "tick": 5, "residents": residents}}
+                with open(ck, "w", encoding="utf-8") as f:
+                    json.dump(snap, f)
+                with self.subTest(count=len(residents)):
+                    with self.assertRaises(SystemExit) as cm:
+                        dr.main(["--seed", "7", "--agents", "20", "--ticks", "20",
+                                 "--checkpoint-dir", d, "--resume", "--out", os.path.join(d, "b.json")])
+                    self.assertEqual(cm.exception.code, 2)
+
+    def test_write_path_oserror(self):
+        """R38 O-2：写路径 OSError 干净拒绝 rc=2（--out 目录不存在 / --checkpoint-dir 是普通文件）。"""
+        with tempfile.TemporaryDirectory() as d:
+            with self.assertRaises(SystemExit) as cm:
+                dr.main(["--seed", "7", "--agents", "10", "--ticks", "2", "--mode", "sequential",
+                         "--out", os.path.join(d, "no_such_dir", "r.json")])
+            self.assertEqual(cm.exception.code, 2)
+            regular_file = os.path.join(d, "afile")
+            with open(regular_file, "w", encoding="utf-8") as f:
+                f.write("x")
+            with self.assertRaises(SystemExit) as cm:
+                dr.main(["--seed", "7", "--agents", "10", "--ticks", "2", "--mode", "sequential",
+                         "--checkpoint-dir", regular_file])
+            self.assertEqual(cm.exception.code, 2)
 
 
 if __name__ == "__main__":

@@ -171,7 +171,8 @@ def main(argv=None):
         try:
             with open(ck, encoding="utf-8") as f:
                 snap = json.load(f)
-        except (ValueError, OSError) as e:
+        except (ValueError, OSError, RecursionError) as e:
+            # RecursionError：深嵌套*语法合法* JSON（与 overnight_town R13 同型）；UnicodeDecodeError ⊂ ValueError。
             p.error(f"--resume：检查点读取失败（{ck}）：{e}")
         if not isinstance(snap, dict) or not isinstance(snap.get("world"), dict):
             p.error("--resume：检查点格式错误（缺 world 对象）")
@@ -182,12 +183,16 @@ def main(argv=None):
         if not all(k in world for k in ("seed", "n", "tick", "residents")):
             p.error("--resume：检查点 world 缺必需字段（seed/n/tick/residents）")
         # 值类型校验（R37 O-1a/b）：键齐全但值损坏也须干净拒绝；type() is int 排除 bool。
-        # 域外说明：residents 元素内部结构不做逐条深校验（教学复刻，检查点由本程序自身写出）。
+        # 域外说明：residents 元素内部结构不做逐条深校验（仅数量与 n 交叉校验；教学复刻，检查点由本程序自身写出）。
         if (type(world["seed"]) is not int or type(world["n"]) is not int
                 or type(world["tick"]) is not int or not isinstance(world["residents"], list)):
             p.error("--resume：检查点字段类型错误（seed/n/tick 须为整数，residents 须为列表；bool 不算整数）")
+        if world["tick"] < 0:
+            p.error(f"--resume：检查点 tick={world['tick']} 为负（进度须 >= 0；负值会无界多跑，绕过 ticks 上限意图）")
         if world["seed"] != a.seed or world["n"] != a.agents:
             p.error(f"--resume 配置不匹配：检查点 seed={world['seed']}/n={world['n']}，当前 seed={a.seed}/agents={a.agents}")
+        if len(world["residents"]) != world["n"]:
+            p.error(f"--resume：检查点 residents 数量 {len(world['residents'])} 与 n={world['n']} 不一致")
         fp = snap.get("focal_period")
         if type(fp) is not int or fp != a.focal_period:
             p.error(f"--resume 配置不匹配：检查点 focal_period={fp!r}，当前 {a.focal_period}（焦点周期改变会产生混合轨迹，须一致；bool/float 不算整数）")
@@ -228,14 +233,17 @@ def main(argv=None):
     report["world_hash"] = world_hash(world)
 
     if a.checkpoint_dir:
-        os.makedirs(a.checkpoint_dir, exist_ok=True)
-        ck = os.path.join(a.checkpoint_dir, "dist_ckpt.json")
-        tmp = ck + ".tmp"
-        with open(tmp, "w", encoding="utf-8") as f:
-            json.dump({"schema_version": 1, "focal_period": a.focal_period, "world": world}, f, ensure_ascii=False)
-            f.flush()
-            os.fsync(f.fileno())
-        os.replace(tmp, ck)
+        try:
+            os.makedirs(a.checkpoint_dir, exist_ok=True)
+            ck = os.path.join(a.checkpoint_dir, "dist_ckpt.json")
+            tmp = ck + ".tmp"
+            with open(tmp, "w", encoding="utf-8") as f:
+                json.dump({"schema_version": 1, "focal_period": a.focal_period, "world": world}, f, ensure_ascii=False)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(tmp, ck)
+        except OSError as e:
+            p.error(f"检查点写入失败（{a.checkpoint_dir}）：{e}")
 
     print("=== 分布式复刻报告 ===")
     print("模式: %s · %d 代理 x %d ticks · 焦点周期 1/%d" %
@@ -249,8 +257,11 @@ def main(argv=None):
     print("论点：无状态 worker + 命名空间 RNG + 排序施加补丁 → 可并行且可复现 [S08]。")
 
     if a.out:
-        with open(a.out, "w", encoding="utf-8") as f:
-            json.dump(report, f, ensure_ascii=False, indent=2)
+        try:
+            with open(a.out, "w", encoding="utf-8") as f:
+                json.dump(report, f, ensure_ascii=False, indent=2)
+        except OSError as e:
+            p.error(f"报告写入失败（{a.out}）：{e}")
     return 0
 
 
