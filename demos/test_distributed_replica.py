@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""distributed_replica 测试套件（20 项）：python -m unittest test_distributed_replica -v
+"""distributed_replica 测试套件（23 项）：python -m unittest test_distributed_replica -v
 守卫规模化路线的确定性基础：无状态 worker / 命名空间 RNG / 排序施加 / 并行==串行 / 检查点续跑。
 R36 硬化：续跑 focal_period 不匹配拒绝 / 损坏检查点拒绝 / 量级上限。
 R37 硬化：键齐全但值类型损坏拒绝（bool 不算整数）/ schema_version 读取校验 / focal_period 严格整数化（封 True==1、10.0==10 等值陷阱）。
 R38 硬化：深嵌套合法 JSON RecursionError 拒绝 / 负 tick 拒绝（防无界多跑）/ residents 数量与 n 交叉校验 / 写路径 OSError 干净拒绝。
 R39 硬化：snap/world 未知键拒绝（封额外键深嵌套崩溃窗 W1/W2）/ 顶层 RecursionError 兜底（计算/序列化点未知深嵌套干净拒绝）。
-R40 硬化：顶层兜底扩四家族对齐主 demo（ValueError/OSError/OverflowError/RecursionError；孤立代理对 UnicodeEncodeError ⊂ ValueError 干净拒绝）。"""
+R40 硬化：顶层兜底扩四家族对齐主 demo（ValueError/OSError/OverflowError/RecursionError；孤立代理对 UnicodeEncodeError ⊂ ValueError 干净拒绝）。
+R59 硬化：检查点原子替换 Windows 瞬时文件锁短重试（_atomic_replace，与 overnight_town 同模式；瞬时 PermissionError 退避重试/永久失败抛出/happy path，3 项）。"""
 import copy
 import json
 import os
 import tempfile
 import unittest
+from unittest import mock
 
 import distributed_replica as dr
 
@@ -314,6 +316,53 @@ class TestDistributedReplica(unittest.TestCase):
                         dr.main(["--seed", "7", "--agents", "1", "--ticks", "20",
                                  "--checkpoint-dir", d, "--resume", "--mode", mode])
                     self.assertEqual(cm.exception.code, 2)
+
+
+class TestAtomicReplaceRetry(unittest.TestCase):
+    """R59 硬化：Windows 瞬时文件锁短重试（与 overnight_town 同模式）。"""
+
+    def test_happy_path_moves_file(self):
+        with tempfile.TemporaryDirectory() as d:
+            tmp = os.path.join(d, "t.tmp"); target = os.path.join(d, "t.json")
+            with open(tmp, "w") as f:
+                f.write("x")
+            dr._atomic_replace(tmp, target)
+            self.assertFalse(os.path.exists(tmp))
+            with open(target) as f:
+                self.assertEqual(f.read(), "x")
+
+    def test_transient_permission_then_success(self):
+        calls = {"n": 0}
+        real_replace = os.replace
+
+        def flaky(tmp, target):
+            calls["n"] += 1
+            if calls["n"] <= 2:
+                raise PermissionError(13, "模拟瞬时锁")
+            return real_replace(tmp, target)
+
+        with tempfile.TemporaryDirectory() as d:
+            tmp = os.path.join(d, "t.tmp"); target = os.path.join(d, "t.json")
+            with open(tmp, "w") as f:
+                f.write("y")
+            with mock.patch.object(dr.os, "replace", side_effect=flaky), \
+                 mock.patch.object(dr.time, "sleep") as slp:
+                dr._atomic_replace(tmp, target)
+            self.assertEqual(calls["n"], 3)
+            self.assertEqual(slp.call_count, 2)
+            with open(target) as f:
+                self.assertEqual(f.read(), "y")
+
+    def test_permanent_permission_raises(self):
+        with tempfile.TemporaryDirectory() as d:
+            tmp = os.path.join(d, "t.tmp"); target = os.path.join(d, "t.json")
+            with open(tmp, "w") as f:
+                f.write("z")
+            with mock.patch.object(dr.os, "replace", side_effect=PermissionError(13, "永久锁")), \
+                 mock.patch.object(dr.time, "sleep"):
+                with self.assertRaises(PermissionError):
+                    dr._atomic_replace(tmp, target, attempts=3)
+            self.assertTrue(os.path.exists(tmp))
 
 
 if __name__ == "__main__":

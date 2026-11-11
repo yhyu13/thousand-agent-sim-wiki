@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""overnight_town 测试套件 v3.47（55 项）：python -m unittest test_overnight_town -v
+"""overnight_town 测试套件 v3.48（59 项）：python -m unittest test_overnight_town -v
 v2：别名污染回归、检查点隔离、from_dict 等价、边界、计划违例实弹、半开探针、审计顺序、
 体面停机、meta 崩溃安全；v3：存档相位 BLOCKER、回滚后崩溃窗口、分散注入、抽样互质、
 resume 五连、Config 校验；v3.2：语义损坏 ckpt、NaN/CLI 拒绝、记忆剪枝 TTL×3；
@@ -54,13 +54,16 @@ v3.44：R52（ACCEPT 零 MINOR，instrument 证实偏差 66=ok-but-degraded、�
 v3.45：R53（ACCEPT 零 MINOR，恒等式独立推导为代码定理、11 配置全闭合、基数=min(配额,实际需求) 关键发现；重派成功）观察项落实——基数显式定义（conversations_total+reflections_total 报告恒有，非饱和实证 agents20→309/p_bad1.0→291）+ 恒等式标注代码定理/11 配置/全终态路径 + 第三退化路径（降档调用全 malformed/限流终态，充分非穷尽）+ 偏差回滚不变注。**代码无变更、哈希不变**。
 v3.46：R55（ACCEPT，证据层 13 产物全逐字节可复现+跨报告不变量全闭合+双哈希 ckpt 独立重算）观察项①衍生消歧——04 §3.1/demos README「干净跑」改「干净浸泡跑（growth_1000x30，--no-crash 保留风暴；非 clean_* 零失败跑——去风暴改变失败历史故 world_hash 不同）」，消除命名混淆（跨干预不变量限定同风暴配置）。**代码无变更、哈希不变**。
 v3.47：R56（REQUEST_CHANGES 2 MINOR）修复——术语全库清扫（README TL;DR#2 + STATUS 运行记录表「干净跑」→「干净浸泡跑」，活体零残留）；不变量限定收紧「同风暴配置」→「同失败配置（风暴窗口+基线 p_rate/p_bad/p_invalid 均同）」（04/demos README/05 §4），clean_* 差异改二维说明（既去风暴又零化基线概率）；probeB/C 作者独立复现（0fba076d/23ff455c）。**代码无变更、哈希不变**。
+v3.48：R58（ACCEPT 跨文档完整性终审）后验证发现 Windows os.replace 瞬时文件锁（杀软/索引器，PermissionError WinError 5）致 resume 测试间歇 errors——R55 观察项②建议的硬化被实证触发：**save() 原子替换短重试**（_atomic_replace：瞬时 PermissionError 退避重试 5 次、永久失败仍抛、非 PermissionError 不重试，掉电安全语义不变，军规 4/5 通宵检查点可靠性）；test 55→59（+重试 4 项）；distributed_replica 同模式硬化 20→23。**happy path 不变、双哈希/成本/调用数逐位不变**。
 可视化冒烟另见 vis_smoke.js（node vis_smoke.js .，38 项）；对比度实测 contrast_check.py（6 项含 RED）。"""
 import copy
 import json
 import os
 import tempfile
 import unittest
+from unittest import mock
 
+import overnight_town as ot
 from overnight_town import (CheckpointStore, Config, MockLLM, Rng, Supervisor,
                             World, build_day, canonical_hash, do_reflections,
                             fnv1a, gateway, make_snapshot, new_counters,
@@ -777,6 +780,67 @@ class TestRound2Regressions(unittest.TestCase):
         r = run_overnight(cfg(nights=2))
         self.assertIsNone(r["memory_ttl"])
         self.assertEqual(r["counters"]["memories_pruned"], 0)
+
+
+class TestAtomicReplaceRetry(unittest.TestCase):
+    """R59 硬化：Windows 瞬时文件锁（PermissionError/WinError 5）短重试（军规 4/5）。"""
+
+    def test_happy_path_moves_file(self):
+        with tempfile.TemporaryDirectory() as d:
+            tmp = os.path.join(d, "t.tmp"); target = os.path.join(d, "t.json")
+            with open(tmp, "w") as f:
+                f.write("x")
+            ot._atomic_replace(tmp, target)
+            self.assertFalse(os.path.exists(tmp))
+            with open(target) as f:
+                self.assertEqual(f.read(), "x")
+
+    def test_transient_permission_then_success(self):
+        calls = {"n": 0}
+        real_replace = os.replace
+
+        def flaky(tmp, target):
+            calls["n"] += 1
+            if calls["n"] <= 3:
+                raise PermissionError(13, "拒绝访问（模拟杀软瞬时锁）")
+            return real_replace(tmp, target)
+
+        with tempfile.TemporaryDirectory() as d:
+            tmp = os.path.join(d, "t.tmp"); target = os.path.join(d, "t.json")
+            with open(tmp, "w") as f:
+                f.write("y")
+            with mock.patch.object(ot.os, "replace", side_effect=flaky), \
+                 mock.patch.object(ot.time, "sleep") as slp:
+                ot._atomic_replace(tmp, target)
+            self.assertEqual(calls["n"], 4)  # 3 次瞬时失败 + 1 次成功
+            self.assertEqual(slp.call_count, 3)
+            with open(target) as f:
+                self.assertEqual(f.read(), "y")
+
+    def test_permanent_permission_raises(self):
+        with tempfile.TemporaryDirectory() as d:
+            tmp = os.path.join(d, "t.tmp"); target = os.path.join(d, "t.json")
+            with open(tmp, "w") as f:
+                f.write("z")
+            with mock.patch.object(ot.os, "replace", side_effect=PermissionError(13, "永久锁")), \
+                 mock.patch.object(ot.time, "sleep") as slp:
+                with self.assertRaises(PermissionError):
+                    ot._atomic_replace(tmp, target, attempts=4)
+            self.assertEqual(slp.call_count, 3)  # attempts-1 次退避后抛出
+            self.assertTrue(os.path.exists(tmp))  # 永久失败未替换
+
+    def test_non_permission_oserror_no_retry(self):
+        calls = {"n": 0}
+
+        def boom(tmp, target):
+            calls["n"] += 1
+            raise FileNotFoundError(2, "no such file")
+
+        with mock.patch.object(ot.os, "replace", side_effect=boom), \
+             mock.patch.object(ot.time, "sleep"):
+            with self.assertRaises(FileNotFoundError):
+                ot._atomic_replace("a", "b")
+        self.assertEqual(calls["n"], 1)  # 非 PermissionError 立即抛出不重试
 
 
 if __name__ == "__main__":

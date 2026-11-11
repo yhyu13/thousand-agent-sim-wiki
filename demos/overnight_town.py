@@ -32,7 +32,23 @@ import json
 import math
 import os
 import sys
+import time
 from dataclasses import dataclass
+
+
+def _atomic_replace(tmp: str, target: str, attempts: int = 5):
+    """原子替换 + Windows 瞬时文件锁短重试（R59 硬化，军规 4/5）。
+    杀软/索引器可能短暂持有目标文件致 os.replace 抛 PermissionError(WinError 5)；
+    掉电安全语义不变（调用前已 fsync 落盘），仅对瞬时 PermissionError 退避重试，
+    永久失败（最后一次）仍抛出。无锁时首次即成功，行为与 os.replace 一致。"""
+    for i in range(attempts):
+        try:
+            os.replace(tmp, target)
+            return
+        except PermissionError:
+            if i == attempts - 1:
+                raise
+            time.sleep(0.05 * (i + 1))
 
 # ---------------------------------------------------------------------------
 # 确定性随机（对齐 thousand-town 源码约定：FNV-1a hash32 + 派生流隔离 [S16]）
@@ -475,7 +491,7 @@ class CheckpointStore:
                 json.dump(snap, f, ensure_ascii=False, allow_nan=False)
                 f.flush()
                 os.fsync(f.fileno())  # 掉电安全：先落盘再原子替换
-            os.replace(tmp, os.path.join(self.directory, "ckpt.json"))
+            _atomic_replace(tmp, os.path.join(self.directory, "ckpt.json"))
 
     def load(self):
         # 单点语义校验：冷重启/热恢复/回滚三条路径共用（R5 MINOR-2）
