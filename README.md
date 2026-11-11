@@ -2,7 +2,7 @@
 
 > 主题：**千人级 AI 模拟，如何通宵无人值守运行、世界不崩溃、且 ROI 为正。**
 > 服务对象：`bw-town` 千人小镇项目（PRD 见 `../PRD-千人小镇Web引擎.md`），以及未来任何想读这份资料的 LLM agent。
-> 建立日期：2026-11-11 · 状态：v3.34（critic 迭代轮 42；**R26 整体验收原始目标达成**，分布式复刻经 R36–R41 审查 + 硬化并收敛，进度见 [STATUS.md](STATUS.md)）
+> 建立日期：2026-11-11 · 状态：v3.35（critic 迭代轮 43；**R26 整体验收原始目标达成**，分布式复刻经 R36–R41 审查 + 硬化并收敛，发布产物经 R42 fresh clone 端到端审计，进度见 [STATUS.md](STATUS.md)）
 
 ## TL;DR（五条快结论）
 
@@ -36,12 +36,13 @@ python -m unittest test_overnight_town -v
 python -I roi_calculator.py --agents 1000 --steps 48 --activation 0.1
 ```
 
-`overnight_town.py` 用纯 Python 标准库模拟 1000 名居民连续 3 夜：分层认知（T0 规则 / T1 廉价模型 / T2 贵模型）、记忆流+检索+反思+**opt-in 记忆剪枝（--memory-ttl，GA 30 天过期移植）**、限流指数退避+熔断+半开探针、预算封顶降级、真实崩溃→检查点重放、不变量看门狗+自动回滚+体面停机、`--resume` 冷重启（检查点语义校验单点覆盖冷/热/回滚），最后产出「早晨报告」+ 事件流（`--events-out`）。全部失败注入都是种子确定的，**同种子两次运行终态哈希逐位一致**；55 个测试 + 38 项可视化冒烟 + Chromium 对比度实测（6/6 AA）覆盖 critic 轮 1–28 发现的全部回归点（含检查点别名污染与存档相位两个 BLOCKER、可视化 XSS 四向量、schema 校验 73 形态 + 消费点运行时防御纵深，夜班 id 双层独立机制 + NaN/inf/超 float 大整数有限校验（_finite 安全版）+ 深嵌套 JSON RecursionError 干净拒绝 + agents/nights/corrupt_times 量级上限 + 变异击杀基线对照实证）。**`visualize.html` 双击离线打开，拖入报告/事件流/检查点即可看每夜 24h 时间轴与居民记忆流**。真实 LLM 接入见 [07-integration.md](07-integration.md)。
+`overnight_town.py` 用纯 Python 标准库模拟 1000 名居民连续 3 夜：分层认知（T0 规则 / T1 廉价模型 / T2 贵模型）、记忆流+检索+反思+**opt-in 记忆剪枝（--memory-ttl，GA 30 天过期移植）**、限流指数退避+熔断+半开探针、预算封顶降级、真实崩溃→检查点重放、不变量看门狗+自动回滚+体面停机、`--resume` 冷重启（检查点语义校验单点覆盖冷/热/回滚），最后产出「早晨报告」+ 事件流（`--events-out`）。全部失败注入都是种子确定的，**同种子两次运行终态哈希逐位一致**；75 个测试（主演示 55 + 分布式复刻 20）+ 38 项可视化冒烟 + Chromium 对比度实测（6/6 AA）覆盖 critic 轮 1–41 发现的全部回归点（含检查点别名污染与存档相位两个 BLOCKER、可视化 XSS 四向量、schema 校验 73 形态 + 消费点运行时防御纵深，夜班 id 双层独立机制 + NaN/inf/超 float 大整数有限校验（_finite 安全版）+ 深嵌套 JSON RecursionError 干净拒绝 + agents/nights/corrupt_times 量级上限 + 变异击杀基线对照实证）。**`visualize.html` 双击离线打开，拖入报告/事件流/检查点即可看每夜 24h 时间轴与居民记忆流**。真实 LLM 接入见 [07-integration.md](07-integration.md)。
 
 ## 给 LLM 读者的使用约定
 
 - 引用键 `[Sxx]` 一律指向 [sources.md](sources.md) 的登记条目；每条事实性陈述都应能落到一个 `[Sxx]` 或本地 `file:line`。
 - 标注「**假设，待验证**」的内容不是事实，是工程估算或待办（沿用 PRD 写作约定 [S15]）。
 - 页面 ID 稳定（`01`–`07`），小节用 `§` 编号；改内容不改 ID，方便交叉引用。
+- **本地底稿锚点**（`../PRD-千人小镇Web引擎.md`、`../source/`）指向作者 bw-town 工作布局，**不随公开 repo 分发**；外部研究声称均可经 `[Sxx]` 外源核验，demos 完全自包含（零依赖/零网络）。
 - 本地底稿优先级：`../source/`（thousand-town 克隆）> `../PRD-千人小镇Web引擎.md` > 外部网页。外部网页核验日期见 sources.md。
 - demo 代码是**教学 mock**：LLM 是确定性假模型，价格表是真的（[S13]），行为模式对齐论文，但不要把 mock 输出当成真实模型能力证据。

@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-11（v3.34，critic 迭代轮 42；R41 ACCEPT 零新发现，分布式复刻族收敛，轮 42 转发布产物端到端审计）
+更新：2026-11-11（v3.35，critic 迭代轮 43；R42 发布产物 fresh clone 端到端审计 ACCEPT，轮 43 修复 2 活体 stale 计数 MINOR）
 
 ## 迭代模式
 
@@ -59,11 +59,12 @@
 | 39 | **REQUEST_CHANGES**（MINOR，域内反例）：四项窄声称全部实证（59/59 探针：深嵌套多深度/多位置/BOM/非法 UTF-8/重复键、负 tick -(10^400) 0.15s 返回不挂、数量自洽篡改语义正确、写路径 9 形态含不存在盘、边界 E 组 4301 位 seed 拒/4000 位接受/workers 64 真实池）；核心声称 14/14（R35 哈希逐位、w1/2/4/8 跨进程数全同、fp=10/1 双链续跑==全程）；72 测试+38 冒烟+6/6 AA+标准跑 47 字段+events 逐字节（sha256 325d61c4…）；AST 10 函数 IDENTICAL、overnight_town blob 不变。**但证伪搜寻命中域内反例**：world 层**额外键**携带可解析深嵌套通过全部校验后裸崩——W1（深度 498–994，仅 both）copy.deepcopy RecursionError rc=1 / W2（995–2996，全模式）写盘 json.dump RecursionError 逃出 except OSError rc=1；根因：仅解析点捕 RecursionError，未复刻主 demo main() 顶层兜底，且三递归上限不对称（json.load C 扫描器~2996 / json.dump iterencode~994 / deepcopy~497）；README/STATUS「深嵌套均干净拒绝」无限定措辞被证伪。+观察项：写失败留 tmp 残留（原检查点恒完整，原子 replace 未到达，无数据丢失） | wiki v3.33：**snap/world 双层未知键闸门**（set 差集非空→rc=2，一行封 W1+W2；合法检查点恒无额外键，零误拒）+ **main() 顶层 RecursionError 兜底**（与 overnight_town R13 同模式：deepcopy/world_hash/写盘各消费点未知深嵌套干净拒绝；residents 元素内深嵌套属域外——超递归上限 rc=2、未超原样携带 rc=0，均无裸崩）+ 措辞对齐（解析层/未知键/兜底三层限定）；test_distributed_replica 17→**19 测试**（未知键 3 形态含深 800 both + 元素深 1500 兜底 both/sequential） | overnight_town 55/55 + distributed_replica 19/19（合 74）+ 38/38 + 6/6 AA；标准跑 47 平铺字段逐位 + events 63222B 逐字节 + 双哈希不变；36 实弹探针全过（**critic 深度矩阵 497/498/800/994/995/1500/2996/2997 × both/sequential/parallel 全 rc=2** + 元素深 800/1500/2500 无裸崩 + 合法续跑不误拒 + R35 基线复现）；探针预期修正注：800 sequential rc=0 系域外合法携带（无消费点超限），契约为无 rc=1 裸崩 |
 | 40 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，234 探针 + ~70 次上限二分 + 全量回归，域内零反例）：W1/W2 封死（world/snap 额外键 8 深度×3 模式 48 例全 rc=2：≤2996 闸门/2997 解析点）；三上限实测 deepcopy 495/496、world_hash dumps 999/1000、写盘 dump 993/994、load ~2998、repr≥load（**sv/fp 深值 repr 逃逸假设被实验证伪**）；元素深嵌套 44 例 rc∈{0,2} 零裸崩（rc=0 检查点深度逐位==输入，原样携带实证）；零误拒 48/48（fp1/10×agents1/1000×3 模式×fresh/resume）；R35 基线 w1/2/4/8 逐位 + 双 fp 链（ec4a48e9/8e6ee6ea）；新逃逸搜寻 84 例仅命中域外（巨整数 4301 位拒/4300 携带、NaN/Inf rc=0、宽列表 30 万 rc=0、BOM/非法 UTF-8/重复键 rc=2）；OverflowError 无域内路径/MemoryError 需 GB 级域外/json.dump ValueError 不可达；74 测试+38+6/6 AA+47 字段+events sha256 325d61c4…+双哈希；AST 10 内核 IDENTICAL、overnight_town blob 恒等；措辞三层限定逐句吻合。+O-1（域外非缺陷：孤立代理对 \ud800 经元素字符串→world_hash .encode UnicodeEncodeError rc=1 全模式，既有行为不被声称覆盖；建议扩顶层兜底四家族对齐主 demo）/O-2（措辞精度：「R13 同模式」对 RecursionError 增量准确，主 demo 四家族 vs 复刻单家族不对称提示） | wiki v3.34：**顶层兜底扩四家族**（ValueError/OSError/OverflowError/RecursionError，对齐 overnight_town main()；UnicodeEncodeError ⊂ ValueError → 孤立代理对全模式干净 rc=2；域外元素垃圾 TypeError/KeyError 不在兜底家族，保持 rc=1 文档行为不变）+ 域外注/README 措辞精化（编码类错误归兜底、TypeError/KeyError 明示域外）；test_distributed_replica 19→**20 测试**（孤立代理对 note 载体 both/sequential/parallel 3 模式） | overnight_town 55/55 + distributed_replica 20/20（合 75）+ 38/38 + 6/6 AA；标准跑 47 平铺字段逐位 + events 63222B 逐字节 + 双哈希不变；10 实弹探针全过（代理对 note/id 载体×3 模式 rc=2 无 Traceback + 垃圾元素 rc=1 域外行为不变 + 闸门 994 both rc=2 + 合法续跑==全程 + R35 基线复现） |
 | 41 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，150 项独立检查 + 全量回归，域内零反例）：O-1 闭合 36/36（12 载体×3 模式：note/id/role × \ud800/\udfff/分离混合对/多元素带毒/1000 代理仅第 777 带毒，全 rc=2 检查点字节恒不变；正对照相邻转义对合并 U+10000 与 emoji rc=0 round-trip）；**扩家族副作用搜寻 76/76**（域外垃圾 6 形态×3 模式全 rc=1 TypeError/KeyError 逐例核实、NaN/Inf/10^400/4300 位 rc=0 携带不变、**v3.33 父版本对照实跑：唯一行为增量=代理对 rc=1→rc=2 修复本身**、内层写路径文案优先级保持、零误拒 24 跑、元素深 400 原样携带逐位）；核心声称 14/14（R35 w1/2/4/8 逐位、双 fp 链、闸门矩阵）；75 测试+38+6/6 AA+47 字段+整份 deep-equal+events sha256 325d61c4…+双哈希；AST 10 内核 IDENTICAL、main 仅外层 handler 元组+注释、overnight_town blob 恒等；措辞逐句吻合（「四家族对齐」经 overnight_town:1072 同一元组核实为真）。+2 信息性观察（无需动作）：包络文案变更全库无旧引用/--out 文件名代理对 Windows W API rc=0 环境特性 | —（零缺陷，v3.34 不变） | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
-| 42 | 已派出：R42 critic 发布产物端到端审计（公开 wiki fresh clone + SimCity --recurse-submodules fresh clone 实跑 75 测试/哈希基线/文件完整性/跨文档一致性） | 待报告 | — |
+| 42 | **ACCEPT**（发布产物端到端审计，0 BLOCKER/MAJOR，2 MINOR+5 观察项）：公开 wiki fresh clone（HEAD 3ca0991，26 tracked 文件）实跑 75 测试 OK+38 冒烟+6/6 AA+标准跑双哈希/events 63222B sha256 325d61c4…/成本 0.205012/335 调用/0.0775% 全命中+47 字段对照+对照跑逐字节+R35 基线 ec4a48e9…+续跑链 18597c46…+ROI 14 行；文件完整性（18 链接全解析/out/ 6 产物齐全/.gitignore 零误排除/visualize.html 28176B 零外部引用自包含）；**SimCity --recurse-submodules fresh clone**（HEAD 4ce517e，.gitmodules 指向公开 repo，submodule 3ca0991，从 submodule checkout 实跑 75 OK；首次 DNS 瞬时失败 git 自动重试成功如实记录）；跨文档 v3.34 六处活体一致/轮号自洽/S01–S27 连续无缺；发布卫生（敏感模式零命中/私有路径零命中/Assisted-by 8/8）。+MINOR-1（01:64「8 测试守卫」初始提交固化漏网，现行 20）/MINOR-2（README:39「轮 1–28」轮范围滞后，计数本身当前）+观察项（STATUS:66 初始快照 24 项无轮号注/本地底稿锚点发布上下文不可解析属固有边界/.gitmodules SSH 非缺陷/test_replica 无版本标签系约定差异/DNS 瞬时） | wiki v3.35（编辑性，代码无变更）：01:64「8 测试」→**20 测试**（MINOR-1）；README:39「55 测试…轮 1–28」→**75 测试（主 55+复刻 20）…轮 1–41**（MINOR-2）；README 使用约定补**本地底稿不随公开 repo 分发**说明（观察项 2）；STATUS:66 初始快照行加「R32 演进至 38 项」注记（观察项 1）；版本标签全量同步 v3.35 | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变（代码零变更）；哈希/成本/调用数不变；活体 stale 计数全库 sweep 清零 |
+| 43 | 已派出：R43 critic 复核 v3.35 编辑性修复（2 MINOR + 观察项落实 + 活体计数全库 sweep + fresh clone 回归闸门） | 待报告 | — |
 
 ## 进度
 
-- [x] wiki 10 页（01–07 + README/sources/STATUS）+ demos（overnight_town / 55 测试 / roi_calculator / visualize.html / vis_smoke.js 24 项冒烟 / contrast_check.py 6 项实测）
+- [x] wiki 10 页（01–07 + README/sources/STATUS）+ demos（overnight_town / 55 测试 / roi_calculator / visualize.html / vis_smoke.js 24 项冒烟（初始建成快照，R32 演进至 38 项）/ contrast_check.py 6 项实测）
 - [x] 外部来源核验 S01–S27（论文 8 + 代码仓 5 + 仓库文档/代码文件 2 + 平台文档 5 + issues 2 组 + 本地底稿 3 + 定价 2）
 - [x] 论文/代码正文级核验 + 论文-代码差异登记（GA 0.995/0.99、α=1/gw=[0.5,3,2]）
 - [x] GitHub issues 事故挖掘 ×9（8 个入 §15 复盘，#312 仅登记；状态标注经 API 复核：#305/#312 合并；#313/#208/#203 closed-未合并；#309/#307/#211/#210 open）
@@ -114,7 +115,8 @@
 - [x] 轮 39 critic（**REQUEST_CHANGES** MINOR，域内反例：world 额外键深嵌套 W1 deepcopy/W2 写盘裸崩，三递归上限不对称）→ 轮 40 修复（v3.33：snap/world 未知键闸门 + 顶层 RecursionError 兜底 + 措辞对齐，test 17→19）
 - [x] 轮 40 critic（**ACCEPT**，234 探针域内零反例，W1/W2 封死 + 三上限实测 + 零误拒 48/48）→ 轮 41 硬化（v3.34：顶层兜底扩四家族对齐主 demo，孤立代理对干净拒绝，test 19→20）
 - [x] 轮 41 critic（**ACCEPT**，零 BLOCKER/MAJOR/MINOR，150 检查域内零反例，父版本对照证明唯一增量=修复本身）→ 无缺陷修复（v3.34 不变）
-- [ ] 轮 42 critic（发布产物端到端审计：fresh clone 实跑 + 文件完整性 + 跨文档一致性）
+- [x] 轮 42 critic（**ACCEPT**，发布产物 fresh clone 端到端真正可用：双 clone 75 测试全绿 + 全部哈希/字节不变量 + 零敏感信息）→ 轮 43 编辑性修复（v3.35：01 页 8→20 测试、README 轮范围 1–28→1–41 + 75 口径、本地底稿边界说明、初始快照注记）
+- [ ] 轮 43 critic（v3.35 编辑性修复复核 + 活体计数 sweep + fresh clone 回归）
 - [ ] 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务
 
 ## 核验日志
@@ -129,7 +131,7 @@
 | 2026-11-11 轮3 | demo v3 存档相位 BLOCKER 修复（先体检后存档）；33/33 测试；标准跑数字逐位不变 |
 | 2026-11-11 轮4 | 07 两 MAJOR 修复（每夜 token 25.4k/5.9k、Ollama /v1 端点）；**DeepSeek 峰谷计价核验（S26）：北京夜间全 off-peak 半价——通宵天然 ROI 杠杆**；Qwen 现役模型换代确认（S27，qwen-plus/max 已 legacy，单价 ⏳ console） |
 
-## demo 运行记录（v3.34，2026-11-11，Python 3.13.12）
+## demo 运行记录（v3.35，2026-11-11，Python 3.13.12）
 
 | 项 | 结果 |
 | --- | --- |
@@ -137,15 +139,15 @@
 | 分布式复刻（R35） | 1000 代理×144 ticks 焦点 1/10：并行==串行（哈希 ec4a48e9…一致）、确定性双跑一致、检查点续跑==全程（resumed_from 72）；焦点调度 14400/144000 |
 | critic BLOCKER 复现案例（--corrupt-frac 0.2066，相位 X≡5 mod 6） | v2 RED → **v3 GREEN**（288/288，人口 200/200，回滚 1） |
 | 标准通宵（1000×3 夜，全注入） | GREEN ~2s；崩溃恢复1（重放≤6tick）/回滚1；335 次调用覆盖率 0.0775%；$0.205012 |
-| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.34 逐位不变） |
+| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.35 逐位不变） |
 | final_hash（v3.3） | ff7c76832d6e1145…（schema_version=2 所致；v3.2 为 736e8318…、v3 为 594f4f85…，历史记录） |
 | 30 夜×200 人增长跑 | GREEN 70s；记忆 6804（人均34）；检查点 2.09MB；对话 2520+反思 1200；$2.90；熔断开4关1 |
 | 剪枝跑（ttl=7×30 夜） | GREEN；剪枝 4548、存留 2256（-67%）；检查点 1.22MB（-42%）；$2.9013 |
 | ROI 估算器 | qwen-max ≈¥370.42（历史口径）；Haiku $2.01→缓存+Batch $0.50；DeepSeek Flash 谷时 $2.90→70%命中 $1.24 [S26]；Qwen 现价（轮 24，北京区）qwen3.8-max $30.56→Batch $15.28 / qwen3.7-flash $0.54（04 §1.5） |
 
-## 下一步（轮 43）
+## 下一步（轮 44）
 
-1. 轮 42 critic 报告 → 修复（发布产物端到端审计）；
+1. 轮 43 critic 报告 → 修复（v3.35 编辑性修复复核）；
 2. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
 3. 可选深化：分布式最小复刻（Ray 路线 [S08]）、可视化增强（居民详情/记忆查看器）；
 4. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。
