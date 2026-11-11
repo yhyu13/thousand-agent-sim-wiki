@@ -1,0 +1,104 @@
+{
+  "status": "GREEN",
+  "seed": 20261111,
+  "nights_planned": 30,
+  "agents": 1000,
+  "ticks_completed": 4320,
+  "ticks_planned": 4320,
+  "resumed_from_tick": 1728,
+  "sim_days": 30.0,
+  "population_final": 1000,
+  "counters": {
+    "conversations_llm": 2348,
+    "conversations_degraded": 172,
+    "reflections_accepted": 1073,
+    "reflections_rejected": 39,
+    "reflections_degraded": 88,
+    "rate_limit_hits": 82,
+    "malformed_hits": 142,
+    "breaker_opens": 1,
+    "breaker_skips": 45,
+    "breaker_closes": 1,
+    "backoff_skips": 67,
+    "budget_degradations": 0,
+    "budget_refusals": 0,
+    "memories_pruned": 0
+  },
+  "conversations_total": 2520,
+  "reflections_total": 1200,
+  "llm_calls": 3684,
+  "llm_coverage_pct": 0.0853,
+  "tokens": {
+    "T1": [
+      1487568,
+      192933
+    ],
+    "T2": [
+      1111668,
+      255018
+    ]
+  },
+  "cost_usd": 2.9055,
+  "memory_ttl": null,
+  "memories_pruned": 0,
+  "budget_cap_usd": 20.0,
+  "budget_used_pct": 14.53,
+  "cost_per_event_usd": 0.000781,
+  "cost_per_llm_event_usd": 0.000849,
+  "interventions_rollbacks": 1,
+  "violations_detected": 1,
+  "violations_unresolved": [],
+  "audit_summary": {
+    "plan_patch": 1073,
+    "patch_rejected": 39,
+    "breaker_open": 1,
+    "breaker_close": 1,
+    "rollback": 1
+  },
+  "audit_entries": 1115,
+  "sample_events": [
+    {
+      "type": "conversation",
+      "day": 0,
+      "minute": 720,
+      "a": "guard-017",
+      "b": "nurse-023",
+      "loc": "park",
+      "mode": "llm",
+      "text": "guard-017 对 nurse-023 说：「哈哈，guard总是这样。」"
+    },
+    {
+      "type": "conversation",
+      "day": 0,
+      "minute": 720,
+      "a": "guard-041",
+      "b": "guard-047",
+      "loc": "park",
+      "mode": "llm",
+      "text": "guard-041 对 guard-047 说：「哈哈，guard总是这样。」"
+    },
+    {
+      "type": "conversation",
+      "day": 29,
+      "minute": 1290,
+      "a": "miner-021",
+      "b": "student-049",
+      "loc": "restaurant",
+      "mode": "llm",
+      "text": "miner-021 对 student-049 说：「哈哈，restaurant总是这样。」"
+    },
+    {
+      "type": "conversation",
+      "day": 29,
+      "minute": 1290,
+      "a": "engineer-023",
+      "b": "miner-006",
+      "loc": "restaurant",
+      "mode": "llm",
+      "text": "engineer-023 对 miner-006 说：「关于restaurant，我同意一半。」"
+    }
+  ],
+  "world_hash": "d8dd773b14946496c0f3fdde07a1c319ccd4d7912cf6f5e75b60f66d1407efe2",
+  "final_hash": "d5b0bd8a38aa956d1dd3569db65bd8c89accb397ee4434b69ae023fffd5d9ad9",
+  "crashes_recovered": 1
+}

@@ -1,0 +1,104 @@
+{
+  "status": "GREEN",
+  "seed": 42,
+  "nights_planned": 30,
+  "agents": 1000,
+  "ticks_completed": 4320,
+  "ticks_planned": 4320,
+  "resumed_from_tick": 1728,
+  "sim_days": 30.0,
+  "population_final": 1000,
+  "counters": {
+    "conversations_llm": 2330,
+    "conversations_degraded": 190,
+    "reflections_accepted": 1063,
+    "reflections_rejected": 40,
+    "reflections_degraded": 97,
+    "rate_limit_hits": 80,
+    "malformed_hits": 152,
+    "breaker_opens": 2,
+    "breaker_skips": 80,
+    "breaker_closes": 2,
+    "backoff_skips": 49,
+    "budget_degradations": 0,
+    "budget_refusals": 0,
+    "memories_pruned": 0
+  },
+  "conversations_total": 2520,
+  "reflections_total": 1200,
+  "llm_calls": 3665,
+  "llm_coverage_pct": 0.0848,
+  "tokens": {
+    "T1": [
+      1477277,
+      192724
+    ],
+    "T2": [
+      1112125,
+      254720
+    ]
+  },
+  "cost_usd": 2.903219,
+  "memory_ttl": null,
+  "memories_pruned": 0,
+  "budget_cap_usd": 20.0,
+  "budget_used_pct": 14.52,
+  "cost_per_event_usd": 0.00078,
+  "cost_per_llm_event_usd": 0.000856,
+  "interventions_rollbacks": 1,
+  "violations_detected": 1,
+  "violations_unresolved": [],
+  "audit_summary": {
+    "plan_patch": 1063,
+    "patch_rejected": 40,
+    "breaker_open": 2,
+    "breaker_close": 2,
+    "rollback": 1
+  },
+  "audit_entries": 1108,
+  "sample_events": [
+    {
+      "type": "conversation",
+      "day": 0,
+      "minute": 720,
+      "a": "guard-002",
+      "b": "nurse-047",
+      "loc": "park",
+      "mode": "llm",
+      "text": "guard-002 对 nurse-047 说：「哈哈，guard总是这样。」"
+    },
+    {
+      "type": "conversation",
+      "day": 0,
+      "minute": 720,
+      "a": "guard-029",
+      "b": "nurse-047",
+      "loc": "park",
+      "mode": "llm",
+      "text": "guard-029 对 nurse-047 说：「我对guard有点新想法。」"
+    },
+    {
+      "type": "conversation",
+      "day": 29,
+      "minute": 1290,
+      "a": "engineer-023",
+      "b": "doctor-004",
+      "loc": "restaurant",
+      "mode": "llm",
+      "text": "engineer-023 对 doctor-004 说：「关于park，我同意一半。」"
+    },
+    {
+      "type": "conversation",
+      "day": 29,
+      "minute": 1290,
+      "a": "student-048",
+      "b": "fisher-037",
+      "loc": "restaurant",
+      "mode": "llm",
+      "text": "student-048 对 fisher-037 说：「restaurant的事，我觉得挺好。」"
+    }
+  ],
+  "world_hash": "783204895e082bd58786e3a99b39f23db4bb76c05ccf18169147510a9d1a125c",
+  "final_hash": "b7a3793f792a5a08d8f98c06008be2e2db6535bdd3743dd1b1ee40b5f297c1ea",
+  "crashes_recovered": 1
+}
