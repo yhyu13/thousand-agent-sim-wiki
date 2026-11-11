@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""overnight_town 测试套件 v3.32（55 项）：python -m unittest test_overnight_town -v
+"""overnight_town 测试套件 v3.33（55 项）：python -m unittest test_overnight_town -v
 v2：别名污染回归、检查点隔离、from_dict 等价、边界、计划违例实弹、半开探针、审计顺序、
 体面停机、meta 崩溃安全；v3：存档相位 BLOCKER、回滚后崩溃窗口、分散注入、抽样互质、
 resume 五连、Config 校验；v3.2：语义损坏 ckpt、NaN/CLI 拒绝、记忆剪枝 TTL×3；
@@ -39,6 +39,7 @@ v3.29：R35（ACCEPT）可选深化——S24 补 Python 限定；新增分布式
 v3.30：R36（ACCEPT）分布式复刻硬化——检查点记录并校验 focal_period、resume schema 校验、量级上限、唯一 id/段统计语义注、README 签名对齐；test_distributed_replica 8→11。**overnight_town.py 无变更、哈希不变**。
 v3.31：R37（ACCEPT 硬化复核，52 断言全过）分布式复刻值类型硬化——resume 值类型校验（seed/n/tick 须 int 排除 bool、residents 须 list，键齐全但值损坏干净 rc=2）+ schema_version 读取校验（仅支持整数 1）+ focal_period 严格整数化（封 True==1/10.0==10 等值陷阱）；test_distributed_replica 11→13。**overnight_town.py 无变更、哈希不变**。
 v3.32：R38（ACCEPT，106 探针域内零穿透）四项闭合——深嵌套合法 JSON RecursionError 捕获（与 R13 同型）+ 负 tick 拒绝（防 -(10^400) 挂死绕过上限）+ residents 数量与 n 交叉校验 + 检查点/报告写路径 OSError 干净拒绝；test_distributed_replica 13→17。**overnight_town.py 无变更、哈希不变**。
+v3.33：R39（REQUEST_CHANGES MINOR，域内反例：world 额外键深嵌套 W1 deepcopy/W2 写盘裸崩，三递归上限不对称 load~2996/dump~994/deepcopy~497）——snap/world 双层未知键闸门 + main() 顶层 RecursionError 兜底（与本 demo R13 同模式）+ 措辞三层限定；test_distributed_replica 17→19。**overnight_town.py 无变更、哈希不变**。
 可视化冒烟另见 vis_smoke.js（node vis_smoke.js .，38 项）；对比度实测 contrast_check.py（6 项含 RED）。"""
 import copy
 import json

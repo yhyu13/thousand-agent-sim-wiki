@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""distributed_replica 测试套件（17 项）：python -m unittest test_distributed_replica -v
+"""distributed_replica 测试套件（19 项）：python -m unittest test_distributed_replica -v
 守卫规模化路线的确定性基础：无状态 worker / 命名空间 RNG / 排序施加 / 并行==串行 / 检查点续跑。
 R36 硬化：续跑 focal_period 不匹配拒绝 / 损坏检查点拒绝 / 量级上限。
 R37 硬化：键齐全但值类型损坏拒绝（bool 不算整数）/ schema_version 读取校验 / focal_period 严格整数化（封 True==1、10.0==10 等值陷阱）。
-R38 硬化：深嵌套合法 JSON RecursionError 拒绝 / 负 tick 拒绝（防无界多跑）/ residents 数量与 n 交叉校验 / 写路径 OSError 干净拒绝。"""
+R38 硬化：深嵌套合法 JSON RecursionError 拒绝 / 负 tick 拒绝（防无界多跑）/ residents 数量与 n 交叉校验 / 写路径 OSError 干净拒绝。
+R39 硬化：snap/world 未知键拒绝（封额外键深嵌套崩溃窗 W1/W2）/ 顶层 RecursionError 兜底（计算/序列化点未知深嵌套干净拒绝）。"""
 import copy
 import json
 import os
@@ -241,6 +242,61 @@ class TestDistributedReplica(unittest.TestCase):
                 dr.main(["--seed", "7", "--agents", "10", "--ticks", "2", "--mode", "sequential",
                          "--checkpoint-dir", regular_file])
             self.assertEqual(cm.exception.code, 2)
+
+    def test_resume_unknown_keys(self):
+        """R39：snap/world 未知键拒绝（封额外键携带深嵌套的 W1 deepcopy/W2 写盘崩溃窗）。"""
+        with tempfile.TemporaryDirectory() as d:
+            ck = os.path.join(d, "dist_ckpt.json")
+            # world 额外键（浅值）
+            snap = {"schema_version": 1, "focal_period": 10,
+                    "world": {"seed": 7, "n": 1, "tick": 5, "extra": 1,
+                              "residents": [{"id": "r-0000", "role": "resident", "energy": 60}]}}
+            with open(ck, "w", encoding="utf-8") as f:
+                json.dump(snap, f)
+            with self.subTest(form="world_extra_shallow"):
+                with self.assertRaises(SystemExit) as cm:
+                    dr.main(["--seed", "7", "--agents", "1", "--ticks", "20",
+                             "--checkpoint-dir", d, "--resume", "--mode", "both"])
+                self.assertEqual(cm.exception.code, 2)
+            # world 额外键（深 800，可解析；旧版 both 模式 deepcopy 裸崩窗）
+            payload = ('{"schema_version":1,"focal_period":10,"world":{"seed":7,"n":1,"tick":5,'
+                       '"residents":[{"id":"r-0000","role":"resident","energy":60}],"extra":'
+                       + "[" * 800 + "0" + "]" * 800 + "}}")
+            with open(ck, "w", encoding="utf-8") as f:
+                f.write(payload)
+            with self.subTest(form="world_extra_deep800_both"):
+                with self.assertRaises(SystemExit) as cm:
+                    dr.main(["--seed", "7", "--agents", "1", "--ticks", "20",
+                             "--checkpoint-dir", d, "--resume", "--mode", "both"])
+                self.assertEqual(cm.exception.code, 2)
+            # snap 顶层额外键
+            snap2 = {"schema_version": 1, "focal_period": 10, "extra": 1,
+                     "world": {"seed": 7, "n": 1, "tick": 5,
+                               "residents": [{"id": "r-0000", "role": "resident", "energy": 60}]}}
+            with open(ck, "w", encoding="utf-8") as f:
+                json.dump(snap2, f)
+            with self.subTest(form="snap_extra"):
+                with self.assertRaises(SystemExit) as cm:
+                    dr.main(["--seed", "7", "--agents", "1", "--ticks", "20",
+                             "--checkpoint-dir", d, "--resume", "--mode", "sequential"])
+                self.assertEqual(cm.exception.code, 2)
+
+    def test_deep_nesting_residents_envelope(self):
+        """R39：residents 元素内深嵌套（域外载体）由顶层 RecursionError 兜底干净拒绝。
+        深度 1500：> deepcopy 上限(~500) 且 > json.dump 上限(~1000)、< json.load 上限(~3000)。"""
+        payload = ('{"schema_version":1,"focal_period":10,"world":{"seed":7,"n":1,"tick":5,'
+                   '"residents":[{"id":"r-0000","role":"resident","energy":60,"deep":'
+                   + "[" * 1500 + "0" + "]" * 1500 + "}]}}")
+        with tempfile.TemporaryDirectory() as d:
+            ck = os.path.join(d, "dist_ckpt.json")
+            with open(ck, "w", encoding="utf-8") as f:
+                f.write(payload)
+            for mode in ("both", "sequential"):
+                with self.subTest(mode=mode):
+                    with self.assertRaises(SystemExit) as cm:
+                        dr.main(["--seed", "7", "--agents", "1", "--ticks", "20",
+                                 "--checkpoint-dir", d, "--resume", "--mode", mode])
+                    self.assertEqual(cm.exception.code, 2)
 
 
 if __name__ == "__main__":

@@ -176,14 +176,19 @@ def main(argv=None):
             p.error(f"--resume：检查点读取失败（{ck}）：{e}")
         if not isinstance(snap, dict) or not isinstance(snap.get("world"), dict):
             p.error("--resume：检查点格式错误（缺 world 对象）")
+        if set(snap) - {"schema_version", "focal_period", "world"}:
+            p.error("--resume：检查点含未知顶层键（仅允许 schema_version/focal_period/world）")
         sv = snap.get("schema_version")
         if type(sv) is not int or sv != 1:
             p.error(f"--resume：不支持的检查点 schema_version={sv!r}（仅支持整数 1；bool/float 不算整数）")
         world = snap["world"]
         if not all(k in world for k in ("seed", "n", "tick", "residents")):
             p.error("--resume：检查点 world 缺必需字段（seed/n/tick/residents）")
+        if set(world) - {"seed", "n", "tick", "residents"}:
+            p.error("--resume：检查点 world 含未知键（仅允许 seed/n/tick/residents；封额外键深嵌套崩溃窗 R39）")
         # 值类型校验（R37 O-1a/b）：键齐全但值损坏也须干净拒绝；type() is int 排除 bool。
-        # 域外说明：residents 元素内部结构不做逐条深校验（仅数量与 n 交叉校验；教学复刻，检查点由本程序自身写出）。
+        # 域外说明：residents 元素内部结构不做逐条深校验（仅数量与 n 交叉校验；教学复刻，检查点由本程序自身写出）；
+        # 元素内未知深嵌套形态由 main() 顶层 RecursionError 兜底干净拒绝（与 overnight_town R13 同模式）。
         if (type(world["seed"]) is not int or type(world["n"]) is not int
                 or type(world["tick"]) is not int or not isinstance(world["residents"], list)):
             p.error("--resume：检查点字段类型错误（seed/n/tick 须为整数，residents 须为列表；bool 不算整数）")
@@ -202,67 +207,73 @@ def main(argv=None):
     else:
         world = init_world(a.seed, a.agents)
 
-    remaining = a.ticks - start_tick
-    report = {"seed": a.seed, "agents": a.agents, "ticks_planned": a.ticks,
-              "resumed_from_tick": start_tick, "focal_period": a.focal_period}
+    # 顶层 RecursionError 兜底（与 overnight_town main() 同模式，R39）：三个递归上限不对称
+    # （json.load C 扫描器 ~3000 / json.dump iterencode ~1000 / copy.deepcopy ~500），
+    # 解析点捕获之外，计算/序列化点（deepcopy/world_hash/写盘）遇未知深嵌套形态亦干净拒绝。
+    try:
+        remaining = a.ticks - start_tick
+        report = {"seed": a.seed, "agents": a.agents, "ticks_planned": a.ticks,
+                  "resumed_from_tick": start_tick, "focal_period": a.focal_period}
 
-    if a.mode == "both":
-        import copy
-        w_seq = copy.deepcopy(world)
-        w_par = copy.deepcopy(world)
-        f_seq = run_sequential(w_seq, remaining, a.focal_period)
-        f_par = run_parallel(w_par, remaining, a.focal_period, a.workers)
-        h_seq, h_par = world_hash(w_seq), world_hash(w_par)
-        report["mode"] = "both"
-        report["sequential_hash"] = h_seq
-        report["parallel_hash"] = h_par
-        report["parallel_equals_sequential"] = (h_seq == h_par)
-        report["focal_total"] = f_par
-        world = w_par
-        if h_seq != h_par:
-            print("错误：并行 != 串行（确定性被破坏）", file=sys.stderr)
-            return 1
-    elif a.mode == "parallel":
-        report["focal_total"] = run_parallel(world, remaining, a.focal_period, a.workers)
-        report["mode"] = "parallel"
-    else:
-        report["focal_total"] = run_sequential(world, remaining, a.focal_period)
-        report["mode"] = "sequential"
+        if a.mode == "both":
+            import copy
+            w_seq = copy.deepcopy(world)
+            w_par = copy.deepcopy(world)
+            f_seq = run_sequential(w_seq, remaining, a.focal_period)
+            f_par = run_parallel(w_par, remaining, a.focal_period, a.workers)
+            h_seq, h_par = world_hash(w_seq), world_hash(w_par)
+            report["mode"] = "both"
+            report["sequential_hash"] = h_seq
+            report["parallel_hash"] = h_par
+            report["parallel_equals_sequential"] = (h_seq == h_par)
+            report["focal_total"] = f_par
+            world = w_par
+            if h_seq != h_par:
+                print("错误：并行 != 串行（确定性被破坏）", file=sys.stderr)
+                return 1
+        elif a.mode == "parallel":
+            report["focal_total"] = run_parallel(world, remaining, a.focal_period, a.workers)
+            report["mode"] = "parallel"
+        else:
+            report["focal_total"] = run_sequential(world, remaining, a.focal_period)
+            report["mode"] = "sequential"
 
-    report["ticks_completed"] = world["tick"]
-    report["world_hash"] = world_hash(world)
+        report["ticks_completed"] = world["tick"]
+        report["world_hash"] = world_hash(world)
 
-    if a.checkpoint_dir:
-        try:
-            os.makedirs(a.checkpoint_dir, exist_ok=True)
-            ck = os.path.join(a.checkpoint_dir, "dist_ckpt.json")
-            tmp = ck + ".tmp"
-            with open(tmp, "w", encoding="utf-8") as f:
-                json.dump({"schema_version": 1, "focal_period": a.focal_period, "world": world}, f, ensure_ascii=False)
-                f.flush()
-                os.fsync(f.fileno())
-            os.replace(tmp, ck)
-        except OSError as e:
-            p.error(f"检查点写入失败（{a.checkpoint_dir}）：{e}")
+        if a.checkpoint_dir:
+            try:
+                os.makedirs(a.checkpoint_dir, exist_ok=True)
+                ck = os.path.join(a.checkpoint_dir, "dist_ckpt.json")
+                tmp = ck + ".tmp"
+                with open(tmp, "w", encoding="utf-8") as f:
+                    json.dump({"schema_version": 1, "focal_period": a.focal_period, "world": world}, f, ensure_ascii=False)
+                    f.flush()
+                    os.fsync(f.fileno())
+                os.replace(tmp, ck)
+            except OSError as e:
+                p.error(f"检查点写入失败（{a.checkpoint_dir}）：{e}")
 
-    print("=== 分布式复刻报告 ===")
-    print("模式: %s · %d 代理 x %d ticks · 焦点周期 1/%d" %
-          (report["mode"], a.agents, world["tick"], a.focal_period))
-    print("焦点调度总数（本次运行段，非累计）: %d（其余走规则层，零 LLM 成本）" % report["focal_total"])
-    if a.mode == "both":
-        print("并行 == 串行: %s" % report["parallel_equals_sequential"])
-        print("  sequential_hash: %s" % report["sequential_hash"])
-        print("  parallel_hash:   %s" % report["parallel_hash"])
-    print("world_hash: %s" % report["world_hash"])
-    print("论点：无状态 worker + 命名空间 RNG + 排序施加补丁 → 可并行且可复现 [S08]。")
+        print("=== 分布式复刻报告 ===")
+        print("模式: %s · %d 代理 x %d ticks · 焦点周期 1/%d" %
+              (report["mode"], a.agents, world["tick"], a.focal_period))
+        print("焦点调度总数（本次运行段，非累计）: %d（其余走规则层，零 LLM 成本）" % report["focal_total"])
+        if a.mode == "both":
+            print("并行 == 串行: %s" % report["parallel_equals_sequential"])
+            print("  sequential_hash: %s" % report["sequential_hash"])
+            print("  parallel_hash:   %s" % report["parallel_hash"])
+        print("world_hash: %s" % report["world_hash"])
+        print("论点：无状态 worker + 命名空间 RNG + 排序施加补丁 → 可并行且可复现 [S08]。")
 
-    if a.out:
-        try:
-            with open(a.out, "w", encoding="utf-8") as f:
-                json.dump(report, f, ensure_ascii=False, indent=2)
-        except OSError as e:
-            p.error(f"报告写入失败（{a.out}）：{e}")
-    return 0
+        if a.out:
+            try:
+                with open(a.out, "w", encoding="utf-8") as f:
+                    json.dump(report, f, ensure_ascii=False, indent=2)
+            except OSError as e:
+                p.error(f"报告写入失败（{a.out}）：{e}")
+        return 0
+    except RecursionError as e:
+        p.error(f"状态嵌套过深，无法处理（干净拒绝）：{e}")
 
 
 if __name__ == "__main__":
