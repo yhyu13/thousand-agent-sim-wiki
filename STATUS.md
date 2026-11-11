@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-11（v3.47，critic 迭代轮 57；R56 REQUEST_CHANGES 2 MINOR，轮 57 术语全库清扫 + 不变量限定收紧为同失败配置）
+更新：2026-11-11（v3.47，critic 迭代轮 58；R57 ACCEPT 零 MINOR 清扫+限定证实，轮 58 转全库跨文档完整性终审）
 
 ## 迭代模式
 
@@ -74,7 +74,8 @@
 | 54 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，3 零动作观察项；14 配置 plain+instrument 双跑零扰动）：fresh clone（HEAD 813f6c6）**基数定义独立推导为代码定理**（gateway 恰 2 调用点 :544/:576、llm.call 恰 1 处 :355、每槽恰增一个结果计数器 :607 恒执行、报告字段即其和 :792-794、回滚/崩溃/续跑同时恢复 counters+llm :717-719/:774-776、save 深拷贝防别名 :471 → B=conv_total+refl_total=网关槽数重放恰计一次，与配置无关）；非饱和实证 agents20→B309（conv252+refl57）/p_bad1.0+budget0.05→B291（conv252+refl39）与 R53 逐值吻合；**证伪尝试全失败**（ttl=1 极短记忆/corrupt-plan 回滚/crash 恢复/冷重启 resume/p_invalid1.0 全拒绝/batch/**RED 体面停机**恒等式与基数全闭合，「报告恒有」不过宽；ttl=0 被 Config 校验拒绝系防御非反例）；第三退化路径证实（p_bad1.0+budget0.05 budget_deg26>0 okbd0 降档全 malformed，gateway :342-345 降档后走正常失败路径 :383/:368）；回滚不变直接证明（corrupt-plan0.5 物理 378 槽 vs 报告 372，重放 6 槽物理两次报告一次）；7 终态路径全覆盖（breaker_skip 由入库 inject 51/80/45 触发）；措辞/版本/轮号全自洽；回归闸门 75/38/6AA/三产物逐字节/三 inject 代入 3672/3665/3684 基数 3720=2520+1200；diff 恰 6 文件 7 blob 相同+test AST 去 docstring 相等 ZERO_CODE_CHANGE_PROVEN；工作副本零污染。+观察项（零动作）：①brief 预期 calls=291 仅 --p-rate 0 成立（默认 p_rate0.02→295），文档只声称 B=291 正确非缺陷②「min(配额,需求)」概念 gloss 精确为逐夜逐分量 min，操作性定义已精确③05 缩写预存域外。**核算式族收敛（R48–R54 七轮，终为代码定理+全终态路径覆盖）** | —（零缺陷，v3.45 不变） | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
 | 55 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，3 零动作观察项；证据层整体可复现性审计）：fresh clone（HEAD bf59ebe）**13 产物全部逐字节可复现**（双口径 CRLF 工作树+LF blob，15 作业 rc=0 含 3 带 ckpt 双跑确定性，3 并行零差异；本机 1000×30 约 52–70s 带 ckpt 180–210s）；命令与 05/demos README/STATUS 逐参核对、报告权威字段吻合；events 结构闭合（333 行=252 conv+81 audit）；**跨报告不变量全闭合**：核算恒等式×12（budget_deg 全 0→okbd0）、world_hash 关系网（morning==control 2fe29e0a/growth1000==inject18 770fa4f6/ttl 28f6e2c8/三种子互异/growth200==growth_ttl30）、**双哈希从 4 份 ckpt 独立重算证实非 stale**、成本分解 12 报告 tokens+缓存模型独立重算唯一整数解 6 位精确（clean 差 −0.013417 output −0.0139010/input +0.0004842、inject 差 +0.004870、失败效应 +0.018287）、记忆公式 ckpt 自数（9204/9200/4656/9201/6804/2256 人格永驻零违例 ttl kind 分解 1344+312+3000）、TTL 剪枝人口无关 4548；**brief 预期纠正**：「clean_* 与 inject 同种子 world_hash 相同」不成立且 wiki 从未声称——跨干预不变量限定同风暴配置，04「干净跑」=growth 浸泡跑（保留风暴），补跑 growth42==inject42 78320489 实证；全量闸门 75/38/6AA（前两次 WinError5 系宿主 TEMP 覆盖缺失+os.replace 瞬时锁，环境受控后连续 75/75，非代码缺陷）+分布式 ec4a48e9 锚点；文档锚点零漂移（9204/3.04MB/2.8983/4548/2.18MB/-28.5%/286/220/66/6804/2256/1190B/6204 等全命中）；v3.45 活体一致/轮号自洽；diff 仅 README+STATUS 代码零变更；工作副本零污染。+观察项（零动作）：①brief 误读已纠正（wiki 口径正确，建议后续 brief 沿用）②测试闸门宿主环境瞬时（可选 save() Windows PermissionError 短重试，非缺陷无需改）③复现时长快于估计 | wiki v3.46：观察项①衍生消歧——04 §3.1 与 demos README「干净跑」改「**干净浸泡跑**（growth_1000x30，--no-crash 保留风暴；非 clean_* 零失败跑——去风暴改变失败历史故 world_hash 不同）」，消除「干净跑」与「clean_*」命名混淆（R55 纠正的误读风险） | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
 | 56 | **REQUEST_CHANGES**（0 BLOCKER/MAJOR，2 MINOR+2 零动作观察项）：fresh clone（HEAD 7a83dd5）核心消歧**正确且强证实**——growth42 浸泡自跑 world==inject_s42 78320489 成本 2.903219/调用 3665 逐位（全 JSON 逐键仅 7 干预/审计字段异）、growth18 与入库双口径逐字节（证实 growth 命令 --no-crash 无 --no-storm 括注准确）；代码机理链核实（:630-634 风暴窗 p_rate0.8/p_bad0.6、:273-274 限流提前 return 跳过 :276 out 抽样→RNG 移位、:1065 --no-crash 只关注入崩溃、:1067 storm 独立开关）；**证伪探针**：probeB（风暴开+p_*=0）0fba076d≠78320489 证「同风暴配置」非充分限定、probeC（风暴关+默认 p_*）23ff455c 证去风暴单独变哈希、clean_s42≠probeC 证零化 p_* 亦变哈希（二维差异）；全量闸门 75/38/6AA/三产物双口径逐字节（TEMP 受控首次即过无 WinError5）；v3.46 活体一致/轮号自洽；diff 恰 6 文件 blob+AST 双证 ZERO_CODE_CHANGE_PROVEN；工作副本零污染。**+MINOR-1（术语清扫不完整）：「干净跑」活体残留 2 处——README:10 TL;DR#2（冷读者第一接触最显眼处）+ STATUS:172 运行记录表**，违反全库消歧目的（陈述为真且链向已消歧 04 缓解，但 brief 判据全库零残留）；**+MINOR-2（限定语欠完整有反例）：04「同风暴配置」非充分（probeB），完整应为「同失败配置（风暴窗口+基线 p_rate/p_bad/p_invalid 均同）」；clean_* 差异二维（去风暴+零化基线概率）文本仅归因一维（真实但不完整，04 同段已列全 clean_* 命令故非错误属简写）；沿袭 05 §4:64 既有「相同风暴配置」表述宜一并收紧**。+观察项（零动作）：①测试 stderr 宿主真实路径系 junction 映射环境虚拟化非缺陷②05 §4:64 与 04 共用「同风暴」简写宜同步 | wiki v3.47：2 MINOR 修复——**术语全库清扫**（README:10 TL;DR + STATUS:172 运行记录表「干净跑」→「干净浸泡跑」，活体零残留）；**不变量限定收紧**（04 §3.1/demos README/05 §4:63-64「同风暴配置」→「**同失败配置（风暴窗口+基线 p_rate/p_bad/p_invalid 均同）**」，clean_* 差异说明改二维「既去风暴又零化基线概率」）；probeB/C 作者独立复现精确吻合（0fba076d/23ff455c）入文 | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
-| 57 | 已派出：R57 critic 复核 v3.47（术语全库零残留 + 同失败配置限定准确性 + probeB/C 复现 + 无回归） | 待报告 | — |
+| 57 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，4 零动作观察项）：fresh clone（HEAD 264eaab）**术语清扫通过**（全库 grep 7 命中全历史/元描述豁免，活体零残留，新术语四处落位 README:10/04:127/demos README:96/STATUS:174）；**限定收紧准确完整**（自跑 growth42/probeB/probeC 精确吻合 78320489/0fba076d/23ff455c，四者互异 four_all_distinct=True，二维差异闭合）；**证伪探针判定限定适切**：--batch world==base3（计价不改 world_hash，:285-286 仅 c*=0.5，补「同计价模式」反错）、--budget0.05 world 变（降级写规则记忆，军规 11 治理+对照非绑定）、--memory-ttl1/--agents200 world 变（ceteris paribus 隐含）→「同失败配置」对跨干预目的准确完整，要求补人口/TTL/计价属过度限定；回归闸门 75/38/6AA/三产物逐字节；v3.47 活体一致/轮号自洽；diff 恰 7 文件 blob+AST 双证 ZERO_CODE_CHANGE；工作副本零污染。+观察项（零动作）：①预算系失败配置枚举外改世界维度但限定适切、计价不改 world_hash②STATUS:76 摘要把 demos README 归入短语替换实为二维说明（元描述简写豁免）③stderr WinError183 系检查点写失败演练+junction 虚拟化非缺陷④inject 行 172→174 轮表增长内容正确 | —（零缺陷，v3.47 不变） | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
+| 58 | 已派出：R58 critic 全库跨文档完整性终审（[Sxx]/§/页面 ID 引用完整性 + 跨文档数字一致性 + 链接解析 + 版本轮号 coherence） | 待报告 | — |
 
 ## 进度
 
@@ -144,7 +145,8 @@
 - [x] 轮 54 critic（**ACCEPT**，零 MINOR，14 配置证伪全失败含 RED 停机/冷重启，基数=代码定理，核算式族 R48–R54 收敛）→ 无缺陷修复（v3.45 不变）
 - [x] 轮 55 critic（**ACCEPT**，证据层 13 产物全逐字节可复现 + 跨报告不变量全闭合 + 双哈希 ckpt 独立重算 + 文档锚点零漂移）→ 轮 56（v3.46：「干净跑」术语消歧，消除与 clean_* 命名混淆）
 - [x] 轮 56 critic（**REQUEST_CHANGES** 2 MINOR：TL;DR/运行记录表「干净跑」残留 + 「同风暴配置」限定欠完整 probeB 反例）→ 轮 57（v3.47：术语全库清扫 + 限定收紧为同失败配置 + 二维差异说明）
-- [ ] 轮 57 critic（v3.47 清扫与限定复核）
+- [x] 轮 57 critic（**ACCEPT**，零 MINOR，清扫活体零残留 + 限定准确完整 + probeB/C 精确吻合 + batch 不改 world_hash 证伪判定限定适切）→ 无缺陷修复（v3.47 不变）
+- [ ] 轮 58 critic（全库跨文档完整性终审）
 - [ ] 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务
 
 ## 核验日志
@@ -177,9 +179,9 @@
 | 剪枝跑（ttl=7×30 夜） | GREEN；剪枝 4548、存留 2256（-67%）；检查点 1.22MB（-42%）；$2.9013 |
 | ROI 估算器 | qwen-max ≈¥370.42（历史口径）；Haiku $2.01→缓存+Batch $0.50；DeepSeek Flash 谷时 $2.90→70%命中 $1.24 [S26]；Qwen 现价（轮 24，北京区）qwen3.8-max $30.56→Batch $15.28 / qwen3.7-flash $0.54（04 §1.5） |
 
-## 下一步（轮 58）
+## 下一步（轮 59）
 
-1. 轮 57 critic 报告 → 修复（v3.47 清扫与限定复核）；
+1. 轮 58 critic 报告 → 修复（全库跨文档完整性终审）；
 2. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
 3. 可选深化：**Ray 版**分布式复刻（[S08]；stdlib 教学复刻 R35 已落地、R41 收敛，居民记忆查看器 R30 已落地、R32 收敛——两者不再列为待做）；
 4. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。
