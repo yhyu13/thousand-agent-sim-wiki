@@ -1,0 +1,237 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+distributed_replica.py — 分布式规模化路线最小复刻（零依赖，纯标准库）
+====================================================================
+演示 AgentSociety 2 [S08] 的「无状态执行体 + 确定性世界 + 焦点激活」规模化路线，
+用 stdlib multiprocessing 替代 Ray（教学复刻，非生产分布式框架）。
+
+核心论点（01 页 §2 路线 B / 02 页架构）：
+  * 世界层是确定性的纯数据；worker 是**无状态纯函数**（输入→补丁，不共享可变状态）。
+  * 每个 worker 的 RNG 由 (seed, resident_id, tick) 命名空间派生（FNV-1a + mulberry32，
+    与 overnight_town.py / resident-plan.js 同常量），故执行顺序无关。
+  * 补丁按 resident_id 排序后施加 → **并行结果 == 串行结果**（可复现，军规2）。
+  * 焦点激活：每 tick 只调度确定性子集（军规1），其余走规则层，成本第一杠杆。
+
+与 overnight_town.py 的关系：后者是单进程全量小镇（含 LLM 网关/记忆/看门狗）；
+本文件剥离出「可并行化的无状态计算内核」，证明规模化路线的确定性基础。
+
+用法：
+  python -I distributed_replica.py --seed 20260818 --agents 1000 --ticks 144 --workers 4 --mode both
+  python -I distributed_replica.py --checkpoint-dir out/dist --ticks 144   # 落检查点
+  python -I distributed_replica.py --checkpoint-dir out/dist --resume --ticks 288  # 续跑
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import multiprocessing as mp
+import os
+import sys
+
+
+def fnv1a(text: str) -> int:
+    """FNV-1a 32bit，与 overnight_town.py / resident-plan.js:50 同常量。"""
+    h = 0x811C9DC5
+    for ch in text:
+        h ^= ord(ch)
+        h = (h * 0x01000193) & 0xFFFFFFFF
+    return h
+
+
+class Rng:
+    """mulberry32：单 uint32 状态，可序列化（军规5）。"""
+
+    def __init__(self, seed: int):
+        self.state = seed & 0xFFFFFFFF
+
+    def next_u32(self) -> int:
+        self.state = (self.state + 0x6D2B79F5) & 0xFFFFFFFF
+        t = self.state
+        t = ((t ^ (t >> 15)) * (t | 1)) & 0xFFFFFFFF
+        t = (t ^ ((t + (((t ^ (t >> 7)) * (t | 61)) & 0xFFFFFFFF)) & 0xFFFFFFFF)) & 0xFFFFFFFF
+        return (t ^ (t >> 14)) & 0xFFFFFFFF
+
+    def randint(self, n: int) -> int:
+        return self.next_u32() % n
+
+
+def canonical_hash(obj) -> str:
+    blob = json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
+# ---------------------------------------------------------------------------
+# 无状态 worker：纯函数 (seed, tick, resident, focal) -> patch。
+# 不读写任何全局/共享状态；RNG 由 (seed:id:tick) 命名空间派生 → 顺序无关（军规2/3）。
+# 必须为模块顶层函数（Windows spawn 可 pickle）。
+# ---------------------------------------------------------------------------
+def step_resident(job):
+    seed, tick, resident, focal = job
+    rid = resident["id"]
+    rng = Rng(fnv1a(f"{seed}:{rid}:{tick}"))
+    energy = resident["energy"]
+    if focal:
+        # 焦点代理：反思消耗能量（对应 T2 贵档低频认知）
+        delta = -(1 + rng.randint(5))
+        action = "reflect"
+    else:
+        # 非焦点：规则层休整（对应 T0 规则，零 LLM 成本）
+        delta = rng.randint(3)
+        action = "idle"
+    new_energy = max(0, min(100, energy + delta))
+    return {"id": rid, "energy": new_energy, "action": action, "tick": tick}
+
+
+def init_world(seed: int, n: int):
+    residents = []
+    for i in range(n):
+        rng = Rng(fnv1a(f"{seed}:init:{i}"))
+        residents.append({"id": f"r-{i:04d}", "role": "resident",
+                          "energy": 60 + rng.randint(41)})
+    return {"seed": seed, "n": n, "tick": 0, "residents": residents}
+
+
+def focal_ids(world, focal_period: int):
+    """确定性焦点选择：每 tick 旋转子集（军规1）。与执行顺序无关。"""
+    tick = world["tick"]
+    return {r["id"] for i, r in enumerate(world["residents"])
+            if i % focal_period == tick % focal_period}
+
+
+def apply_patches(world, patches):
+    """补丁按 id 排序施加 → 并行/串行结果一致（军规2）。"""
+    by_id = {r["id"]: r for r in world["residents"]}
+    focal_count = 0
+    for p in sorted(patches, key=lambda x: x["id"]):
+        by_id[p["id"]]["energy"] = p["energy"]
+        if p["action"] == "reflect":
+            focal_count += 1
+    world["tick"] += 1
+    return focal_count
+
+
+def run_sequential(world, ticks: int, focal_period: int):
+    focal_total = 0
+    for _ in range(ticks):
+        focal = focal_ids(world, focal_period)
+        jobs = [(world["seed"], world["tick"], r, r["id"] in focal)
+                for r in world["residents"]]
+        patches = [step_resident(j) for j in jobs]
+        focal_total += apply_patches(world, patches)
+    return focal_total
+
+
+def run_parallel(world, ticks: int, focal_period: int, workers: int):
+    focal_total = 0
+    with mp.Pool(processes=workers) as pool:
+        for _ in range(ticks):
+            focal = focal_ids(world, focal_period)
+            jobs = [(world["seed"], world["tick"], r, r["id"] in focal)
+                    for r in world["residents"]]
+            patches = pool.map(step_resident, jobs)
+            focal_total += apply_patches(world, patches)
+    return focal_total
+
+
+def world_hash(world):
+    return canonical_hash({"tick": world["tick"], "residents": world["residents"]})
+
+
+def main(argv=None):
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8")
+    p = argparse.ArgumentParser(description="分布式规模化路线最小复刻（无状态 worker + 确定性世界）")
+    p.add_argument("--seed", type=int, default=20260818)
+    p.add_argument("--agents", type=int, default=1000)
+    p.add_argument("--ticks", type=int, default=144)
+    p.add_argument("--focal-period", type=int, default=10, help="焦点激活周期（每 tick 1/period 代理）")
+    p.add_argument("--workers", type=int, default=4)
+    p.add_argument("--mode", choices=["parallel", "sequential", "both"], default="both")
+    p.add_argument("--checkpoint-dir")
+    p.add_argument("--resume", action="store_true")
+    p.add_argument("--out")
+    a = p.parse_args(argv)
+    if a.agents < 1 or a.ticks < 0 or a.focal_period < 1 or a.workers < 1:
+        p.error("agents/focal-period/workers 须 >= 1，ticks 须 >= 0")
+
+    start_tick = 0
+    if a.resume:
+        if not a.checkpoint_dir:
+            p.error("--resume 需 --checkpoint-dir")
+        ck = os.path.join(a.checkpoint_dir, "dist_ckpt.json")
+        if not os.path.exists(ck):
+            p.error(f"--resume：未找到检查点 {ck}")
+        with open(ck, encoding="utf-8") as f:
+            snap = json.load(f)
+        world = snap["world"]
+        if world["seed"] != a.seed or world["n"] != a.agents:
+            p.error(f"--resume 配置不匹配：检查点 seed={world['seed']}/n={world['n']}")
+        start_tick = world["tick"]
+        if a.ticks < start_tick:
+            p.error(f"--resume：ticks={a.ticks} 小于检查点进度 {start_tick}")
+    else:
+        world = init_world(a.seed, a.agents)
+
+    remaining = a.ticks - start_tick
+    report = {"seed": a.seed, "agents": a.agents, "ticks_planned": a.ticks,
+              "resumed_from_tick": start_tick, "focal_period": a.focal_period}
+
+    if a.mode == "both":
+        import copy
+        w_seq = copy.deepcopy(world)
+        w_par = copy.deepcopy(world)
+        f_seq = run_sequential(w_seq, remaining, a.focal_period)
+        f_par = run_parallel(w_par, remaining, a.focal_period, a.workers)
+        h_seq, h_par = world_hash(w_seq), world_hash(w_par)
+        report["mode"] = "both"
+        report["sequential_hash"] = h_seq
+        report["parallel_hash"] = h_par
+        report["parallel_equals_sequential"] = (h_seq == h_par)
+        report["focal_total"] = f_par
+        world = w_par
+        if h_seq != h_par:
+            print("错误：并行 != 串行（确定性被破坏）", file=sys.stderr)
+            return 1
+    elif a.mode == "parallel":
+        report["focal_total"] = run_parallel(world, remaining, a.focal_period, a.workers)
+        report["mode"] = "parallel"
+    else:
+        report["focal_total"] = run_sequential(world, remaining, a.focal_period)
+        report["mode"] = "sequential"
+
+    report["ticks_completed"] = world["tick"]
+    report["world_hash"] = world_hash(world)
+
+    if a.checkpoint_dir:
+        os.makedirs(a.checkpoint_dir, exist_ok=True)
+        ck = os.path.join(a.checkpoint_dir, "dist_ckpt.json")
+        tmp = ck + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump({"schema_version": 1, "world": world}, f, ensure_ascii=False)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, ck)
+
+    print("=== 分布式复刻报告 ===")
+    print("模式: %s · %d 代理 x %d ticks · 焦点周期 1/%d" %
+          (report["mode"], a.agents, world["tick"], a.focal_period))
+    print("焦点调度总数: %d（其余走规则层，零 LLM 成本）" % report["focal_total"])
+    if a.mode == "both":
+        print("并行 == 串行: %s" % report["parallel_equals_sequential"])
+        print("  sequential_hash: %s" % report["sequential_hash"])
+        print("  parallel_hash:   %s" % report["parallel_hash"])
+    print("world_hash: %s" % report["world_hash"])
+    print("论点：无状态 worker + 命名空间 RNG + 排序施加补丁 → 可并行且可复现 [S08]。")
+
+    if a.out:
+        with open(a.out, "w", encoding="utf-8") as f:
+            json.dump(report, f, ensure_ascii=False, indent=2)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

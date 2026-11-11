@@ -1,0 +1,102 @@
+{
+  "status": "GREEN",
+  "seed": 20260818,
+  "nights_planned": 3,
+  "agents": 1000,
+  "ticks_completed": 432,
+  "ticks_planned": 432,
+  "resumed_from_tick": 168,
+  "sim_days": 3.0,
+  "population_final": 1000,
+  "counters": {
+    "conversations_llm": 235,
+    "conversations_degraded": 17,
+    "reflections_accepted": 79,
+    "reflections_rejected": 1,
+    "reflections_degraded": 40,
+    "rate_limit_hits": 9,
+    "malformed_hits": 11,
+    "breaker_opens": 0,
+    "breaker_skips": 0,
+    "breaker_closes": 0,
+    "backoff_skips": 45,
+    "budget_degradations": 0,
+    "budget_refusals": 0,
+    "memories_pruned": 0
+  },
+  "conversations_total": 252,
+  "reflections_total": 120,
+  "llm_calls": 335,
+  "llm_coverage_pct": 0.0775,
+  "tokens": {
+    "T1": [
+      149804,
+      19538
+    ],
+    "T2": [
+      76194,
+      17573
+    ]
+  },
+  "cost_usd": 0.205012,
+  "memory_ttl": null,
+  "memories_pruned": 0,
+  "budget_cap_usd": 2.0,
+  "budget_used_pct": 10.25,
+  "cost_per_event_usd": 0.000551,
+  "cost_per_llm_event_usd": 0.000653,
+  "interventions_rollbacks": 1,
+  "violations_detected": 1,
+  "violations_unresolved": [],
+  "audit_summary": {
+    "plan_patch": 79,
+    "rollback": 1,
+    "patch_rejected": 1
+  },
+  "audit_entries": 81,
+  "sample_events": [
+    {
+      "type": "conversation",
+      "day": 0,
+      "minute": 720,
+      "a": "nurse-026",
+      "b": "nurse-044",
+      "loc": "park",
+      "mode": "llm",
+      "text": "nurse-026 对 nurse-044 说：「nurse……让我想想。」"
+    },
+    {
+      "type": "conversation",
+      "day": 0,
+      "minute": 720,
+      "a": "guard-029",
+      "b": "nurse-017",
+      "loc": "park",
+      "mode": "llm",
+      "text": "guard-029 对 nurse-017 说：「guard……让我想想。」"
+    },
+    {
+      "type": "conversation",
+      "day": 2,
+      "minute": 1290,
+      "a": "engineer-003",
+      "b": "farmer-041",
+      "loc": "restaurant",
+      "mode": "llm",
+      "text": "engineer-003 对 farmer-041 说：「park这事，得问问家里人。」"
+    },
+    {
+      "type": "conversation",
+      "day": 2,
+      "minute": 1290,
+      "a": "student-020",
+      "b": "teacher-038",
+      "loc": "restaurant",
+      "mode": "llm",
+      "text": "student-020 对 teacher-038 说：「说起park，我昨天也遇到了。」"
+    }
+  ],
+  "world_hash": "2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260",
+  "final_hash": "ff7c76832d6e11451c9780b709346e1c31b5c73562a16964a98bdc41cfd07818",
+  "crashes_recovered": 1
+}

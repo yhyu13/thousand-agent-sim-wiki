@@ -1,0 +1,104 @@
+{
+  "status": "GREEN",
+  "seed": 20260818,
+  "nights_planned": 30,
+  "agents": 200,
+  "ticks_completed": 4320,
+  "ticks_planned": 4320,
+  "resumed_from_tick": 0,
+  "sim_days": 30.0,
+  "population_final": 200,
+  "counters": {
+    "conversations_llm": 2347,
+    "conversations_degraded": 173,
+    "reflections_accepted": 1090,
+    "reflections_rejected": 36,
+    "reflections_degraded": 74,
+    "rate_limit_hits": 75,
+    "malformed_hits": 124,
+    "breaker_opens": 4,
+    "breaker_skips": 51,
+    "breaker_closes": 1,
+    "backoff_skips": 67,
+    "budget_degradations": 0,
+    "budget_refusals": 0,
+    "memories_pruned": 0
+  },
+  "conversations_total": 2520,
+  "reflections_total": 1200,
+  "llm_calls": 3672,
+  "llm_coverage_pct": 0.425,
+  "tokens": {
+    "T1": [
+      1484781,
+      194264
+    ],
+    "T2": [
+      1112042,
+      254119
+    ]
+  },
+  "cost_usd": 2.897915,
+  "memory_ttl": 30,
+  "memories_pruned": 0,
+  "budget_cap_usd": 20.0,
+  "budget_used_pct": 14.49,
+  "cost_per_event_usd": 0.000779,
+  "cost_per_llm_event_usd": 0.000843,
+  "interventions_rollbacks": 0,
+  "violations_detected": 0,
+  "violations_unresolved": [],
+  "audit_summary": {
+    "plan_patch": 1090,
+    "patch_rejected": 36,
+    "breaker_open": 2,
+    "breaker_reopen": 2,
+    "breaker_close": 1
+  },
+  "audit_entries": 1131,
+  "sample_events": [
+    {
+      "type": "conversation",
+      "day": 0,
+      "minute": 720,
+      "a": "guard-002",
+      "b": "guard-005",
+      "loc": "park",
+      "mode": "llm",
+      "text": "guard-002 对 guard-005 说：「我对guard有点新想法。」"
+    },
+    {
+      "type": "conversation",
+      "day": 0,
+      "minute": 720,
+      "a": "guard-002",
+      "b": "guard-005",
+      "loc": "park",
+      "mode": "llm",
+      "text": "guard-002 对 guard-005 说：「关于park，我同意一半。」"
+    },
+    {
+      "type": "conversation",
+      "day": 29,
+      "minute": 1290,
+      "a": "vet-002",
+      "b": "weaver-007",
+      "loc": "restaurant",
+      "mode": "llm",
+      "text": "vet-002 对 weaver-007 说：「restaurant吗？下班再聊！」"
+    },
+    {
+      "type": "conversation",
+      "day": 29,
+      "minute": 1290,
+      "a": "teacher-006",
+      "b": "student-002",
+      "loc": "restaurant",
+      "mode": "llm",
+      "text": "teacher-006 对 student-002 说：「restaurant的事，我觉得挺好。」"
+    }
+  ],
+  "world_hash": "991ca20c7f41a0d8efdf381da82c4bcdb89a1df6b4be74bc981b0b8950cf4f65",
+  "final_hash": "d2dd51a80d3799a0031fbd027542101e9ceaade4f7ac8ae5f199e9b6d152a04e",
+  "crashes_recovered": 0
+}

@@ -1,0 +1,15 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# 可再生的大型增长检查点（用文档命令复现；保留小体积报告与 events 示例）
+demos/out/growth_ckpt/
+demos/out/growth_ttl7_ckpt/
+demos/out/growth_ttl_ckpt/
+
+# OS / editor / misc
+.DS_Store
+Thumbs.db
+*.log
+tmp/

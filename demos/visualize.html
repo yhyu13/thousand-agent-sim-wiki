@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>千人小镇 · 早晨报告可视化</title>
+<style>
+  :root {
+    --bg: #f7f8fa; --card: #ffffff; --text: #1c2733; --muted: #52616f;
+    --line: #e3e8ee; --accent: #1d4ed8; --ok: #15803d; --warn: #b45309;
+    --bad: #b91c1c; --rule: #94a3b8; --shadow: 0 1px 3px rgba(16,24,40,.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f172a; --card: #1e293b; --text: #e2e8f0; --muted: #a8b8cc;
+      --line: #334155; --accent: #60a5fa; --ok: #4ade80; --warn: #fbbf24;
+      --bad: #f87171; --rule: #64748b; --shadow: 0 1px 3px rgba(0,0,0,.4);
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; background: var(--bg); color: var(--text);
+         font: 14px/1.6 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 28px 0 10px; }
+  .sub { color: var(--muted); margin-bottom: 18px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+          padding: 16px; box-shadow: var(--shadow); }
+  .badge { display: inline-block; padding: 2px 12px; border-radius: 999px;
+           font-weight: 700; font-size: 13px; color: #fff; }
+  .badge.GREEN { background: var(--ok); } .badge.RED { background: var(--bad); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .stat .k { color: var(--muted); font-size: 12px; }
+  .stat .v { font-size: 22px; font-weight: 700; margin-top: 2px; }
+  .stat .d { color: var(--muted); font-size: 12px; }
+  .bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin-top: 6px; }
+  .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
+  .drop { border: 2px dashed var(--line); border-radius: 10px; padding: 18px;
+          text-align: center; color: var(--muted); margin-bottom: 16px; }
+  .drop.over { border-color: var(--accent); color: var(--accent); }
+  .drop label { color: var(--accent); cursor: pointer; text-decoration: underline; }
+  input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .drop label:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .tabs button { background: var(--card); border: 1px solid var(--line); color: var(--text);
+                 padding: 4px 14px; border-radius: 999px; cursor: pointer; font-size: 13px; }
+  .tabs button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  svg { width: 100%; height: auto; display: block; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; }
+  .mono { font-family: ui-monospace, Consolas, monospace; font-size: 12px; word-break: break-all; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+  .note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .ev { padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .ev:last-child { border-bottom: none; }
+  .pill { display:inline-block; font-size: 11px; padding: 1px 8px; border-radius: 999px;
+          border: 1px solid var(--line); color: var(--muted); margin-right: 6px; }
+  /* 暗色覆盖置于样式表末尾：同特异性、更后源顺序生效（R8 MINOR-1：
+     此前放在基础规则之前被 .badge{color:#fff} 覆盖，实测无效） */
+  @media (prefers-color-scheme: dark) {
+    .badge { color: #0f172a; }
+    .tabs button.on { color: #0f172a; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>千人小镇 · 早晨报告可视化</h1>
+  <div class="sub">overnight_town.py 运行产物查看器 · 零依赖单文件 · 离线可用（file:// 双击打开）</div>
+
+  <div class="drop" id="drop">
+    拖入 <b>morning_report.json</b>、<b>events.jsonl</b>（--events-out 导出）与 <b>ckpt.json</b>（检查点，居民记忆流），或
+    <label for="fr" tabindex="0" role="button">选择报告</label><input type="file" id="fr" accept=".json">
+    <label for="fe" tabindex="0" role="button">选择事件流</label><input type="file" id="fe" accept=".jsonl,.json,.txt">
+    <label for="fc" tabindex="0" role="button">选择检查点</label><input type="file" id="fc" accept=".json">
+    <div class="note" id="loadstate">当前显示：内置合成示例（非真实运行数据）</div>
+  </div>
+
+  <div id="app"></div>
+</div>
+<script>
+"use strict";
+const ANCHORS = [["黎明",300],["起床",360],["通勤",420],["上班",480],["午饭",720],["下午",840],["下班",1020],["晚饭",1140],["入睡",1320]];
+const INTERVENTIONS = new Set(["rollback","breaker_open","breaker_reopen","breaker_close","patch_rejected","budget_downgrade"]);
+const state = { report: null, events: [], night: 0,
+                realReport: false, realEvents: false, reportName: "", eventsName: "",
+                checkpoint: null, realCheckpoint: false, checkpointName: "", selectedResident: 0 };
+
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g,
+    c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function fmt(n, d) { return n == null ? "—" : Number(n).toFixed(d == null ? 0 : d); }
+function dayLabel(d) { if (d == null) return "?"; const n = Number(d); return Number.isFinite(n) ? String(n + 1) : "?"; }
+
+// ---- 内置合成示例（确定性 LCG，明确标注非真实数据）----
+function synth() {
+  let s = 20260818;
+  const rnd = () => (s = (s * 1103515245 + 12345) % 2147483648) / 2147483648;
+  const events = [];
+  const slots = [720,750,780,810,1020,1050,1080,1110,1140,1170,1200,1230,1260,1290];
+  for (let day = 0; day < 3; day++) {
+    for (const m of slots) {
+      const n = 2 + Math.floor(rnd() * 4);
+      for (let i = 0; i < n; i++) {
+        const mode = rnd() < 0.92 ? "llm" : "rule";
+        events.push({ type:"conversation", day, minute:m + Math.floor(rnd()*20),
+          a:"resident-" + (1+Math.floor(rnd()*20)), b:"resident-" + (1+Math.floor(rnd()*20)),
+          loc:["plaza","park","restaurant"][Math.floor(rnd()*3)], mode,
+          text:"（合成示例对话）" });
+      }
+    }
+    for (let i = 0; i < 30; i++)
+      events.push({ _stream:"audit", type:"plan_patch", day, minute:1320, target:"resident-"+(1+i), scope:"behavior" });
+  }
+  events.push({ _stream:"audit", type:"breaker_open", day:1, minute:760, detail:"合成示例：限流熔断" });
+  events.push({ _stream:"audit", type:"rollback", day:2, minute:1030, detail:"合成示例：污染回滚" });
+  events.push({ _stream:"audit", type:"patch_rejected", day:2, minute:1320, target:"resident-9", reason:"focus 越界" });
+  const conv = events.filter(e => e.type === "conversation");
+  const report = {
+    status:"GREEN", seed:20260818, nights_planned:3, agents:1000,
+    ticks_completed:432, ticks_planned:432, sim_days:3, population_final:1000,
+    resumed_from_tick:0, crashes_recovered:1, interventions_rollbacks:1,
+    violations_detected:1, violations_unresolved:[],
+    conversations_total:conv.length,
+    counters:{ conversations_llm:conv.filter(e=>e.mode==="llm").length,
+      conversations_degraded:conv.filter(e=>e.mode==="rule").length,
+      reflections_accepted:30, reflections_rejected:2, reflections_degraded:8,
+      rate_limit_hits:5, backoff_skips:20, breaker_opens:1, breaker_closes:1,
+      malformed_hits:6, budget_degradations:0, budget_refusals:0, memories_pruned:0 },
+    reflections_total:40, llm_calls:123, llm_coverage_pct:0.05,
+    tokens:{ T1:[12000,1500], T2:[8000,1200] },
+    cost_usd:0.123456, budget_cap_usd:1, budget_used_pct:12.35,
+    cost_per_event_usd:0.0004, cost_per_llm_event_usd:0.0005,
+    memory_ttl:null, audit_summary:{ plan_patch:30, rollback:1, patch_rejected:1, breaker_open:1 },
+    audit_entries:33, sample_events:conv.slice(0,2).concat(conv.slice(-2)),
+    world_hash:"（合成示例）", final_hash:"（合成示例）"
+  };
+  const residents = [];
+  const roles = ["baker", "nurse", "teacher"];
+  for (let i = 0; i < 3; i++) {
+    const mems = [];
+    for (let j = 0; j < 4; j++)
+      mems.push({ day: 0, minute: 480 + j*120, text: "（合成记忆 " + (i+1) + "-" + (j+1) + "）",
+        importance: 3 + j, kind: j === 0 ? "identity" : "event", keywords: ["合成", "示例"] });
+    residents.push({ id: roles[i] + "-00" + (i+1), role: roles[i], home: "home-" + (i+1),
+      work: "work-" + (i+1), focus: "social", imp_sum: 10, last_ref_day: 0, memories: mems });
+  }
+  const plans = {};
+  for (const rr of residents)
+    plans[rr.id] = [{ start: 0, end: 360, state: "sleep", location: rr.home },
+      { start: 480, end: 720, state: "work", location: rr.work }];
+  const checkpoint = { schema_version: 2, tick: 144,
+    world: { seed: 20260818, n: 3, day: 1, abs_minute: 1440, residents, plans, events: [], audit: [] } };
+  return { report, events, checkpoint };
+}
+
+// ---- 文件载入（R7 MAJOR-2：真实/合成来源分离标注；载入新报告清空旧事件）----
+function ingest(name, text) {
+  const t = text.replace(/^﻿/, "").trim();
+  let whole = null;
+  try { whole = JSON.parse(t); } catch (e) { /* 多行 JSONL → 落入事件流分支 */ }
+  const isReport = whole && typeof whole === "object" && !Array.isArray(whole) && "status" in whole;
+  const isCheckpoint = whole && typeof whole === "object" && !Array.isArray(whole)
+    && "tick" in whole && whole.world && Array.isArray(whole.world.residents);
+  if (isReport) {
+    state.report = whole;
+    state.realReport = true; state.reportName = name;
+    state.events = []; state.realEvents = false; state.eventsName = "";
+  } else if (isCheckpoint) {
+    // 检查点独立载入（不清空报告/事件）；居民记忆流查看器数据源
+    state.checkpoint = whole;
+    state.realCheckpoint = true; state.checkpointName = name; state.selectedResident = 0;
+  } else {
+    // 逐行容错：畸形行（截断/null/标量）跳过，全无效才整文件拒绝（R8 MINOR-4 / R9 观察项）
+    const lines = t.split("\n").filter(l => l.trim());
+    const evs = [];
+    for (const l of lines) {
+      try {
+        const e = JSON.parse(l);
+        if (e && typeof e === "object" && !Array.isArray(e)) evs.push(e);
+      } catch (err) { /* 跳过畸形行 */ }
+    }
+    if (lines.length && !evs.length) throw new Error("无有效事件行");
+    state.events = evs;
+    state.realEvents = true; state.eventsName = name;
+  }
+  state.night = 0;
+  updateLoadState();
+}
+function updateLoadState() {
+  const el = document.getElementById("loadstate");
+  let base;
+  if (state.realReport && state.realEvents)
+    base = "已载入：" + state.reportName + " + " + state.eventsName + "（真实运行数据）";
+  else if (state.realReport)
+    base = "已载入：" + state.reportName + "（真实报告）；时间轴为合成示例——请再载入 events.jsonl";
+  else if (state.realEvents)
+    base = "已载入：" + state.eventsName + "（真实事件流）；概览为合成示例——请再载入 morning_report.json";
+  else
+    base = "当前显示：内置合成示例（非真实运行数据）";
+  if (state.realCheckpoint) base += " · 检查点 " + state.checkpointName + "（居民记忆流真实）";
+  el.textContent = base;
+}
+function readFile(f) {
+  const r = new FileReader();
+  r.onerror = () => alert("读取失败：" + f.name);
+  r.onload = () => {
+    try { ingest(f.name, r.result); }
+    catch (e) { alert("解析失败：" + f.name + "\n" + e.message); return; }
+    try { render(); }
+    catch (e) { alert("渲染失败（数据已载入但字段异常）：" + e.message); }
+  };
+  r.readAsText(f, "utf-8");
+}
+document.getElementById("fr").addEventListener("change", e => { if (e.target.files[0]) readFile(e.target.files[0]); });
+document.getElementById("fe").addEventListener("change", e => { if (e.target.files[0]) readFile(e.target.files[0]); });
+document.getElementById("fc").addEventListener("change", e => { if (e.target.files[0]) readFile(e.target.files[0]); });
+const drop = document.getElementById("drop");
+drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("over"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+drop.addEventListener("drop", e => {
+  e.preventDefault(); drop.classList.remove("over");
+  for (const f of e.dataTransfer.files) readFile(f);
+});
+
+// ---- 渲染：概览与统计 ----
+function stat(k, v, d) {
+  return '<div class="card stat"><div class="k">' + esc(k) + '</div><div class="v">' + v +
+         '</div><div class="d">' + (d || "") + '</div></div>';
+}
+function renderOverview(r) {
+  const c = r.counters || {};
+  const budgetPct = Math.min(100, Number(r.budget_used_pct) || 0);
+  const banner = state.realReport ? "" :
+    '<div class="card" style="margin-bottom:12px;border-color:var(--warn)"><b style="color:var(--warn)">概览为内置合成示例</b>（非真实运行数据）——载入 morning_report.json 后替换。</div>';
+  return banner + '<div class="card" style="margin-bottom:12px">' +
+    '<span class="badge ' + esc(r.status) + '">' + esc(r.status) + '</span> ' +
+    '<b>seed ' + esc(r.seed) + '</b> · ' + esc(r.agents) + ' 居民 · ' +
+    esc(r.ticks_completed) + '/' + esc(r.ticks_planned) + ' ticks（' + esc(r.sim_days) + ' 模拟天）' +
+    ' · 人口 ' + esc(r.population_final) + '/' + esc(r.agents) +
+    (r.resumed_from_tick ? ' · 续跑点 tick ' + esc(r.resumed_from_tick) : '') +
+    '</div><div class="grid">' +
+    stat("成本 / 封顶", "$" + fmt(r.cost_usd, 4),
+      '$' + fmt(r.budget_cap_usd, 2) + ' 封顶 · ' + fmt(r.budget_used_pct, 1) + '%' +
+      '<div class="bar"><i style="width:' + budgetPct + '%"></i></div>') +
+    stat("LLM 覆盖率", fmt(r.llm_coverage_pct, 4) + "%", esc(r.llm_calls) + " 次尝试 / " +
+      ((r.agents||0)*(r.ticks_completed||0)).toLocaleString() + " 代理-tick") +
+    stat("对话", esc(r.conversations_total), "LLM " + esc(c.conversations_llm) + " · 规则兜底 " + esc(c.conversations_degraded)) +
+    stat("反思", esc(r.reflections_total), "采纳 " + esc(c.reflections_accepted) + " · 拒绝 " + esc(c.reflections_rejected) + " · 降级 " + esc(c.reflections_degraded)) +
+    stat("干预吸收", esc((r.crashes_recovered||0)+(r.interventions_rollbacks||0)),
+      "崩溃恢复 " + esc(r.crashes_recovered) + " · 回滚 " + esc(r.interventions_rollbacks) +
+      " · 熔断开/关 " + esc(c.breaker_opens) + "/" + esc(c.breaker_closes)) +
+    stat("不变量违例", esc(r.violations_detected), "未解决 " + esc((r.violations_unresolved||[]).length) +
+      " · 限流 " + esc(c.rate_limit_hits) + " · 退避 " + esc(c.backoff_skips) + " · 坏JSON " + esc(c.malformed_hits)) +
+    '</div>';
+}
+// ---- 渲染：24h 时间轴（SVG，每夜一条）----
+function renderTimeline(r) {
+  const nights = Math.min(Number(r.nights_planned) || 1, 366);  // 上限防挂死（R7 MINOR-6）
+  const evs = state.realEvents ? state.events : synth().events;
+  let tabs = '<div class="tabs">';
+  for (let d = 0; d < nights; d++)
+    tabs += '<button data-night="' + d + '" class="' + (d === state.night ? "on" : "") + '">第 ' + (d+1) + ' 夜</button>';
+  tabs += '</div>';
+  const day = state.night;
+  const convs = evs.filter(e => e.type === "conversation" && e.day === day);
+  const audits = evs.filter(e => e._stream === "audit" && e.day === day);
+  let svg = '<svg viewBox="0 0 1440 150" role="img" aria-label="第' + (day+1) + '夜 24 小时事件时间轴">';
+  svg += '<rect x="720" y="10" width="120" height="100" fill="var(--accent)" opacity="0.07"/>';
+  svg += '<rect x="1020" y="10" width="300" height="100" fill="var(--accent)" opacity="0.07"/>';
+  for (const [name, m] of ANCHORS) {
+    svg += '<line x1="' + m + '" y1="10" x2="' + m + '" y2="110" stroke="var(--line)" stroke-width="1"/>' +
+           '<text x="' + m + '" y="124" font-size="10" fill="var(--muted)" text-anchor="middle">' + name + '</text>';
+  }
+  for (let h = 0; h <= 24; h += 2)
+    svg += '<text x="' + (h*60) + '" y="142" font-size="9" fill="var(--muted)" text-anchor="middle">' + h + ':00</text>';
+  for (const e of convs) {
+    const m = Number(e.minute);  // 数值强制：恶意字符串不得进入 SVG 属性（R7 MAJOR-1）
+    if (!Number.isFinite(m) || m < 0 || m > 1440) continue;
+    const fill = e.mode === "llm" ? "var(--accent)" : "var(--rule)";
+    svg += '<circle cx="' + m + '" cy="60" r="4" fill="' + fill + '" opacity="0.85">' +
+           '<title>' + esc(e.text || (e.a + " ↔ " + e.b)) + '</title></circle>';
+  }
+  for (const a of audits) {
+    const m = Number(a.minute);
+    if (!Number.isFinite(m) || m < 0 || m > 1440) continue;
+    if (a.type === "plan_patch") {
+      svg += '<rect x="' + (m-2) + '" y="26" width="4" height="8" fill="var(--ok)" opacity="0.7">' +
+             '<title>计划补丁 ' + esc(a.target) + '</title></rect>';
+    } else if (INTERVENTIONS.has(a.type)) {
+      const fill = (a.type === "rollback" || a.type === "patch_rejected") ? "var(--bad)" : "var(--warn)";
+      const y = 95;
+      svg += '<polygon points="' + m + ',' + (y-7) + ' ' + (m-6) + ',' + (y+5) + ' ' + (m+6) + ',' + (y+5) + '" fill="' + fill + '">' +
+             '<title>' + esc(a.type) + '：' + esc(a.detail || a.reason || a.target || "") + '</title></polygon>';
+    }
+  }
+  svg += '</svg>';
+  const legend = '<div class="legend">' +
+    '<span><i style="background:var(--accent)"></i>LLM 对话</span>' +
+    '<span><i style="background:var(--rule)"></i>规则兜底对话</span>' +
+    '<span><i style="background:var(--ok);border-radius:2px"></i>计划补丁（入睡锚点）</span>' +
+    '<span><i style="background:var(--warn);border-radius:2px"></i>熔断/降级</span>' +
+    '<span><i style="background:var(--bad);border-radius:2px"></i>回滚/拒绝</span>' +
+    '<span>浅蓝区 = 社交窗口（午饭/下班/晚饭）</span></div>';
+  const note = state.realEvents ? '' :
+    '<div class="note">时间轴当前为合成示例；载入 --events-out 导出的 events.jsonl 后显示真实事件。</div>';
+  return '<h2>24 小时事件时间轴</h2><div class="card">' + tabs + svg + legend + note + '</div>';
+}
+
+// ---- 渲染：token/审计/哈希/样例 ----
+function renderTokens(r) {
+  const t = r.tokens || {};
+  function row(name, pair) {
+    if (!Array.isArray(pair)) return "";
+    if (pair[0] == null || pair[1] == null)
+      return '<tr><td>' + esc(name) + '</td><td colspan="2">数据无效（null）</td></tr>';
+    const a = Number(pair[0]), b = Number(pair[1]);
+    if (!Number.isFinite(a) || !Number.isFinite(b))
+      return '<tr><td>' + esc(name) + '</td><td colspan="2">数据无效（非数值）</td></tr>';
+    const total = a + b;
+    const pin = total ? (a/total*100) : 0;
+    return '<tr><td>' + esc(name) + '</td><td class="mono">' + a.toLocaleString() + ' in / ' +
+      b.toLocaleString() + ' out</td><td style="width:40%"><div class="bar"><i style="width:' +
+      pin.toFixed(1) + '%"></i></div></td></tr>';
+  }
+  return '<h2>Token 分布</h2><div class="card"><table>' +
+    '<tr><th>档位</th><th>输入 / 输出</th><th>输入占比</th></tr>' +
+    row("T1（廉价档·社交）", t.T1) + row("T2（贵档·反思）", t.T2) + '</table>' +
+    '<div class="note">每事件成本 $' + fmt(r.cost_per_event_usd, 6) + '（全口径） / $' +
+    fmt(r.cost_per_llm_event_usd, 6) + '（LLM 有效事件）· 记忆剪枝 ' + esc(r.counters && r.counters.memories_pruned) +
+    ' 条（ttl=' + esc(r.memory_ttl == null ? "off" : r.memory_ttl) + '）</div></div>';
+}
+function renderAudit(r) {
+  const sum = r.audit_summary || {};
+  let rows = "";
+  for (const k of Object.keys(sum).sort())
+    rows += '<tr><td>' + esc(k) + '</td><td>' + esc(sum[k]) + '</td></tr>';
+  const stream = state.events.filter(e => e._stream === "audit" && INTERVENTIONS.has(e.type));
+  let srows = "";
+  for (const a of stream.slice(0, 50))
+    srows += '<tr><td>第' + esc(dayLabel(a.day)) + '夜 ' + esc(Math.floor(Number(a.minute)/60)) + ':' +
+      esc(String(Number(a.minute)%60).padStart(2,"0")) + '</td><td>' + esc(a.type) + '</td><td>' +
+      esc(a.detail || a.reason || a.target || "") + '</td></tr>';
+  return '<h2>审计流（只追加 · 模拟时间戳）</h2><div class="card"><table>' +
+    '<tr><th>类型</th><th>条数</th></tr>' + rows + '</table>' +
+    (srows ? '<h2 style="margin-top:16px">干预明细（事件流）</h2><table><tr><th>时间</th><th>类型</th><th>详情</th></tr>' + srows + '</table>' : '') +
+    '<div class="note">审计共 ' + esc(r.audit_entries) + ' 条。干预必须留痕（军规 12）。</div></div>';
+}
+function renderHashes(r) {
+  return '<h2>复现性凭证</h2><div class="card">' +
+    '<div class="k" style="color:var(--muted)">world_hash（世界本体：居民/计划/事件，跨干预不变量）</div>' +
+    '<div class="mono">' + esc(r.world_hash) + '</div>' +
+    '<div class="k" style="color:var(--muted);margin-top:10px">final_hash（全量状态：含审计/计费/RNG/schema_version）</div>' +
+    '<div class="mono">' + esc(r.final_hash) + '</div>' +
+    '<div class="note">同配置双跑 final_hash 必须逐位一致；污染回滚后 world_hash 不变、审计多 rollback 条目。见 ../05-overnight-runbook.md §4。</div></div>';
+}
+function renderSamples(r) {
+  const evs = (r.sample_events || []).filter(e => e && typeof e === "object");
+  if (!evs.length) return "";
+  let html = '<h2>事件样例</h2><div class="card">';
+  for (const e of evs)
+    html += '<div class="ev"><span class="pill">第' + esc(dayLabel(e.day)) + '夜 ' +
+      esc(Math.floor(Number(e.minute)/60)) + ':' +
+      esc(String(Number(e.minute)%60).padStart(2,"0")) + '</span><span class="pill">' + esc(e.mode || e.type) + '</span>' +
+      esc(e.text || "") + '</div>';
+  return html + '</div>';
+}
+function renderResidents() {
+  const ck = state.checkpoint;
+  if (!ck || !ck.world || !Array.isArray(ck.world.residents) || !ck.world.residents.length)
+    return '<h2>居民记忆流</h2><div class="card"><div class="note">载入 ckpt.json（检查点，含居民记忆/计划）后查看；当前未载入。</div></div>';
+  const residents = ck.world.residents;
+  const MAX_RES = 2000, MAX_PLAN = 300;  // 上限防恶意检查点挂死（仿 nights 366，R30 ③）
+  const shown = Math.min(residents.length, MAX_RES);
+  let idx = Math.trunc(Number(state.selectedResident)) || 0;  // 整数索引（R31 INFO-1：分数索引归整）
+  if (!Number.isFinite(idx) || idx < 0 || idx >= shown) idx = 0;
+  const r = residents[idx] || {};
+  let opts = '';
+  for (let i = 0; i < shown; i++) {
+    const rr = residents[i] || {};
+    opts += '<option value="' + i + '"' + (i === idx ? ' selected' : '') + '>' +
+      esc(rr.id) + ' · ' + esc(rr.role) + '</option>';
+  }
+  const resNote = residents.length > MAX_RES ? '（居民过多，仅显示前 ' + MAX_RES + '）' : '';
+  // 仅计合法记忆对象（R30 ② / R31 INFO-2：排除 null/畸形/数组）
+  const mems = (Array.isArray(r.memories) ? r.memories : []).filter(m => m && typeof m === 'object' && !Array.isArray(m));
+  let mrows = '';
+  for (const m of mems.slice(-50)) {
+    const imp = Number(m.importance);
+    const min = Number(m.minute);
+    const t = Number.isFinite(min) ? esc(Math.floor(min/60)) + ':' + esc(String(Math.floor(min)%60).padStart(2,'0')) : '?';
+    const kw = Array.isArray(m.keywords) ? m.keywords.filter(x => typeof x === 'string').join(', ') : '';
+    mrows += '<tr><td>第' + esc(dayLabel(m.day)) + '夜 ' + t + '</td><td>' + esc(m.kind) + '</td><td>' +
+      (Number.isFinite(imp) ? imp.toFixed(1) : '—') + '</td><td>' + esc(m.text) + '</td><td class="mono">' + esc(kw) + '</td></tr>';
+  }
+  const plan = (ck.world.plans && Array.isArray(ck.world.plans[r.id])) ? ck.world.plans[r.id] : [];
+  let prows = '';
+  for (const s of plan.slice(0, MAX_PLAN)) {
+    if (!s || typeof s !== 'object') continue;
+    const st = Number(s.start), en = Number(s.end);  // 数值强制（R30 ①：与 minute 同口径）
+    const range = (Number.isFinite(st) ? st : '?') + '–' + (Number.isFinite(en) ? en : '?');
+    prows += '<tr><td>' + range + '</td><td>' + esc(s.state) + '</td><td>' + esc(s.location) + '</td></tr>';
+  }
+  const planNote = plan.length > MAX_PLAN ? '<div class="note">计划段过多，仅显示前 ' + MAX_PLAN + '。</div>' : '';
+  const banner = state.realCheckpoint ? '' :
+    '<div class="note" style="color:var(--warn)">居民记忆流为内置合成示例——载入 ckpt.json 后替换。</div>';
+  const src = state.realCheckpoint ? esc(state.checkpointName) + '（真实检查点）' : '内置合成示例';
+  return '<h2>居民记忆流（检查点）</h2><div class="card">' + banner +
+    '<div class="note">来源：' + src + ' · tick ' + esc(ck.tick) + ' · ' + residents.length + ' 居民' + resNote + ' · 记忆检索/反思架构见 ../02-architecture.md</div>' +
+    '<select id="resSelect" aria-label="选择居民" style="margin:8px 0;padding:4px 8px;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:6px">' + opts + '</select>' +
+    '<div><b>' + esc(r.id) + '</b> · ' + esc(r.role) + ' · home ' + esc(r.home) + ' · work ' + esc(r.work) +
+    ' · focus ' + esc(r.focus == null ? '—' : r.focus) + ' · 记忆 ' + mems.length + ' 条</div>' +
+    '<h2 style="margin-top:12px">记忆流（最近 ' + Math.min(mems.length, 50) + ' 条）</h2>' +
+    '<table><tr><th>时间</th><th>类型</th><th>重要性</th><th>内容</th><th>关键词</th></tr>' + mrows + '</table>' +
+    (prows ? '<h2 style="margin-top:12px">当日计划</h2><table><tr><th>分钟</th><th>状态</th><th>地点</th></tr>' + prows + '</table>' + planNote : '') +
+    '</div>';
+}
+function render() {
+  const r = state.report;
+  document.getElementById("app").innerHTML =
+    renderOverview(r) + renderTimeline(r) + renderTokens(r) + renderAudit(r) +
+    renderHashes(r) + renderSamples(r) + renderResidents() +
+    '<div class="note" style="margin-top:20px">数据来源：overnight_town.py（mock LLM，价格口径真实 [S13][S14][S26]）。' +
+    '生成命令：python -I overnight_town.py --seed 20260818 --nights 3 --agents 1000 --budget 2.0 ' +
+    '--crash-frac 0.4 --corrupt-frac 0.7 --events-out out/events.jsonl --out out/morning_report.json</div>';
+  for (const b of document.querySelectorAll(".tabs button"))
+    b.addEventListener("click", () => {
+      state.night = Number(b.dataset.night);
+      try { render(); }
+      catch (e) { alert("渲染失败（夜切换）：" + e.message); }
+    });
+  const sel = document.getElementById("resSelect");
+  if (sel) sel.addEventListener("change", () => {
+    state.selectedResident = Number(sel.value);
+    try { render(); }
+    catch (e) { alert("渲染失败（居民切换）：" + e.message); }
+  });
+}
+// ---- 初始化：内置合成示例 ----
+(function init() {
+  const d = synth();
+  state.report = d.report; state.events = d.events; state.checkpoint = d.checkpoint;
+  updateLoadState();
+  render();
+  for (const lab of document.querySelectorAll(".drop label")) {
+    lab.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        document.getElementById(lab.getAttribute("for")).click();
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>

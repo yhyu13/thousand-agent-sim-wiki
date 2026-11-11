@@ -1,0 +1,333 @@
+{"type": "conversation", "day": 0, "minute": 720, "a": "nurse-026", "b": "nurse-044", "loc": "park", "mode": "llm", "text": "nurse-026 对 nurse-044 说：「nurse……让我想想。」"}
+{"type": "conversation", "day": 0, "minute": 720, "a": "guard-029", "b": "nurse-017", "loc": "park", "mode": "llm", "text": "guard-029 对 nurse-017 说：「guard……让我想想。」"}
+{"type": "conversation", "day": 0, "minute": 720, "a": "guard-047", "b": "nurse-047", "loc": "park", "mode": "llm", "text": "guard-047 对 nurse-047 说：「guard这事，得问问家里人。」"}
+{"type": "conversation", "day": 0, "minute": 720, "a": "nurse-044", "b": "guard-047", "loc": "park", "mode": "llm", "text": "nurse-044 对 guard-047 说：「说起park，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 720, "a": "guard-005", "b": "guard-002", "loc": "park", "mode": "llm", "text": "guard-005 对 guard-002 说：「我对guard有点新想法。」"}
+{"type": "conversation", "day": 0, "minute": 720, "a": "guard-050", "b": "guard-005", "loc": "park", "mode": "llm", "text": "guard-050 对 guard-005 说：「说起guard，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 750, "a": "nurse-011", "b": "nurse-044", "loc": "park", "mode": "llm", "text": "nurse-011 对 nurse-044 说：「nurse……让我想想。」"}
+{"type": "conversation", "day": 0, "minute": 750, "a": "nurse-017", "b": "guard-026", "loc": "park", "mode": "llm", "text": "nurse-017 对 guard-026 说：「park……让我想想。」"}
+{"type": "conversation", "day": 0, "minute": 750, "a": "guard-035", "b": "guard-023", "loc": "park", "mode": "llm", "text": "guard-035 对 guard-023 说：「说起guard，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 750, "a": "nurse-017", "b": "guard-029", "loc": "park", "mode": "llm", "text": "nurse-017 对 guard-029 说：「park吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 750, "a": "nurse-047", "b": "nurse-017", "loc": "park", "mode": "llm", "text": "nurse-047 对 nurse-017 说：「nurse……让我想想。」"}
+{"type": "conversation", "day": 0, "minute": 750, "a": "guard-026", "b": "guard-002", "loc": "park", "mode": "llm", "text": "guard-026 对 guard-002 说：「我对park有点新想法。」"}
+{"type": "conversation", "day": 0, "minute": 780, "a": "guard-035", "b": "guard-005", "loc": "park", "mode": "rule", "text": "（规则兜底）guard-035 和 guard-005 在park聊了聊日常"}
+{"type": "conversation", "day": 0, "minute": 780, "a": "guard-005", "b": "nurse-026", "loc": "park", "mode": "llm", "text": "guard-005 对 nurse-026 说：「park的事，我觉得挺好。」"}
+{"type": "conversation", "day": 0, "minute": 780, "a": "guard-050", "b": "nurse-044", "loc": "park", "mode": "llm", "text": "guard-050 对 nurse-044 说：「说起park，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 780, "a": "guard-014", "b": "guard-029", "loc": "park", "mode": "llm", "text": "guard-014 对 guard-029 说：「guard的事，我觉得挺好。」"}
+{"type": "conversation", "day": 0, "minute": 780, "a": "nurse-044", "b": "guard-026", "loc": "park", "mode": "llm", "text": "nurse-044 对 guard-026 说：「park吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 780, "a": "guard-050", "b": "guard-026", "loc": "park", "mode": "llm", "text": "guard-050 对 guard-026 说：「park吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 810, "a": "guard-002", "b": "guard-050", "loc": "park", "mode": "llm", "text": "guard-002 对 guard-050 说：「关于park，我同意一半。」"}
+{"type": "conversation", "day": 0, "minute": 810, "a": "guard-035", "b": "nurse-026", "loc": "park", "mode": "llm", "text": "guard-035 对 nurse-026 说：「park的事，我觉得挺好。」"}
+{"type": "conversation", "day": 0, "minute": 810, "a": "guard-002", "b": "nurse-011", "loc": "park", "mode": "llm", "text": "guard-002 对 nurse-011 说：「关于park，我同意一半。」"}
+{"type": "conversation", "day": 0, "minute": 810, "a": "guard-029", "b": "guard-026", "loc": "park", "mode": "llm", "text": "guard-029 对 guard-026 说：「关于park，我同意一半。」"}
+{"type": "conversation", "day": 0, "minute": 810, "a": "guard-023", "b": "nurse-026", "loc": "park", "mode": "llm", "text": "guard-023 对 nurse-026 说：「park吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 810, "a": "nurse-011", "b": "guard-014", "loc": "park", "mode": "llm", "text": "nurse-011 对 guard-014 说：「我对park有点新想法。」"}
+{"type": "conversation", "day": 0, "minute": 1020, "a": "nurse-037", "b": "doctor-033", "loc": "park", "mode": "llm", "text": "nurse-037 对 doctor-033 说：「nurse的事，我觉得挺好。」"}
+{"type": "conversation", "day": 0, "minute": 1020, "a": "fisher-022", "b": "builder-005", "loc": "park", "mode": "llm", "text": "fisher-022 对 builder-005 说：「fisher……让我想想。」"}
+{"type": "conversation", "day": 0, "minute": 1020, "a": "guard-013", "b": "merchant-024", "loc": "park", "mode": "llm", "text": "guard-013 对 merchant-024 说：「说起guard，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 1020, "a": "nurse-042", "b": "miner-037", "loc": "park", "mode": "llm", "text": "nurse-042 对 miner-037 说：「关于nurse，我同意一半。」"}
+{"type": "conversation", "day": 0, "minute": 1020, "a": "miner-044", "b": "doctor-035", "loc": "park", "mode": "llm", "text": "miner-044 对 doctor-035 说：「miner的事，我觉得挺好。」"}
+{"type": "conversation", "day": 0, "minute": 1020, "a": "cook-027", "b": "guard-042", "loc": "park", "mode": "llm", "text": "cook-027 对 guard-042 说：「说起cook，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 1050, "a": "student-049", "b": "baker-005", "loc": "park", "mode": "llm", "text": "student-049 对 baker-005 说：「我对student有点新想法。」"}
+{"type": "conversation", "day": 0, "minute": 1050, "a": "farmer-025", "b": "baker-046", "loc": "park", "mode": "llm", "text": "farmer-025 对 baker-046 说：「哈哈，farmer总是这样。」"}
+{"type": "conversation", "day": 0, "minute": 1050, "a": "merchant-034", "b": "builder-011", "loc": "park", "mode": "llm", "text": "merchant-034 对 builder-011 说：「merchant吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1050, "a": "fisher-026", "b": "artist-040", "loc": "park", "mode": "llm", "text": "fisher-026 对 artist-040 说：「fisher……让我想想。」"}
+{"type": "conversation", "day": 0, "minute": 1050, "a": "farmer-006", "b": "farmer-021", "loc": "park", "mode": "llm", "text": "farmer-006 对 farmer-021 说：「farmer吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1050, "a": "nurse-043", "b": "weaver-039", "loc": "park", "mode": "llm", "text": "nurse-043 对 weaver-039 说：「nurse的事，我觉得挺好。」"}
+{"type": "conversation", "day": 0, "minute": 1080, "a": "cook-024", "b": "vet-030", "loc": "park", "mode": "llm", "text": "cook-024 对 vet-030 说：「cook吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1080, "a": "farmer-005", "b": "builder-011", "loc": "park", "mode": "llm", "text": "farmer-005 对 builder-011 说：「我对farmer有点新想法。」"}
+{"type": "conversation", "day": 0, "minute": 1080, "a": "weaver-049", "b": "fisher-034", "loc": "park", "mode": "llm", "text": "weaver-049 对 fisher-034 说：「关于weaver，我同意一半。」"}
+{"type": "conversation", "day": 0, "minute": 1080, "a": "driver-022", "b": "baker-002", "loc": "park", "mode": "llm", "text": "driver-022 对 baker-002 说：「说起driver，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 1080, "a": "elder-039", "b": "artist-050", "loc": "park", "mode": "llm", "text": "elder-039 对 artist-050 说：「哈哈，elder总是这样。」"}
+{"type": "conversation", "day": 0, "minute": 1080, "a": "baker-043", "b": "student-011", "loc": "park", "mode": "llm", "text": "baker-043 对 student-011 说：「baker吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1110, "a": "elder-023", "b": "guard-036", "loc": "park", "mode": "llm", "text": "elder-023 对 guard-036 说：「elder吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1110, "a": "driver-005", "b": "nurse-043", "loc": "park", "mode": "llm", "text": "driver-005 对 nurse-043 说：「说起driver，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 1110, "a": "artist-006", "b": "elder-033", "loc": "park", "mode": "llm", "text": "artist-006 对 elder-033 说：「哈哈，artist总是这样。」"}
+{"type": "conversation", "day": 0, "minute": 1110, "a": "builder-036", "b": "merchant-005", "loc": "park", "mode": "llm", "text": "builder-036 对 merchant-005 说：「builder吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1110, "a": "vet-034", "b": "farmer-018", "loc": "park", "mode": "llm", "text": "vet-034 对 farmer-018 说：「vet的事，我觉得挺好。」"}
+{"type": "conversation", "day": 0, "minute": 1110, "a": "artist-028", "b": "clerk-015", "loc": "park", "mode": "llm", "text": "artist-028 对 clerk-015 说：「关于artist，我同意一半。」"}
+{"type": "conversation", "day": 0, "minute": 1140, "a": "cook-018", "b": "merchant-049", "loc": "restaurant", "mode": "llm", "text": "cook-018 对 merchant-049 说：「cook吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1140, "a": "elder-001", "b": "nurse-031", "loc": "restaurant", "mode": "llm", "text": "elder-001 对 nurse-031 说：「elder吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1140, "a": "builder-047", "b": "engineer-031", "loc": "restaurant", "mode": "llm", "text": "builder-047 对 engineer-031 说：「关于builder，我同意一半。」"}
+{"type": "conversation", "day": 0, "minute": 1140, "a": "baker-023", "b": "child-014", "loc": "restaurant", "mode": "llm", "text": "baker-023 对 child-014 说：「baker的事，我觉得挺好。」"}
+{"type": "conversation", "day": 0, "minute": 1140, "a": "artist-005", "b": "engineer-028", "loc": "restaurant", "mode": "llm", "text": "artist-005 对 engineer-028 说：「说起artist，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 1140, "a": "artist-031", "b": "miner-049", "loc": "restaurant", "mode": "llm", "text": "artist-031 对 miner-049 说：「artist吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1170, "a": "weaver-031", "b": "miner-013", "loc": "restaurant", "mode": "llm", "text": "weaver-031 对 miner-013 说：「weaver……让我想想。」"}
+{"type": "conversation", "day": 0, "minute": 1170, "a": "engineer-018", "b": "driver-019", "loc": "restaurant", "mode": "llm", "text": "engineer-018 对 driver-019 说：「关于engineer，我同意一半。」"}
+{"type": "conversation", "day": 0, "minute": 1170, "a": "guard-029", "b": "clerk-024", "loc": "restaurant", "mode": "llm", "text": "guard-029 对 clerk-024 说：「说起park，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 1170, "a": "nurse-002", "b": "doctor-021", "loc": "restaurant", "mode": "llm", "text": "nurse-002 对 doctor-021 说：「说起nurse，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 1170, "a": "teacher-039", "b": "elder-035", "loc": "restaurant", "mode": "llm", "text": "teacher-039 对 elder-035 说：「我对teacher有点新想法。」"}
+{"type": "conversation", "day": 0, "minute": 1170, "a": "clerk-046", "b": "guard-003", "loc": "restaurant", "mode": "llm", "text": "clerk-046 对 guard-003 说：「clerk的事，我觉得挺好。」"}
+{"type": "conversation", "day": 0, "minute": 1200, "a": "vet-013", "b": "baker-030", "loc": "restaurant", "mode": "llm", "text": "vet-013 对 baker-030 说：「哈哈，vet总是这样。」"}
+{"type": "conversation", "day": 0, "minute": 1200, "a": "engineer-046", "b": "farmer-032", "loc": "restaurant", "mode": "llm", "text": "engineer-046 对 farmer-032 说：「engineer这事，得问问家里人。」"}
+{"type": "conversation", "day": 0, "minute": 1200, "a": "clerk-040", "b": "clerk-031", "loc": "restaurant", "mode": "llm", "text": "clerk-040 对 clerk-031 说：「clerk吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1200, "a": "doctor-016", "b": "farmer-031", "loc": "restaurant", "mode": "llm", "text": "doctor-016 对 farmer-031 说：「doctor这事，得问问家里人。」"}
+{"type": "conversation", "day": 0, "minute": 1200, "a": "elder-024", "b": "cook-004", "loc": "restaurant", "mode": "llm", "text": "elder-024 对 cook-004 说：「说起elder，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 1200, "a": "weaver-035", "b": "miner-004", "loc": "restaurant", "mode": "llm", "text": "weaver-035 对 miner-004 说：「关于weaver，我同意一半。」"}
+{"type": "conversation", "day": 0, "minute": 1230, "a": "teacher-002", "b": "cook-041", "loc": "restaurant", "mode": "llm", "text": "teacher-002 对 cook-041 说：「teacher吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1230, "a": "clerk-027", "b": "artist-019", "loc": "restaurant", "mode": "llm", "text": "clerk-027 对 artist-019 说：「clerk……让我想想。」"}
+{"type": "conversation", "day": 0, "minute": 1230, "a": "vet-047", "b": "teacher-048", "loc": "restaurant", "mode": "llm", "text": "vet-047 对 teacher-048 说：「说起vet，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 1230, "a": "farmer-006", "b": "student-045", "loc": "restaurant", "mode": "llm", "text": "farmer-006 对 student-045 说：「说起farmer，我昨天也遇到了。」"}
+{"type": "conversation", "day": 0, "minute": 1230, "a": "miner-013", "b": "cook-012", "loc": "restaurant", "mode": "llm", "text": "miner-013 对 cook-012 说：「哈哈，restaurant总是这样。」"}
+{"type": "conversation", "day": 0, "minute": 1230, "a": "baker-040", "b": "fisher-039", "loc": "restaurant", "mode": "llm", "text": "baker-040 对 fisher-039 说：「baker吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1260, "a": "elder-029", "b": "driver-022", "loc": "restaurant", "mode": "llm", "text": "elder-029 对 driver-022 说：「我对elder有点新想法。」"}
+{"type": "conversation", "day": 0, "minute": 1260, "a": "child-040", "b": "baker-023", "loc": "restaurant", "mode": "llm", "text": "child-040 对 baker-023 说：「我对child有点新想法。」"}
+{"type": "conversation", "day": 0, "minute": 1260, "a": "clerk-002", "b": "doctor-043", "loc": "restaurant", "mode": "llm", "text": "clerk-002 对 doctor-043 说：「clerk……让我想想。」"}
+{"type": "conversation", "day": 0, "minute": 1260, "a": "farmer-041", "b": "miner-049", "loc": "restaurant", "mode": "llm", "text": "farmer-041 对 miner-049 说：「farmer吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1260, "a": "teacher-010", "b": "clerk-018", "loc": "restaurant", "mode": "llm", "text": "teacher-010 对 clerk-018 说：「哈哈，teacher总是这样。」"}
+{"type": "conversation", "day": 0, "minute": 1260, "a": "engineer-038", "b": "nurse-009", "loc": "restaurant", "mode": "llm", "text": "engineer-038 对 nurse-009 说：「engineer吗？下班再聊！」"}
+{"type": "conversation", "day": 0, "minute": 1290, "a": "teacher-037", "b": "doctor-050", "loc": "restaurant", "mode": "rule", "text": "（规则兜底）teacher-037 和 doctor-050 在restaurant聊了聊日常"}
+{"type": "conversation", "day": 0, "minute": 1290, "a": "builder-024", "b": "fisher-021", "loc": "restaurant", "mode": "rule", "text": "（规则兜底）builder-024 和 fisher-021 在restaurant聊了聊日常"}
+{"type": "conversation", "day": 0, "minute": 1290, "a": "farmer-010", "b": "doctor-047", "loc": "restaurant", "mode": "rule", "text": "（规则兜底）farmer-010 和 doctor-047 在restaurant聊了聊日常"}
+{"type": "conversation", "day": 0, "minute": 1290, "a": "cook-005", "b": "cook-044", "loc": "restaurant", "mode": "rule", "text": "（规则兜底）cook-005 和 cook-044 在restaurant聊了聊日常"}
+{"type": "conversation", "day": 0, "minute": 1290, "a": "miner-028", "b": "builder-039", "loc": "restaurant", "mode": "rule", "text": "（规则兜底）miner-028 和 builder-039 在restaurant聊了聊日常"}
+{"type": "conversation", "day": 0, "minute": 1290, "a": "doctor-013", "b": "fisher-033", "loc": "restaurant", "mode": "rule", "text": "（规则兜底）doctor-013 和 fisher-033 在restaurant聊了聊日常"}
+{"type": "conversation", "day": 1, "minute": 720, "a": "guard-044", "b": "nurse-011", "loc": "park", "mode": "llm", "text": "guard-044 对 nurse-011 说：「guard这事，得问问家里人。」"}
+{"type": "conversation", "day": 1, "minute": 720, "a": "nurse-050", "b": "guard-047", "loc": "park", "mode": "llm", "text": "nurse-050 对 guard-047 说：「关于nurse，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 720, "a": "nurse-038", "b": "guard-047", "loc": "park", "mode": "llm", "text": "nurse-038 对 guard-047 说：「nurse吗？下班再聊！」"}
+{"type": "conversation", "day": 1, "minute": 720, "a": "nurse-008", "b": "guard-047", "loc": "park", "mode": "llm", "text": "nurse-008 对 guard-047 说：「nurse吗？下班再聊！」"}
+{"type": "conversation", "day": 1, "minute": 720, "a": "guard-041", "b": "nurse-008", "loc": "park", "mode": "llm", "text": "guard-041 对 nurse-008 说：「关于guard，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 720, "a": "nurse-050", "b": "guard-035", "loc": "park", "mode": "llm", "text": "nurse-050 对 guard-035 说：「关于park，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 750, "a": "nurse-047", "b": "guard-041", "loc": "park", "mode": "llm", "text": "nurse-047 对 guard-041 说：「关于park，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 750, "a": "nurse-050", "b": "nurse-047", "loc": "park", "mode": "llm", "text": "nurse-050 对 nurse-047 说：「我对park有点新想法。」"}
+{"type": "conversation", "day": 1, "minute": 750, "a": "nurse-050", "b": "nurse-047", "loc": "park", "mode": "llm", "text": "nurse-050 对 nurse-047 说：「park的事，我觉得挺好。」"}
+{"type": "conversation", "day": 1, "minute": 750, "a": "guard-041", "b": "nurse-050", "loc": "park", "mode": "llm", "text": "guard-041 对 nurse-050 说：「关于park，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 750, "a": "nurse-047", "b": "nurse-038", "loc": "park", "mode": "llm", "text": "nurse-047 对 nurse-038 说：「park这事，得问问家里人。」"}
+{"type": "conversation", "day": 1, "minute": 750, "a": "guard-041", "b": "guard-032", "loc": "park", "mode": "llm", "text": "guard-041 对 guard-032 说：「说起park，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 780, "a": "nurse-047", "b": "nurse-050", "loc": "park", "mode": "llm", "text": "nurse-047 对 nurse-050 说：「park这事，得问问家里人。」"}
+{"type": "conversation", "day": 1, "minute": 780, "a": "nurse-011", "b": "guard-041", "loc": "park", "mode": "llm", "text": "nurse-011 对 guard-041 说：「park这事，得问问家里人。」"}
+{"type": "conversation", "day": 1, "minute": 780, "a": "guard-041", "b": "guard-047", "loc": "park", "mode": "llm", "text": "guard-041 对 guard-047 说：「park这事，得问问家里人。」"}
+{"type": "conversation", "day": 1, "minute": 780, "a": "guard-044", "b": "guard-035", "loc": "park", "mode": "llm", "text": "guard-044 对 guard-035 说：「关于park，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 780, "a": "nurse-038", "b": "nurse-008", "loc": "park", "mode": "llm", "text": "nurse-038 对 nurse-008 说：「关于park，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 780, "a": "nurse-038", "b": "guard-041", "loc": "park", "mode": "llm", "text": "nurse-038 对 guard-041 说：「哈哈，park总是这样。」"}
+{"type": "conversation", "day": 1, "minute": 810, "a": "guard-041", "b": "guard-044", "loc": "park", "mode": "llm", "text": "guard-041 对 guard-044 说：「我对park有点新想法。」"}
+{"type": "conversation", "day": 1, "minute": 810, "a": "guard-032", "b": "nurse-008", "loc": "park", "mode": "llm", "text": "guard-032 对 nurse-008 说：「park这事，得问问家里人。」"}
+{"type": "conversation", "day": 1, "minute": 810, "a": "guard-035", "b": "nurse-047", "loc": "park", "mode": "llm", "text": "guard-035 对 nurse-047 说：「关于park，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 810, "a": "nurse-047", "b": "guard-032", "loc": "park", "mode": "llm", "text": "nurse-047 对 guard-032 说：「说起park，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 810, "a": "nurse-047", "b": "guard-044", "loc": "park", "mode": "llm", "text": "nurse-047 对 guard-044 说：「哈哈，park总是这样。」"}
+{"type": "conversation", "day": 1, "minute": 810, "a": "nurse-038", "b": "guard-047", "loc": "park", "mode": "llm", "text": "nurse-038 对 guard-047 说：「说起park，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 1020, "a": "miner-016", "b": "teacher-002", "loc": "park", "mode": "llm", "text": "miner-016 对 teacher-002 说：「哈哈，miner总是这样。」"}
+{"type": "conversation", "day": 1, "minute": 1020, "a": "guard-028", "b": "farmer-013", "loc": "park", "mode": "rule", "text": "（规则兜底）guard-028 和 farmer-013 在park聊了聊日常"}
+{"type": "conversation", "day": 1, "minute": 1020, "a": "builder-031", "b": "fisher-014", "loc": "park", "mode": "llm", "text": "builder-031 对 fisher-014 说：「builder这事，得问问家里人。」"}
+{"type": "conversation", "day": 1, "minute": 1020, "a": "doctor-002", "b": "engineer-003", "loc": "park", "mode": "llm", "text": "doctor-002 对 engineer-003 说：「doctor吗？下班再聊！」"}
+{"type": "conversation", "day": 1, "minute": 1020, "a": "farmer-002", "b": "weaver-033", "loc": "park", "mode": "rule", "text": "（规则兜底）farmer-002 和 weaver-033 在park聊了聊日常"}
+{"type": "conversation", "day": 1, "minute": 1020, "a": "builder-042", "b": "weaver-005", "loc": "park", "mode": "rule", "text": "（规则兜底）builder-042 和 weaver-005 在park聊了聊日常"}
+{"type": "conversation", "day": 1, "minute": 1050, "a": "baker-042", "b": "weaver-045", "loc": "park", "mode": "rule", "text": "（规则兜底）baker-042 和 weaver-045 在park聊了聊日常"}
+{"type": "conversation", "day": 1, "minute": 1050, "a": "miner-008", "b": "engineer-015", "loc": "park", "mode": "rule", "text": "（规则兜底）miner-008 和 engineer-015 在park聊了聊日常"}
+{"type": "conversation", "day": 1, "minute": 1050, "a": "guard-049", "b": "student-032", "loc": "park", "mode": "llm", "text": "guard-049 对 student-032 说：「guard这事，得问问家里人。」"}
+{"type": "conversation", "day": 1, "minute": 1050, "a": "clerk-018", "b": "child-043", "loc": "park", "mode": "llm", "text": "clerk-018 对 child-043 说：「restaurant……让我想想。」"}
+{"type": "conversation", "day": 1, "minute": 1050, "a": "merchant-029", "b": "child-011", "loc": "park", "mode": "rule", "text": "（规则兜底）merchant-029 和 child-011 在park聊了聊日常"}
+{"type": "conversation", "day": 1, "minute": 1050, "a": "student-006", "b": "elder-015", "loc": "park", "mode": "llm", "text": "student-006 对 elder-015 说：「student吗？下班再聊！」"}
+{"type": "conversation", "day": 1, "minute": 1080, "a": "fisher-028", "b": "teacher-006", "loc": "park", "mode": "llm", "text": "fisher-028 对 teacher-006 说：「哈哈，fisher总是这样。」"}
+{"type": "conversation", "day": 1, "minute": 1080, "a": "teacher-012", "b": "vet-036", "loc": "park", "mode": "llm", "text": "teacher-012 对 vet-036 说：「teacher吗？下班再聊！」"}
+{"type": "conversation", "day": 1, "minute": 1080, "a": "fisher-024", "b": "student-020", "loc": "park", "mode": "llm", "text": "fisher-024 对 student-020 说：「哈哈，fisher总是这样。」"}
+{"type": "conversation", "day": 1, "minute": 1080, "a": "clerk-040", "b": "doctor-024", "loc": "park", "mode": "llm", "text": "clerk-040 对 doctor-024 说：「restaurant的事，我觉得挺好。」"}
+{"type": "conversation", "day": 1, "minute": 1080, "a": "teacher-002", "b": "clerk-016", "loc": "park", "mode": "llm", "text": "teacher-002 对 clerk-016 说：「哈哈，park总是这样。」"}
+{"type": "conversation", "day": 1, "minute": 1080, "a": "merchant-029", "b": "student-002", "loc": "park", "mode": "llm", "text": "merchant-029 对 student-002 说：「park这事，得问问家里人。」"}
+{"type": "conversation", "day": 1, "minute": 1110, "a": "clerk-021", "b": "cook-019", "loc": "park", "mode": "llm", "text": "clerk-021 对 cook-019 说：「clerk……让我想想。」"}
+{"type": "conversation", "day": 1, "minute": 1110, "a": "artist-046", "b": "student-005", "loc": "park", "mode": "llm", "text": "artist-046 对 student-005 说：「artist这事，得问问家里人。」"}
+{"type": "conversation", "day": 1, "minute": 1110, "a": "cook-014", "b": "child-026", "loc": "park", "mode": "llm", "text": "cook-014 对 child-026 说：「cook吗？下班再聊！」"}
+{"type": "conversation", "day": 1, "minute": 1110, "a": "teacher-012", "b": "vet-041", "loc": "park", "mode": "llm", "text": "teacher-012 对 vet-041 说：「我对park有点新想法。」"}
+{"type": "conversation", "day": 1, "minute": 1110, "a": "merchant-008", "b": "baker-017", "loc": "park", "mode": "llm", "text": "merchant-008 对 baker-017 说：「说起merchant，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 1110, "a": "driver-042", "b": "elder-015", "loc": "park", "mode": "llm", "text": "driver-042 对 elder-015 说：「哈哈，driver总是这样。」"}
+{"type": "conversation", "day": 1, "minute": 1140, "a": "doctor-019", "b": "farmer-032", "loc": "restaurant", "mode": "llm", "text": "doctor-019 对 farmer-032 说：「关于doctor，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 1140, "a": "vet-036", "b": "driver-044", "loc": "restaurant", "mode": "llm", "text": "vet-036 对 driver-044 说：「说起vet，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 1140, "a": "vet-017", "b": "teacher-008", "loc": "restaurant", "mode": "llm", "text": "vet-017 对 teacher-008 说：「我对vet有点新想法。」"}
+{"type": "conversation", "day": 1, "minute": 1140, "a": "vet-001", "b": "farmer-036", "loc": "restaurant", "mode": "llm", "text": "vet-001 对 farmer-036 说：「说起vet，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 1140, "a": "cook-050", "b": "farmer-042", "loc": "restaurant", "mode": "llm", "text": "cook-050 对 farmer-042 说：「关于cook，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 1140, "a": "driver-011", "b": "elder-033", "loc": "restaurant", "mode": "llm", "text": "driver-011 对 elder-033 说：「driver的事，我觉得挺好。」"}
+{"type": "conversation", "day": 1, "minute": 1170, "a": "baker-040", "b": "miner-044", "loc": "restaurant", "mode": "llm", "text": "baker-040 对 miner-044 说：「restaurant吗？下班再聊！」"}
+{"type": "conversation", "day": 1, "minute": 1170, "a": "nurse-007", "b": "doctor-009", "loc": "restaurant", "mode": "llm", "text": "nurse-007 对 doctor-009 说：「哈哈，nurse总是这样。」"}
+{"type": "conversation", "day": 1, "minute": 1170, "a": "clerk-033", "b": "vet-033", "loc": "restaurant", "mode": "llm", "text": "clerk-033 对 vet-033 说：「说起clerk，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 1170, "a": "nurse-042", "b": "baker-013", "loc": "restaurant", "mode": "llm", "text": "nurse-042 对 baker-013 说：「关于park，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 1170, "a": "teacher-024", "b": "farmer-049", "loc": "restaurant", "mode": "llm", "text": "teacher-024 对 farmer-049 说：「teacher……让我想想。」"}
+{"type": "conversation", "day": 1, "minute": 1170, "a": "farmer-048", "b": "farmer-036", "loc": "restaurant", "mode": "llm", "text": "farmer-048 对 farmer-036 说：「说起farmer，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 1200, "a": "elder-045", "b": "farmer-017", "loc": "restaurant", "mode": "llm", "text": "elder-045 对 farmer-017 说：「elder这事，得问问家里人。」"}
+{"type": "conversation", "day": 1, "minute": 1200, "a": "vet-031", "b": "fisher-034", "loc": "restaurant", "mode": "llm", "text": "vet-031 对 fisher-034 说：「关于vet，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 1200, "a": "baker-004", "b": "student-036", "loc": "restaurant", "mode": "llm", "text": "baker-004 对 student-036 说：「baker……让我想想。」"}
+{"type": "conversation", "day": 1, "minute": 1200, "a": "miner-038", "b": "student-046", "loc": "restaurant", "mode": "llm", "text": "miner-038 对 student-046 说：「说起miner，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 1200, "a": "nurse-033", "b": "farmer-005", "loc": "restaurant", "mode": "llm", "text": "nurse-033 对 farmer-005 说：「nurse的事，我觉得挺好。」"}
+{"type": "conversation", "day": 1, "minute": 1200, "a": "weaver-048", "b": "elder-016", "loc": "restaurant", "mode": "llm", "text": "weaver-048 对 elder-016 说：「weaver这事，得问问家里人。」"}
+{"type": "conversation", "day": 1, "minute": 1230, "a": "teacher-007", "b": "clerk-023", "loc": "restaurant", "mode": "llm", "text": "teacher-007 对 clerk-023 说：「teacher……让我想想。」"}
+{"type": "conversation", "day": 1, "minute": 1230, "a": "fisher-030", "b": "teacher-037", "loc": "restaurant", "mode": "llm", "text": "fisher-030 对 teacher-037 说：「说起fisher，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 1230, "a": "fisher-029", "b": "fisher-022", "loc": "restaurant", "mode": "llm", "text": "fisher-029 对 fisher-022 说：「我对fisher有点新想法。」"}
+{"type": "conversation", "day": 1, "minute": 1230, "a": "miner-027", "b": "cook-015", "loc": "restaurant", "mode": "llm", "text": "miner-027 对 cook-015 说：「说起miner，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 1230, "a": "builder-049", "b": "engineer-042", "loc": "restaurant", "mode": "llm", "text": "builder-049 对 engineer-042 说：「说起builder，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 1230, "a": "nurse-004", "b": "fisher-023", "loc": "restaurant", "mode": "llm", "text": "nurse-004 对 fisher-023 说：「nurse吗？下班再聊！」"}
+{"type": "conversation", "day": 1, "minute": 1260, "a": "doctor-012", "b": "baker-027", "loc": "restaurant", "mode": "llm", "text": "doctor-012 对 baker-027 说：「doctor……让我想想。」"}
+{"type": "conversation", "day": 1, "minute": 1260, "a": "driver-019", "b": "doctor-038", "loc": "restaurant", "mode": "llm", "text": "driver-019 对 doctor-038 说：「restaurant的事，我觉得挺好。」"}
+{"type": "conversation", "day": 1, "minute": 1260, "a": "farmer-017", "b": "doctor-019", "loc": "restaurant", "mode": "llm", "text": "farmer-017 对 doctor-019 说：「关于restaurant，我同意一半。」"}
+{"type": "conversation", "day": 1, "minute": 1260, "a": "teacher-033", "b": "farmer-028", "loc": "restaurant", "mode": "llm", "text": "teacher-033 对 farmer-028 说：「我对teacher有点新想法。」"}
+{"type": "conversation", "day": 1, "minute": 1260, "a": "miner-020", "b": "baker-004", "loc": "restaurant", "mode": "llm", "text": "miner-020 对 baker-004 说：「miner的事，我觉得挺好。」"}
+{"type": "conversation", "day": 1, "minute": 1260, "a": "weaver-004", "b": "merchant-025", "loc": "restaurant", "mode": "llm", "text": "weaver-004 对 merchant-025 说：「我对weaver有点新想法。」"}
+{"type": "conversation", "day": 1, "minute": 1290, "a": "miner-041", "b": "farmer-033", "loc": "restaurant", "mode": "llm", "text": "miner-041 对 farmer-033 说：「miner的事，我觉得挺好。」"}
+{"type": "conversation", "day": 1, "minute": 1290, "a": "farmer-007", "b": "clerk-032", "loc": "restaurant", "mode": "llm", "text": "farmer-007 对 clerk-032 说：「farmer的事，我觉得挺好。」"}
+{"type": "conversation", "day": 1, "minute": 1290, "a": "cook-016", "b": "driver-034", "loc": "restaurant", "mode": "llm", "text": "cook-016 对 driver-034 说：「cook的事，我觉得挺好。」"}
+{"type": "conversation", "day": 1, "minute": 1290, "a": "fisher-010", "b": "baker-044", "loc": "restaurant", "mode": "llm", "text": "fisher-010 对 baker-044 说：「说起fisher，我昨天也遇到了。」"}
+{"type": "conversation", "day": 1, "minute": 1290, "a": "fisher-022", "b": "miner-015", "loc": "restaurant", "mode": "llm", "text": "fisher-022 对 miner-015 说：「哈哈，restaurant总是这样。」"}
+{"type": "conversation", "day": 1, "minute": 1290, "a": "teacher-033", "b": "nurse-042", "loc": "restaurant", "mode": "llm", "text": "teacher-033 对 nurse-042 说：「我对restaurant有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 720, "a": "guard-014", "b": "nurse-005", "loc": "park", "mode": "llm", "text": "guard-014 对 nurse-005 说：「park的事，我觉得挺好。」"}
+{"type": "conversation", "day": 2, "minute": 720, "a": "guard-005", "b": "nurse-005", "loc": "park", "mode": "llm", "text": "guard-005 对 nurse-005 说：「我对park有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 720, "a": "nurse-050", "b": "guard-032", "loc": "park", "mode": "llm", "text": "nurse-050 对 guard-032 说：「park这事，得问问家里人。」"}
+{"type": "conversation", "day": 2, "minute": 720, "a": "guard-029", "b": "guard-014", "loc": "park", "mode": "llm", "text": "guard-029 对 guard-014 说：「说起park，我昨天也遇到了。」"}
+{"type": "conversation", "day": 2, "minute": 720, "a": "guard-035", "b": "guard-050", "loc": "park", "mode": "rule", "text": "（规则兜底）guard-035 和 guard-050 在park聊了聊日常"}
+{"type": "conversation", "day": 2, "minute": 720, "a": "nurse-047", "b": "guard-050", "loc": "park", "mode": "llm", "text": "nurse-047 对 guard-050 说：「我对park有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 750, "a": "nurse-002", "b": "nurse-047", "loc": "park", "mode": "llm", "text": "nurse-002 对 nurse-047 说：「nurse的事，我觉得挺好。」"}
+{"type": "conversation", "day": 2, "minute": 750, "a": "guard-035", "b": "guard-050", "loc": "park", "mode": "llm", "text": "guard-035 对 guard-050 说：「park吗？下班再聊！」"}
+{"type": "conversation", "day": 2, "minute": 750, "a": "guard-020", "b": "nurse-047", "loc": "park", "mode": "llm", "text": "guard-020 对 nurse-047 说：「guard……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 750, "a": "nurse-002", "b": "guard-005", "loc": "park", "mode": "llm", "text": "nurse-002 对 guard-005 说：「说起park，我昨天也遇到了。」"}
+{"type": "conversation", "day": 2, "minute": 750, "a": "guard-050", "b": "guard-035", "loc": "park", "mode": "llm", "text": "guard-050 对 guard-035 说：「park……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 750, "a": "guard-023", "b": "nurse-002", "loc": "park", "mode": "llm", "text": "guard-023 对 nurse-002 说：「我对park有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 780, "a": "guard-035", "b": "guard-032", "loc": "park", "mode": "llm", "text": "guard-035 对 guard-032 说：「park这事，得问问家里人。」"}
+{"type": "conversation", "day": 2, "minute": 780, "a": "guard-035", "b": "guard-005", "loc": "park", "mode": "rule", "text": "（规则兜底）guard-035 和 guard-005 在park聊了聊日常"}
+{"type": "conversation", "day": 2, "minute": 780, "a": "guard-005", "b": "guard-020", "loc": "park", "mode": "llm", "text": "guard-005 对 guard-020 说：「park吗？下班再聊！」"}
+{"type": "conversation", "day": 2, "minute": 780, "a": "guard-023", "b": "guard-038", "loc": "park", "mode": "llm", "text": "guard-023 对 guard-038 说：「park的事，我觉得挺好。」"}
+{"type": "conversation", "day": 2, "minute": 780, "a": "nurse-029", "b": "guard-035", "loc": "park", "mode": "llm", "text": "nurse-029 对 guard-035 说：「哈哈，nurse总是这样。」"}
+{"type": "conversation", "day": 2, "minute": 780, "a": "guard-014", "b": "guard-038", "loc": "park", "mode": "rule", "text": "（规则兜底）guard-014 和 guard-038 在park聊了聊日常"}
+{"type": "conversation", "day": 2, "minute": 810, "a": "guard-035", "b": "guard-029", "loc": "park", "mode": "llm", "text": "guard-035 对 guard-029 说：「park吗？下班再聊！」"}
+{"type": "conversation", "day": 2, "minute": 810, "a": "guard-050", "b": "guard-023", "loc": "park", "mode": "llm", "text": "guard-050 对 guard-023 说：「park……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 810, "a": "guard-032", "b": "guard-023", "loc": "park", "mode": "llm", "text": "guard-032 对 guard-023 说：「关于park，我同意一半。」"}
+{"type": "conversation", "day": 2, "minute": 810, "a": "nurse-029", "b": "guard-014", "loc": "park", "mode": "llm", "text": "nurse-029 对 guard-014 说：「park……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 810, "a": "guard-035", "b": "guard-005", "loc": "park", "mode": "llm", "text": "guard-035 对 guard-005 说：「park吗？下班再聊！」"}
+{"type": "conversation", "day": 2, "minute": 810, "a": "guard-023", "b": "nurse-029", "loc": "park", "mode": "llm", "text": "guard-023 对 nurse-029 说：「park……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 1020, "a": "engineer-035", "b": "farmer-024", "loc": "park", "mode": "llm", "text": "engineer-035 对 farmer-024 说：「engineer吗？下班再聊！」"}
+{"type": "conversation", "day": 2, "minute": 1020, "a": "driver-044", "b": "elder-014", "loc": "park", "mode": "llm", "text": "driver-044 对 elder-014 说：「restaurant吗？下班再聊！」"}
+{"type": "conversation", "day": 2, "minute": 1020, "a": "builder-021", "b": "miner-026", "loc": "park", "mode": "llm", "text": "builder-021 对 miner-026 说：「关于builder，我同意一半。」"}
+{"type": "conversation", "day": 2, "minute": 1020, "a": "artist-018", "b": "elder-023", "loc": "park", "mode": "llm", "text": "artist-018 对 elder-023 说：「artist……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 1020, "a": "weaver-029", "b": "driver-011", "loc": "park", "mode": "llm", "text": "weaver-029 对 driver-011 说：「我对weaver有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 1020, "a": "merchant-041", "b": "clerk-034", "loc": "park", "mode": "llm", "text": "merchant-041 对 clerk-034 说：「merchant这事，得问问家里人。」"}
+{"type": "conversation", "day": 2, "minute": 1050, "a": "artist-043", "b": "clerk-037", "loc": "park", "mode": "llm", "text": "artist-043 对 clerk-037 说：「artist这事，得问问家里人。」"}
+{"type": "conversation", "day": 2, "minute": 1050, "a": "driver-013", "b": "nurse-039", "loc": "park", "mode": "llm", "text": "driver-013 对 nurse-039 说：「driver……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 1050, "a": "driver-024", "b": "driver-038", "loc": "park", "mode": "llm", "text": "driver-024 对 driver-038 说：「关于driver，我同意一半。」"}
+{"type": "conversation", "day": 2, "minute": 1050, "a": "weaver-046", "b": "baker-042", "loc": "park", "mode": "llm", "text": "weaver-046 对 baker-042 说：「weaver的事，我觉得挺好。」"}
+{"type": "conversation", "day": 2, "minute": 1050, "a": "guard-045", "b": "vet-044", "loc": "park", "mode": "llm", "text": "guard-045 对 vet-044 说：「guard这事，得问问家里人。」"}
+{"type": "conversation", "day": 2, "minute": 1050, "a": "engineer-030", "b": "merchant-041", "loc": "park", "mode": "llm", "text": "engineer-030 对 merchant-041 说：「我对engineer有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 1080, "a": "driver-042", "b": "student-019", "loc": "park", "mode": "llm", "text": "driver-042 对 student-019 说：「我对park有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 1080, "a": "engineer-037", "b": "teacher-036", "loc": "park", "mode": "llm", "text": "engineer-037 对 teacher-036 说：「engineer这事，得问问家里人。」"}
+{"type": "conversation", "day": 2, "minute": 1080, "a": "builder-010", "b": "clerk-014", "loc": "park", "mode": "llm", "text": "builder-010 对 clerk-014 说：「builder吗？下班再聊！」"}
+{"type": "conversation", "day": 2, "minute": 1080, "a": "teacher-040", "b": "engineer-034", "loc": "park", "mode": "llm", "text": "teacher-040 对 engineer-034 说：「teacher……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 1080, "a": "weaver-047", "b": "weaver-031", "loc": "park", "mode": "llm", "text": "weaver-047 对 weaver-031 说：「weaver的事，我觉得挺好。」"}
+{"type": "conversation", "day": 2, "minute": 1080, "a": "miner-010", "b": "driver-026", "loc": "park", "mode": "llm", "text": "miner-010 对 driver-026 说：「我对miner有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 1110, "a": "teacher-038", "b": "child-030", "loc": "park", "mode": "llm", "text": "teacher-038 对 child-030 说：「我对teacher有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 1110, "a": "clerk-014", "b": "vet-032", "loc": "park", "mode": "llm", "text": "clerk-014 对 vet-032 说：「park这事，得问问家里人。」"}
+{"type": "conversation", "day": 2, "minute": 1110, "a": "builder-034", "b": "miner-045", "loc": "park", "mode": "llm", "text": "builder-034 对 miner-045 说：「builder……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 1110, "a": "teacher-038", "b": "guard-046", "loc": "park", "mode": "llm", "text": "teacher-038 对 guard-046 说：「park……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 1110, "a": "nurse-019", "b": "vet-015", "loc": "park", "mode": "llm", "text": "nurse-019 对 vet-015 说：「nurse的事，我觉得挺好。」"}
+{"type": "conversation", "day": 2, "minute": 1110, "a": "student-035", "b": "engineer-035", "loc": "park", "mode": "llm", "text": "student-035 对 engineer-035 说：「哈哈，student总是这样。」"}
+{"type": "conversation", "day": 2, "minute": 1140, "a": "engineer-034", "b": "farmer-036", "loc": "restaurant", "mode": "llm", "text": "engineer-034 对 farmer-036 说：「我对park有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 1140, "a": "miner-043", "b": "merchant-043", "loc": "restaurant", "mode": "llm", "text": "miner-043 对 merchant-043 说：「miner的事，我觉得挺好。」"}
+{"type": "conversation", "day": 2, "minute": 1140, "a": "elder-012", "b": "farmer-020", "loc": "restaurant", "mode": "rule", "text": "（规则兜底）elder-012 和 farmer-020 在restaurant聊了聊日常"}
+{"type": "conversation", "day": 2, "minute": 1140, "a": "guard-024", "b": "fisher-030", "loc": "restaurant", "mode": "llm", "text": "guard-024 对 fisher-030 说：「guard的事，我觉得挺好。」"}
+{"type": "conversation", "day": 2, "minute": 1140, "a": "doctor-002", "b": "child-013", "loc": "restaurant", "mode": "llm", "text": "doctor-002 对 child-013 说：「park这事，得问问家里人。」"}
+{"type": "conversation", "day": 2, "minute": 1140, "a": "elder-002", "b": "guard-024", "loc": "restaurant", "mode": "llm", "text": "elder-002 对 guard-024 说：「哈哈，elder总是这样。」"}
+{"type": "conversation", "day": 2, "minute": 1170, "a": "farmer-009", "b": "miner-048", "loc": "restaurant", "mode": "llm", "text": "farmer-009 对 miner-048 说：「我对farmer有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 1170, "a": "elder-039", "b": "elder-025", "loc": "restaurant", "mode": "llm", "text": "elder-039 对 elder-025 说：「我对park有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 1170, "a": "baker-015", "b": "clerk-035", "loc": "restaurant", "mode": "llm", "text": "baker-015 对 clerk-035 说：「baker吗？下班再聊！」"}
+{"type": "conversation", "day": 2, "minute": 1170, "a": "doctor-019", "b": "fisher-005", "loc": "restaurant", "mode": "llm", "text": "doctor-019 对 fisher-005 说：「doctor吗？下班再聊！」"}
+{"type": "conversation", "day": 2, "minute": 1170, "a": "weaver-045", "b": "elder-050", "loc": "restaurant", "mode": "llm", "text": "weaver-045 对 elder-050 说：「weaver吗？下班再聊！」"}
+{"type": "conversation", "day": 2, "minute": 1170, "a": "clerk-047", "b": "fisher-049", "loc": "restaurant", "mode": "llm", "text": "clerk-047 对 fisher-049 说：「clerk……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 1200, "a": "artist-035", "b": "elder-039", "loc": "restaurant", "mode": "llm", "text": "artist-035 对 elder-039 说：「artist……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 1200, "a": "farmer-045", "b": "vet-031", "loc": "restaurant", "mode": "llm", "text": "farmer-045 对 vet-031 说：「说起farmer，我昨天也遇到了。」"}
+{"type": "conversation", "day": 2, "minute": 1200, "a": "artist-009", "b": "vet-008", "loc": "restaurant", "mode": "llm", "text": "artist-009 对 vet-008 说：「artist这事，得问问家里人。」"}
+{"type": "conversation", "day": 2, "minute": 1200, "a": "weaver-010", "b": "farmer-009", "loc": "restaurant", "mode": "llm", "text": "weaver-010 对 farmer-009 说：「weaver的事，我觉得挺好。」"}
+{"type": "conversation", "day": 2, "minute": 1200, "a": "teacher-017", "b": "merchant-027", "loc": "restaurant", "mode": "llm", "text": "teacher-017 对 merchant-027 说：「说起teacher，我昨天也遇到了。」"}
+{"type": "conversation", "day": 2, "minute": 1200, "a": "engineer-043", "b": "miner-033", "loc": "restaurant", "mode": "llm", "text": "engineer-043 对 miner-033 说：「说起engineer，我昨天也遇到了。」"}
+{"type": "conversation", "day": 2, "minute": 1230, "a": "driver-026", "b": "weaver-005", "loc": "restaurant", "mode": "llm", "text": "driver-026 对 weaver-005 说：「说起park，我昨天也遇到了。」"}
+{"type": "conversation", "day": 2, "minute": 1230, "a": "cook-032", "b": "student-041", "loc": "restaurant", "mode": "llm", "text": "cook-032 对 student-041 说：「cook这事，得问问家里人。」"}
+{"type": "conversation", "day": 2, "minute": 1230, "a": "builder-035", "b": "child-009", "loc": "restaurant", "mode": "llm", "text": "builder-035 对 child-009 说：「builder吗？下班再聊！」"}
+{"type": "conversation", "day": 2, "minute": 1230, "a": "artist-028", "b": "driver-015", "loc": "restaurant", "mode": "llm", "text": "artist-028 对 driver-015 说：「关于park，我同意一半。」"}
+{"type": "conversation", "day": 2, "minute": 1230, "a": "student-049", "b": "student-034", "loc": "restaurant", "mode": "llm", "text": "student-049 对 student-034 说：「student……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 1230, "a": "guard-043", "b": "farmer-007", "loc": "restaurant", "mode": "llm", "text": "guard-043 对 farmer-007 说：「我对guard有点新想法。」"}
+{"type": "conversation", "day": 2, "minute": 1260, "a": "teacher-038", "b": "engineer-025", "loc": "restaurant", "mode": "llm", "text": "teacher-038 对 engineer-025 说：「park的事，我觉得挺好。」"}
+{"type": "conversation", "day": 2, "minute": 1260, "a": "fisher-014", "b": "engineer-032", "loc": "restaurant", "mode": "llm", "text": "fisher-014 对 engineer-032 说：「说起fisher，我昨天也遇到了。」"}
+{"type": "conversation", "day": 2, "minute": 1260, "a": "student-038", "b": "farmer-024", "loc": "restaurant", "mode": "llm", "text": "student-038 对 farmer-024 说：「说起student，我昨天也遇到了。」"}
+{"type": "conversation", "day": 2, "minute": 1260, "a": "engineer-026", "b": "baker-039", "loc": "restaurant", "mode": "llm", "text": "engineer-026 对 baker-039 说：「哈哈，engineer总是这样。」"}
+{"type": "conversation", "day": 2, "minute": 1260, "a": "weaver-010", "b": "nurse-021", "loc": "restaurant", "mode": "llm", "text": "weaver-010 对 nurse-021 说：「哈哈，restaurant总是这样。」"}
+{"type": "conversation", "day": 2, "minute": 1260, "a": "fisher-030", "b": "driver-015", "loc": "restaurant", "mode": "llm", "text": "fisher-030 对 driver-015 说：「说起restaurant，我昨天也遇到了。」"}
+{"type": "conversation", "day": 2, "minute": 1290, "a": "driver-037", "b": "cook-040", "loc": "restaurant", "mode": "llm", "text": "driver-037 对 cook-040 说：「driver吗？下班再聊！」"}
+{"type": "conversation", "day": 2, "minute": 1290, "a": "cook-034", "b": "builder-030", "loc": "restaurant", "mode": "llm", "text": "cook-034 对 builder-030 说：「cook的事，我觉得挺好。」"}
+{"type": "conversation", "day": 2, "minute": 1290, "a": "teacher-003", "b": "farmer-013", "loc": "restaurant", "mode": "llm", "text": "teacher-003 对 farmer-013 说：「teacher这事，得问问家里人。」"}
+{"type": "conversation", "day": 2, "minute": 1290, "a": "driver-019", "b": "cook-016", "loc": "restaurant", "mode": "llm", "text": "driver-019 对 cook-016 说：「driver……让我想想。」"}
+{"type": "conversation", "day": 2, "minute": 1290, "a": "engineer-003", "b": "farmer-041", "loc": "restaurant", "mode": "llm", "text": "engineer-003 对 farmer-041 说：「park这事，得问问家里人。」"}
+{"type": "conversation", "day": 2, "minute": 1290, "a": "student-020", "b": "teacher-038", "loc": "restaurant", "mode": "llm", "text": "student-020 对 teacher-038 说：「说起park，我昨天也遇到了。」"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "guard-041", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "nurse-047", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "nurse-050", "scope": "behavior", "patch": {"tomorrow_focus": "family"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "guard-047", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "nurse-038", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "nurse-008", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "guard-032", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "guard-035", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "guard-044", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "teacher-002", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "nurse-042", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "teacher-033", "scope": "behavior", "patch": {"tomorrow_focus": "family"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "baker-040", "scope": "behavior", "patch": {"tomorrow_focus": "family"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "fisher-034", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "farmer-036", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "teacher-012", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "driver-019", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "elder-015", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "baker-004", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "fisher-022", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "farmer-032", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "elder-033", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "farmer-048", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "doctor-019", "scope": "behavior", "patch": {"tomorrow_focus": "family"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "vet-041", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "teacher-037", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "fisher-028", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "teacher-006", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "builder-031", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "fisher-014", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "merchant-029", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "baker-044", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "fisher-010", "scope": "behavior", "patch": {"tomorrow_focus": "family"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "doctor-009", "scope": "behavior", "patch": {"tomorrow_focus": "family"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "nurse-007", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "guard-049", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "student-032", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "clerk-040", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "farmer-018", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 1, "minute": 1320, "type": "plan_patch", "target": "vet-034", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 2, "minute": 120, "type": "rollback", "detail": "检出1项违例，回滚至tick300", "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "guard-035", "scope": "behavior", "patch": {"tomorrow_focus": "family"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "guard-023", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "guard-050", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "guard-005", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "teacher-038", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "nurse-047", "scope": "behavior", "patch": {"tomorrow_focus": "family"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "guard-014", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "nurse-029", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "guard-032", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "fisher-030", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "artist-028", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "nurse-002", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "vet-031", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "weaver-031", "scope": "behavior", "patch": {"tomorrow_focus": "family"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "student-020", "scope": "behavior", "patch": {"tomorrow_focus": "family"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "engineer-003", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "elder-039", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "guard-029", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "farmer-007", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "doctor-002", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "driver-015", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "driver-011", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "patch_rejected", "target": "guard-020", "reason": "tomorrow_focus 越界", "raw": "征服世界", "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "student-049", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "driver-026", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "driver-044", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "guard-024", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "driver-042", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "merchant-041", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "engineer-034", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "elder-023", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "clerk-014", "scope": "behavior", "patch": {"tomorrow_focus": "work"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "farmer-009", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "weaver-005", "scope": "behavior", "patch": {"tomorrow_focus": "family"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "guard-043", "scope": "behavior", "patch": {"tomorrow_focus": "family"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "nurse-019", "scope": "behavior", "patch": {"tomorrow_focus": "health"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "vet-015", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "weaver-045", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "baker-042", "scope": "behavior", "patch": {"tomorrow_focus": "study"}, "_stream": "audit"}
+{"day": 2, "minute": 1320, "type": "plan_patch", "target": "student-034", "scope": "behavior", "patch": {"tomorrow_focus": "social"}, "_stream": "audit"}
