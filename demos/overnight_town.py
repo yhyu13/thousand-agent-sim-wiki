@@ -36,21 +36,26 @@ import time
 from dataclasses import dataclass
 
 
-def _atomic_replace(tmp: str, target: str, attempts: int = 5):
-    """原子替换 + Windows 瞬时文件锁短重试（R59 硬化，军规 4/5）。
-    杀软/索引器可能短暂持有目标文件致 os.replace 抛 PermissionError(WinError 5)；
-    掉电安全语义不变（调用前已 fsync 落盘），仅对瞬时 PermissionError 退避重试，
-    永久失败（最后一次）仍抛出。无锁时首次即成功，行为与 os.replace 一致。"""
+def _retry_on_lock(fn, attempts: int = 5):
+    """对瞬时 Windows 文件锁（PermissionError/WinError 5，杀软/索引器短暂持有被写文件）
+    有界退避重试（R59/R61 硬化，军规 4/5）。仅捕 PermissionError 退避重试，永久失败
+    （最后一次）仍抛出；非 PermissionError（如 NaN 的 ValueError、其他 OSError）立即
+    传播不重试。无锁时首次即成功。attempts<1 守卫防静默跳过。"""
     if attempts < 1:
         raise ValueError("attempts 须 >= 1（防静默丢检查点，军规 4/5）")
     for i in range(attempts):
         try:
-            os.replace(tmp, target)
-            return
+            return fn()
         except PermissionError:
             if i == attempts - 1:
                 raise
             time.sleep(0.05 * (i + 1))
+
+
+def _atomic_replace(tmp: str, target: str, attempts: int = 5):
+    """原子替换 + 瞬时文件锁短重试（R59 硬化，军规 4/5）。
+    掉电安全语义不变（调用前已 fsync 落盘）；委托 _retry_on_lock，无锁时行为同 os.replace。"""
+    _retry_on_lock(lambda: os.replace(tmp, target), attempts)
 
 # ---------------------------------------------------------------------------
 # 确定性随机（对齐 thousand-town 源码约定：FNV-1a hash32 + 派生流隔离 [S16]）
@@ -489,10 +494,13 @@ class CheckpointStore:
         self.latest = json.loads(json.dumps(snap, ensure_ascii=False))  # 深拷贝
         if self.directory:
             tmp = os.path.join(self.directory, "ckpt.tmp.json")
-            with open(tmp, "w", encoding="utf-8") as f:
-                json.dump(snap, f, ensure_ascii=False, allow_nan=False)
-                f.flush()
-                os.fsync(f.fileno())  # 掉电安全：先落盘再原子替换
+
+            def _write_tmp():
+                with open(tmp, "w", encoding="utf-8") as f:
+                    json.dump(snap, f, ensure_ascii=False, allow_nan=False)
+                    f.flush()
+                    os.fsync(f.fileno())  # 掉电安全：先落盘再原子替换
+            _retry_on_lock(_write_tmp)  # R61：tmp 写段瞬时锁重试（与 replace 对称，军规 4/5）
             _atomic_replace(tmp, os.path.join(self.directory, "ckpt.json"))
 
     def load(self):
@@ -822,11 +830,13 @@ def _run(cfg, store, injections, resume, meta):
     agent_ticks = cfg.agents * tick
     if cfg.events_out:
         # 事件流导出（JSONL）：世界事件 + 审计（_stream 标记），供 visualize.html 时间轴
-        with open(cfg.events_out, "w", encoding="utf-8") as f:
-            for e in w.events:
-                f.write(json.dumps(e, ensure_ascii=False) + "\n")
-            for a in w.audit:
-                f.write(json.dumps(dict(a, _stream="audit"), ensure_ascii=False) + "\n")
+        def _write_events():
+            with open(cfg.events_out, "w", encoding="utf-8") as f:
+                for e in w.events:
+                    f.write(json.dumps(e, ensure_ascii=False) + "\n")
+                for a in w.audit:
+                    f.write(json.dumps(dict(a, _stream="audit"), ensure_ascii=False) + "\n")
+        _retry_on_lock(_write_events)  # R61：终点导出瞬时锁重试（模拟已完成、世界已落盘）
     # 世界本体哈希：居民/计划/事件（跨干预不变量）；全量哈希另含审计与计费状态
     world_core = {"day": w.day, "abs_minute": w.abs_minute,
                   "residents": w.residents, "plans": w.plans, "events": w.events}
@@ -1117,8 +1127,11 @@ def main(argv=None):
     if a.out:
         try:
             os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
-            with open(a.out, "w", encoding="utf-8") as f:
-                json.dump(rep, f, ensure_ascii=False, indent=2, allow_nan=False)
+
+            def _write_report():
+                with open(a.out, "w", encoding="utf-8") as f:
+                    json.dump(rep, f, ensure_ascii=False, indent=2, allow_nan=False)
+            _retry_on_lock(_write_report)  # R61：报告写瞬时锁重试（永久失败仍走 except 体面）
         except (OSError, ValueError) as e:
             p.error(f"报告写盘失败：{e}")
         print("报告已写入: %s" % a.out)

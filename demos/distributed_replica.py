@@ -32,20 +32,24 @@ import sys
 import time
 
 
-def _atomic_replace(tmp: str, target: str, attempts: int = 5):
-    """原子替换 + Windows 瞬时文件锁短重试（R59 硬化，与 overnight_town 同模式）。
-    杀软/索引器短暂持有目标致 os.replace 抛 PermissionError(WinError 5)时退避重试，
-    永久失败仍抛出（调用方 except OSError 转干净 rc=2）；无锁时行为同 os.replace。"""
+def _retry_on_lock(fn, attempts: int = 5):
+    """瞬时 Windows 文件锁（PermissionError/WinError 5）有界退避重试（R59/R61，与
+    overnight_town 同模式）。仅捕 PermissionError，永久失败仍抛出（调用方 except OSError
+    转干净 rc=2）；非 PermissionError 立即传播；attempts<1 守卫防静默跳过。"""
     if attempts < 1:
         raise ValueError("attempts 须 >= 1（防静默丢检查点，军规 4/5）")
     for i in range(attempts):
         try:
-            os.replace(tmp, target)
-            return
+            return fn()
         except PermissionError:
             if i == attempts - 1:
                 raise
             time.sleep(0.05 * (i + 1))
+
+
+def _atomic_replace(tmp: str, target: str, attempts: int = 5):
+    """原子替换 + 瞬时文件锁短重试（R59 硬化）；委托 _retry_on_lock，无锁时行为同 os.replace。"""
+    _retry_on_lock(lambda: os.replace(tmp, target), attempts)
 
 
 def fnv1a(text: str) -> int:
@@ -265,10 +269,13 @@ def main(argv=None):
                 os.makedirs(a.checkpoint_dir, exist_ok=True)
                 ck = os.path.join(a.checkpoint_dir, "dist_ckpt.json")
                 tmp = ck + ".tmp"
-                with open(tmp, "w", encoding="utf-8") as f:
-                    json.dump({"schema_version": 1, "focal_period": a.focal_period, "world": world}, f, ensure_ascii=False)
-                    f.flush()
-                    os.fsync(f.fileno())
+
+                def _write_tmp():
+                    with open(tmp, "w", encoding="utf-8") as f:
+                        json.dump({"schema_version": 1, "focal_period": a.focal_period, "world": world}, f, ensure_ascii=False)
+                        f.flush()
+                        os.fsync(f.fileno())
+                _retry_on_lock(_write_tmp)  # R61：tmp 写段瞬时锁重试（与 replace 对称）
                 _atomic_replace(tmp, ck)
             except OSError as e:
                 p.error(f"检查点写入失败（{a.checkpoint_dir}）：{e}")
@@ -286,8 +293,10 @@ def main(argv=None):
 
         if a.out:
             try:
-                with open(a.out, "w", encoding="utf-8") as f:
-                    json.dump(report, f, ensure_ascii=False, indent=2)
+                def _write_report():
+                    with open(a.out, "w", encoding="utf-8") as f:
+                        json.dump(report, f, ensure_ascii=False, indent=2)
+                _retry_on_lock(_write_report)  # R61：报告写瞬时锁重试
             except OSError as e:
                 p.error(f"报告写入失败（{a.out}）：{e}")
         return 0

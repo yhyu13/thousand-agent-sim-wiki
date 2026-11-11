@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""distributed_replica 测试套件（24 项）：python -m unittest test_distributed_replica -v
+"""distributed_replica 测试套件（25 项）：python -m unittest test_distributed_replica -v
 守卫规模化路线的确定性基础：无状态 worker / 命名空间 RNG / 排序施加 / 并行==串行 / 检查点续跑。
 R36 硬化：续跑 focal_period 不匹配拒绝 / 损坏检查点拒绝 / 量级上限。
 R37 硬化：键齐全但值类型损坏拒绝（bool 不算整数）/ schema_version 读取校验 / focal_period 严格整数化（封 True==1、10.0==10 等值陷阱）。
@@ -8,7 +8,8 @@ R38 硬化：深嵌套合法 JSON RecursionError 拒绝 / 负 tick 拒绝（防�
 R39 硬化：snap/world 未知键拒绝（封额外键深嵌套崩溃窗 W1/W2）/ 顶层 RecursionError 兜底（计算/序列化点未知深嵌套干净拒绝）。
 R40 硬化：顶层兜底扩四家族对齐主 demo（ValueError/OSError/OverflowError/RecursionError；孤立代理对 UnicodeEncodeError ⊂ ValueError 干净拒绝）。
 R59 硬化：检查点原子替换 Windows 瞬时文件锁短重试（_atomic_replace，与 overnight_town 同模式；瞬时 PermissionError 退避重试/永久失败抛出/happy path，3 项）。
-R60 硬化：_atomic_replace attempts<1 守卫（raise ValueError 防静默丢检查点，+1 项）。"""
+R60 硬化：_atomic_replace attempts<1 守卫（raise ValueError 防静默丢检查点，+1 项）。
+R61 硬化：重试扩至全写点（_retry_on_lock 共享 helper，save tmp 写段+报告写瞬时锁重试，+tmp 写段重试 1 项）。"""
 import copy
 import json
 import os
@@ -372,6 +373,27 @@ class TestAtomicReplaceRetry(unittest.TestCase):
                     with self.assertRaises(ValueError):
                         dr._atomic_replace("a", "b", attempts=bad)
                     rep.assert_not_called()
+
+    def test_save_tmp_write_transient_retry(self):
+        import builtins
+        real_open = builtins.open
+        n = {"tmp": 0}
+
+        def flaky_open(file, *a, **k):
+            if isinstance(file, str) and file.endswith("dist_ckpt.json.tmp"):
+                n["tmp"] += 1
+                if n["tmp"] <= 2:
+                    raise PermissionError(13, "模拟 tmp 写段瞬时锁")
+            return real_open(file, *a, **k)
+
+        with tempfile.TemporaryDirectory() as d:
+            with mock.patch.object(builtins, "open", side_effect=flaky_open), \
+                 mock.patch.object(dr.time, "sleep"):
+                rc = dr.main(["--seed", "7", "--agents", "10", "--ticks", "5",
+                              "--checkpoint-dir", d, "--mode", "sequential"])
+            self.assertEqual(rc, 0)
+            self.assertEqual(n["tmp"], 3)  # 2 次瞬时失败 + 1 次成功
+            self.assertTrue(os.path.exists(os.path.join(d, "dist_ckpt.json")))
 
 
 if __name__ == "__main__":
