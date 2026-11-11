@@ -1,4 +1,4 @@
-# Demos · 可运行 mock 演示（v3.45，critic 轮 1–53 修复 + 记忆剪枝 + schema 校验与运行时防御 + 可视化 + 居民记忆流查看器 + 分布式复刻 + 千人 30 夜浸泡/全注入三种子/TTL/零失败反事实实测；R26 整体验收原始目标达成，R44 冷读者审计确认）
+# Demos · 可运行 mock 演示（v3.46，critic 轮 1–55 修复 + 记忆剪枝 + schema 校验与运行时防御 + 可视化 + 居民记忆流查看器 + 分布式复刻 + 千人 30 夜浸泡/全注入三种子/TTL/零失败反事实实测；R26 整体验收原始目标达成，R44 冷读者审计确认，R55 证据层全逐字节可复现）
 
 零依赖（Python 3.10+ 标准库）、零网络、零真实 LLM、零 API key。
 所有失败注入都是**种子确定**的：同配置双跑，哈希逐位一致。
@@ -14,7 +14,7 @@
 | `distributed_replica.py` | **分布式规模化路线最小复刻（R35，零依赖 multiprocessing）**：演示 AgentSociety 2 [S08] 无状态 worker + 确定性世界 + 焦点激活——worker 是纯函数 (seed,tick,resident,focal)→补丁、RNG 命名空间派生（FNV-1a+mulberry32 同 overnight_town）、补丁按 id 排序施加 → **并行==串行**（`--mode both` 实证哈希一致）+ 检查点续跑==全程（记录并校验 focal_period、schema_version=1、字段值类型：seed/n/tick/focal_period/schema_version 须严格整数且 bool/float 不算整数、residents 须列表且数量与 n 一致、tick 须 >= 0；snap/world 未知键拒绝；深嵌套 JSON 解析层干净拒绝，计算/序列化点超递归上限由顶层四家族兜底（ValueError/OSError/OverflowError/RecursionError，对齐主 demo）干净拒绝，孤立代理对等编码类错误同被捕获；写路径 OSError 干净拒绝。residents 元素内部结构不深校验——域外，未超递归上限的深嵌套原样携带，元素垃圾 TypeError/KeyError 保持 rc=1）。剥离 overnight_town 的可并行计算内核，证明路线 B 的确定性基础 |
 | `test_distributed_replica.py` | **20 个测试**：并行==串行、确定性双跑、worker 纯函数无状态（不修改输入）、RNG 命名空间、焦点选择确定性旋转、补丁顺序无关、检查点续跑==全程、CLI 校验、**续跑 focal_period 不匹配/bool/float 拒绝、损坏检查点拒绝、量级上限、值类型损坏拒绝（7 形态含 bool 陷阱）、schema_version 读取校验（999/缺失/True/1.0/"1" 拒绝）、深嵌套合法 JSON RecursionError 拒绝、负 tick 拒绝（含 -(10^400) 防挂死）、residents 数量交叉校验、写路径 OSError 拒绝、snap/world 未知键拒绝（含额外键深 800 both 崩溃窗）、元素内深 1500 顶层兜底（both/sequential）、孤立代理对四家族兜底（3 模式）**。运行：`python -m unittest test_distributed_replica` |
 | `vis_smoke.js` | **visualize.html 冒烟守卫（38 项，node 运行）**：XSS 四向量、合成/真实来源三态标注、只载 report/只载 events 场景、null token、null/标量/畸形行容错、全无效拒绝、sample_events null 渲染安全、**tab 处理器 render 守卫（结构守卫为有效 M6 守卫；行为点击仅辅助验证接线，render 容错无法区分 try/catch 有无——R11 MINOR-2 校准）**、dayLabel null、nights 上限、BOM 路由、CSS 暗色覆盖源顺序、**居民记忆流查看器（R30：检查点载入/居民选择器/记忆流+计划渲染/居民字段 XSS 四向量/null 记忆容错/检查点独立于报告/空检查点提示；R31：居民 option 上限 2000/计划行上限 300/记忆精确计数；R32：数组记忆排除/分数索引归整）**。运行：`node vis_smoke.js .` |
-| `contrast_check.py` | 暗色/亮色徽章（GREEN+RED）与 tabs 对比度**真实 Chromium 实测**（需 playwright，路径相对脚本自身）：`python contrast_check.py`，AA ≥4.5 判定。v3.45 实测 6/6 全过（dark 10.25/6.45/7.02，light 5.02/6.47/6.70） |
+| `contrast_check.py` | 暗色/亮色徽章（GREEN+RED）与 tabs 对比度**真实 Chromium 实测**（需 playwright，路径相对脚本自身）：`python contrast_check.py`，AA ≥4.5 判定。v3.46 实测 6/6 全过（dark 10.25/6.45/7.02，light 5.02/6.47/6.70） |
 | `roi_calculator.py` | ROI 估算器：OASIS 实测 token 基线 x 平台时价 x 缓存/Batch 杠杆 + Claude/DeepSeek 谷时/**Qwen 现价（北京区 6 模型，缓存/Batch 不叠加）**场景（双层参数校验，对齐 04 §1.3–1.5） |
 | `visualize.html` | **早晨报告可视化**：零依赖单文件，双击离线打开；拖入 report JSON + events JSONL + **ckpt.json（检查点）** → 状态徽章/成本与覆盖率卡片/每夜 24h 事件时间轴（社交窗口+9 锚点+干预标记）/token 分布/审计流/双哈希/**居民记忆流查看器（R30：居民选择器+记忆流+当日计划，演示记忆检索架构）**；内置合成示例（明确标注），事件与居民字段 XSS 转义 |
 | `out/` | 运行产物（早晨报告 / 对照报告 / 增长报告 / events.jsonl 事件流） |
@@ -68,7 +68,7 @@ python -I overnight_town.py --nights 2 --agents 200 --crash-frac 0.5 --corrupt-f
 - **跨 nights 扩展续跑的边界**：注入/风暴窗口按 total 比例调度，nights 改变会移动窗口位置 → 首段历史不同。逐位等价在**首段无风暴/污染历史差异**时成立（崩溃注入被重放吸收，不影响 final_hash）；resume 测试特意用 storm=False 构造中间续跑。
 - v3.2 快照新增 `memories_pruned` 计数、v3.3 新增 `schema_version=2` → **final_hash 随之变化**（world_hash、成本、调用数逐位不变）。旧版快照续跑时缺失计数键自动补齐；`memory_ttl` 是运行配置不入快照，续跑可变（行为自洽，critic 轮 5 已验证）。
 
-## 实测记录（2026-11-11，本机 Python 3.13，v3.45；world_hash/成本/调用数与 v2 起逐位一致）
+## 实测记录（2026-11-11，本机 Python 3.13，v3.46；world_hash/成本/调用数与 v2 起逐位一致）
 
 标准通宵跑（1000 人 x 3 夜，432 ticks，含全部注入）：
 
@@ -93,7 +93,7 @@ python -I overnight_town.py --nights 2 --agents 200 --crash-frac 0.5 --corrupt-f
 ttl=30 × 30 夜 → 剪枝 0（正确：记忆年龄未超 30 天；GA 式过期只在超长运行生效）。
 人格记忆（identity 2 条 + habit 1 条）永驻，不参与剪枝。
 
-**千人 30 夜规模锚点（v3.38）**：全注入跑（崩溃 0.4 / 污染 0.7 / 风暴）GREEN，4320/4320 ticks、人口 1000/1000，崩溃恢复 1（resumed_from 1728）+ 回滚 1 全吸收，**world_hash/成本/调用数与干净跑逐位一致**（重放不膨胀计费，干预只留审计痕，`out/inject_1000x30_report.json`）；TTL=7 剪枝 **4,548（与 200 人跑逐位相同，夜数驱动）**、存留 4,656、检查点 **2.18 MB（-28.5%**，降幅随人口增长收窄——人格基座变大，`out/ttl_1000x30_report.json`）。**多种子稳健性（v3.39）**：seed 42/20261111 同配置全注入亦 GREEN（成本 $2.9032/$2.9055，`out/inject_1000x30_s42_report.json` / `_s20261111_report.json`）。机理与口径告诫见 ../04-roi.md §3.1。
+**千人 30 夜规模锚点（v3.38）**：全注入跑（崩溃 0.4 / 污染 0.7 / 风暴）GREEN，4320/4320 ticks、人口 1000/1000，崩溃恢复 1（resumed_from 1728）+ 回滚 1 全吸收，**world_hash/成本/调用数与干净浸泡跑逐位一致**（`growth_1000x30`，--no-crash 保留风暴；**非 `clean_*` 零失败跑**——去风暴改变失败历史故 world_hash 不同，重放不膨胀计费，干预只留审计痕，`out/inject_1000x30_report.json`）；TTL=7 剪枝 **4,548（与 200 人跑逐位相同，夜数驱动）**、存留 4,656、检查点 **2.18 MB（-28.5%**，降幅随人口增长收窄——人格基座变大，`out/ttl_1000x30_report.json`）。**多种子稳健性（v3.39）**：seed 42/20261111 同配置全注入亦 GREEN（成本 $2.9032/$2.9055，`out/inject_1000x30_s42_report.json` / `_s20261111_report.json`）。机理与口径告诫见 ../04-roi.md §3.1。
 
 测试套件：`Ran 55 tests ... OK`（~25 秒）+ `node vis_smoke.js .` 38/38 + `python contrast_check.py` 6/6 AA（Chromium 实测，含 RED 徽章）。R10 三根因 + R11 夜班 id Unicode 洞（`nurse-²`/`nurse-①`）/前缀不一致/NaN + R12 超 float 大整数（`10**400`，8 字段入口）+ R13 深嵌套合法 JSON（5000 层 meta.unresolved/world.events）/大整数 counter + R14 corrupt_times 量级（`10**9` 不再挂起）攻击形态端到端复现：全部 rc=2 干净拒绝（无 OverflowError/RecursionError 裸 traceback）；消费点运行时防御单元守卫入库；**变异击杀基线对照实证**（M3/M4/M5/M35/N2/N5/N6/N10/X_recursion/X_cost_bool/X_main_exc/X_p_bool/X_corrupt_cap 各被对应测试精确杀死，未变异基线全绿）。
 

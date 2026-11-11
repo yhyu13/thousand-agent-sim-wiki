@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-11（v3.45，critic 迭代轮 55；R54 ACCEPT 零 MINOR 核算式族收敛（代码定理），轮 55 转证据层整体可复现性审计）
+更新：2026-11-11（v3.46，critic 迭代轮 56；R55 ACCEPT 证据层 13 产物全逐字节可复现，轮 56「干净跑」术语消歧）
 
 ## 迭代模式
 
@@ -72,7 +72,8 @@
 | 52 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，4 零动作观察项；instrument 探针加固）：fresh clone（HEAD 20a5197）边界复跑逐值命中（286/152=46+106/220/66/106/86）；代码核实（T1_TEMPLATES :229-234 纯文本、gateway 仅 T2→T1 :342-345、call 先计数 :272 计费 :287 后 ok :295、do_reflections 解析失败→degraded :581-583/:602-607）；**偏差归因 instrument 证实**（观察性 monkeypatch 零扰动，instrumented 报告与未 instrument deep-equal）：ok_but_degraded_refl=66=偏差，106 降级反思=66 ok-but-degraded+40 零调用拒绝，conv 46 全零调用拒绝（86=46+40 闭合），降档全在 minute 1320 sleep 锚点→全反思；**前提过宽/过窄证伪**：「降档全为对话」代码不可能（T2 仅反思 :576，对话 T1 :544 只拒不降）；**充分非必要反例**（p_bad=1.0+降阈值饱和探针：degradations 105>0 但 ok-but-degraded=0 偏差 0，文档措辞充分前提+修正项准确）；**一般情形强化**（budget 0.05+默认失败全开：cost 0.048094 与历史记录逐位吻合，actual 335 公式 269 偏差 66=ok-but-degraded，**无条件恒等式四探针全闭合**含失败并存）；键名全称/基数 6×14+40=124×30 程序化核实/句法无悬挂；缩写 sweep 05:81 活体演练表 conv_degraded 系预存非本轮范围外观察；回归闸门 75/38/6AA/三产物逐字节+标准跑公式 372−57+9+11=335+三 inject 代入精确；diff 恰 6 文件 blob+AST 双证 ZERO_CODE_CHANGE_PROVEN；v3.43 活体一致/轮号自洽；工作副本零污染。+观察项（零动作）：①前提充分非必要可选补注+无条件恒等式②05:81 预存缩写可选润色③有失败跑末项须 instrument 分解（偏差恒可算）④基数饱和前提已注明 | wiki v3.44：观察项①③落实——04 §3.1 前提注精化「**充分非必要**」+ **无条件恒等式**（llm_calls=基数−降级+限流+坏JSON+ok-but-degraded，R52 四探针闭合含失败语境）+ 末项为 0 退化条件（对话只拒不降档/T2 仅反思）+ 可计算性边界（有失败末项须 instrument，偏差恒可从报告算）+ R52 instrument 分解 106=66+40 入文 | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
 | 53 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，2 零动作观察项；重派——前次宿主退出中断无报告）：fresh clone（HEAD ce4dc8c）**独立推导恒等式为代码定理**（calls=OK_n+M_n+rate_limit_hits，D=Z+RL_n+M_n+okbd → calls=B−D+rate+mal+okbd，B=conv_total+refl_total 报告恒有，与配置无关）；**11 配置 instrument 双跑全闭合**（plain+instrument deep-equal 零扰动，okbd 双口径逐配置一致）：零失败 budget0.05（286）/失败并存（335 cost 0.048094 与 R52 逐位）/标准全注入（335）/**--batch**（372 okbd89）/**--memory-ttl 1**（286 基数不变）/**--p-invalid 1.0**（372 全 rejected D=0）/**--corrupt-plan-frac 0.5**（372 回滚重放恰计一次）/**--agents 20**（B=309 非饱和）/**--p-bad 1.0**（B=291 非饱和 okbd0）/p-invalid+budget/p-bad+降阈值（241 budget_deg105 okbd0）；**关键发现：基数=min(配额,实际需求) 非恒 124/夜**（文档已注饱和前提，千人语境正确）；全部网关终态路径实证覆盖（含 30 夜 inject breaker_skips 51/80/45）；充分非必要代码证实（gateway :342 仅 T2 降档、对话 :544 T1 只拒、T2 唯一调用点 :576）+反例精确复现（105/26>0 okbd0）；可计算性边界证实（counters 聚合无拆分 :698-704，偏差恒可算回滚不变）；措辞/版本/轮号全自洽；回归闸门 75/38/6AA/三产物逐字节/三 inject 代入精确；diff 恰 6 文件 blob+AST 双证 ZERO_CODE_CHANGE_PROVEN；工作副本零污染。+观察项（零动作）：①基数项显式化「=conversations_total+reflections_total（饱和时 124/夜×nights）」更具普适操作性②退化条件括注充分非穷尽——okbd=0 亦可经降档调用全 malformed/限流终态达成（探针 i/k），可选补第三路径 | wiki v3.45：观察项①②落实——04 §3.1 基数显式定义（报告恒有 conv_total+refl_total，min(配额,实际需求)，非饱和实证 agents20→309/p_bad1.0→291）+ 恒等式标注代码定理/11 配置/全终态路径 + **第三退化路径**（降档调用全 malformed/限流终态，充分非穷尽）+ 偏差回滚不变注 | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
 | 54 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，3 零动作观察项；14 配置 plain+instrument 双跑零扰动）：fresh clone（HEAD 813f6c6）**基数定义独立推导为代码定理**（gateway 恰 2 调用点 :544/:576、llm.call 恰 1 处 :355、每槽恰增一个结果计数器 :607 恒执行、报告字段即其和 :792-794、回滚/崩溃/续跑同时恢复 counters+llm :717-719/:774-776、save 深拷贝防别名 :471 → B=conv_total+refl_total=网关槽数重放恰计一次，与配置无关）；非饱和实证 agents20→B309（conv252+refl57）/p_bad1.0+budget0.05→B291（conv252+refl39）与 R53 逐值吻合；**证伪尝试全失败**（ttl=1 极短记忆/corrupt-plan 回滚/crash 恢复/冷重启 resume/p_invalid1.0 全拒绝/batch/**RED 体面停机**恒等式与基数全闭合，「报告恒有」不过宽；ttl=0 被 Config 校验拒绝系防御非反例）；第三退化路径证实（p_bad1.0+budget0.05 budget_deg26>0 okbd0 降档全 malformed，gateway :342-345 降档后走正常失败路径 :383/:368）；回滚不变直接证明（corrupt-plan0.5 物理 378 槽 vs 报告 372，重放 6 槽物理两次报告一次）；7 终态路径全覆盖（breaker_skip 由入库 inject 51/80/45 触发）；措辞/版本/轮号全自洽；回归闸门 75/38/6AA/三产物逐字节/三 inject 代入 3672/3665/3684 基数 3720=2520+1200；diff 恰 6 文件 7 blob 相同+test AST 去 docstring 相等 ZERO_CODE_CHANGE_PROVEN；工作副本零污染。+观察项（零动作）：①brief 预期 calls=291 仅 --p-rate 0 成立（默认 p_rate0.02→295），文档只声称 B=291 正确非缺陷②「min(配额,需求)」概念 gloss 精确为逐夜逐分量 min，操作性定义已精确③05 缩写预存域外。**核算式族收敛（R48–R54 七轮，终为代码定理+全终态路径覆盖）** | —（零缺陷，v3.45 不变） | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
-| 55 | 已派出：R55 critic 证据层整体可复现性审计（12 份入库实测报告 + events.jsonl fresh clone 批量复现 + 跨报告不变量 + 全量闸门） | 待报告 | — |
+| 55 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，3 零动作观察项；证据层整体可复现性审计）：fresh clone（HEAD bf59ebe）**13 产物全部逐字节可复现**（双口径 CRLF 工作树+LF blob，15 作业 rc=0 含 3 带 ckpt 双跑确定性，3 并行零差异；本机 1000×30 约 52–70s 带 ckpt 180–210s）；命令与 05/demos README/STATUS 逐参核对、报告权威字段吻合；events 结构闭合（333 行=252 conv+81 audit）；**跨报告不变量全闭合**：核算恒等式×12（budget_deg 全 0→okbd0）、world_hash 关系网（morning==control 2fe29e0a/growth1000==inject18 770fa4f6/ttl 28f6e2c8/三种子互异/growth200==growth_ttl30）、**双哈希从 4 份 ckpt 独立重算证实非 stale**、成本分解 12 报告 tokens+缓存模型独立重算唯一整数解 6 位精确（clean 差 −0.013417 output −0.0139010/input +0.0004842、inject 差 +0.004870、失败效应 +0.018287）、记忆公式 ckpt 自数（9204/9200/4656/9201/6804/2256 人格永驻零违例 ttl kind 分解 1344+312+3000）、TTL 剪枝人口无关 4548；**brief 预期纠正**：「clean_* 与 inject 同种子 world_hash 相同」不成立且 wiki 从未声称——跨干预不变量限定同风暴配置，04「干净跑」=growth 浸泡跑（保留风暴），补跑 growth42==inject42 78320489 实证；全量闸门 75/38/6AA（前两次 WinError5 系宿主 TEMP 覆盖缺失+os.replace 瞬时锁，环境受控后连续 75/75，非代码缺陷）+分布式 ec4a48e9 锚点；文档锚点零漂移（9204/3.04MB/2.8983/4548/2.18MB/-28.5%/286/220/66/6804/2256/1190B/6204 等全命中）；v3.45 活体一致/轮号自洽；diff 仅 README+STATUS 代码零变更；工作副本零污染。+观察项（零动作）：①brief 误读已纠正（wiki 口径正确，建议后续 brief 沿用）②测试闸门宿主环境瞬时（可选 save() Windows PermissionError 短重试，非缺陷无需改）③复现时长快于估计 | wiki v3.46：观察项①衍生消歧——04 §3.1 与 demos README「干净跑」改「**干净浸泡跑**（growth_1000x30，--no-crash 保留风暴；非 clean_* 零失败跑——去风暴改变失败历史故 world_hash 不同）」，消除「干净跑」与「clean_*」命名混淆（R55 纠正的误读风险） | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
+| 56 | 已派出：R56 critic 复核 v3.46（术语消歧准确性 + 跨干预不变量同风暴限定核对 + 无回归） | 待报告 | — |
 
 ## 进度
 
@@ -140,7 +141,8 @@
 - [x] 轮 52 critic（**ACCEPT**，零 MINOR，instrument 证实偏差 66=ok-but-degraded + 无条件恒等式四探针闭合含失败语境 + 充分非必要反例）→ 轮 53（v3.44：无条件恒等式 + 充分非必要 + 可计算性边界入文）
 - [x] 轮 53 critic（**ACCEPT**，零 MINOR，恒等式独立推导为代码定理 + 11 配置全闭合 + 基数=min(配额,需求) 关键发现；重派成功）→ 轮 54（v3.45：基数显式化 + 第三退化路径 + 回滚不变注）
 - [x] 轮 54 critic（**ACCEPT**，零 MINOR，14 配置证伪全失败含 RED 停机/冷重启，基数=代码定理，核算式族 R48–R54 收敛）→ 无缺陷修复（v3.45 不变）
-- [ ] 轮 55 critic（证据层整体可复现性审计：12 报告 + events 批量复现 + 跨报告不变量）
+- [x] 轮 55 critic（**ACCEPT**，证据层 13 产物全逐字节可复现 + 跨报告不变量全闭合 + 双哈希 ckpt 独立重算 + 文档锚点零漂移）→ 轮 56（v3.46：「干净跑」术语消歧，消除与 clean_* 命名混淆）
+- [ ] 轮 56 critic（v3.46 术语消歧复核）
 - [ ] 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务
 
 ## 核验日志
@@ -155,7 +157,7 @@
 | 2026-11-11 轮3 | demo v3 存档相位 BLOCKER 修复（先体检后存档）；33/33 测试；标准跑数字逐位不变 |
 | 2026-11-11 轮4 | 07 两 MAJOR 修复（每夜 token 25.4k/5.9k、Ollama /v1 端点）；**DeepSeek 峰谷计价核验（S26）：北京夜间全 off-peak 半价——通宵天然 ROI 杠杆**；Qwen 现役模型换代确认（S27，qwen-plus/max 已 legacy，单价 ⏳ console） |
 
-## demo 运行记录（v3.45，2026-11-11，Python 3.13.12）
+## demo 运行记录（v3.46，2026-11-11，Python 3.13.12）
 
 | 项 | 结果 |
 | --- | --- |
@@ -163,7 +165,7 @@
 | 分布式复刻（R35） | 1000 代理×144 ticks 焦点 1/10：并行==串行（哈希 ec4a48e9…一致）、确定性双跑一致、检查点续跑==全程（resumed_from 72）；焦点调度 14400/144000 |
 | critic BLOCKER 复现案例（--corrupt-frac 0.2066，相位 X≡5 mod 6） | v2 RED → **v3 GREEN**（288/288，人口 200/200，回滚 1） |
 | 标准通宵（1000×3 夜，全注入） | GREEN ~2s；崩溃恢复1（重放≤6tick）/回滚1；335 次调用覆盖率 0.0775%；$0.205012 |
-| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.45 逐位不变） |
+| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.46 逐位不变） |
 | final_hash（v3.3） | ff7c76832d6e1145…（schema_version=2 所致；v3.2 为 736e8318…、v3 为 594f4f85…，历史记录） |
 | 30 夜×200 人增长跑 | GREEN 70s；记忆 6804（人均34）；检查点 2.09MB；对话 2520+反思 1200；$2.90；熔断开4关1 |
 | 千人 30 夜浸泡跑（v3.37） | GREEN；4320 ticks 人口 1000/1000；记忆 9204（人均9.2，ckpt 计数）；检查点 3.04MB（3044477B）；3672 调用/0.0850%；$2.8983；审计 1131；熔断开4关1；world_hash 770fa4f6…/final_hash 62f736e0…；**证伪 10MB 外推**（事件派生记忆 6204 与 200 人跑恰相等，夜数驱动）；报告 out/growth_1000x30_report.json |
@@ -173,9 +175,9 @@
 | 剪枝跑（ttl=7×30 夜） | GREEN；剪枝 4548、存留 2256（-67%）；检查点 1.22MB（-42%）；$2.9013 |
 | ROI 估算器 | qwen-max ≈¥370.42（历史口径）；Haiku $2.01→缓存+Batch $0.50；DeepSeek Flash 谷时 $2.90→70%命中 $1.24 [S26]；Qwen 现价（轮 24，北京区）qwen3.8-max $30.56→Batch $15.28 / qwen3.7-flash $0.54（04 §1.5） |
 
-## 下一步（轮 56）
+## 下一步（轮 57）
 
-1. 轮 55 critic 报告 → 修复（证据层整体可复现性审计）；
+1. 轮 56 critic 报告 → 修复（v3.46 术语消歧复核）；
 2. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
 3. 可选深化：**Ray 版**分布式复刻（[S08]；stdlib 教学复刻 R35 已落地、R41 收敛，居民记忆查看器 R30 已落地、R32 收敛——两者不再列为待做）；
 4. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。
