@@ -833,9 +833,9 @@ def _run(cfg, store, injections, resume, meta):
         def _write_events():
             with open(cfg.events_out, "w", encoding="utf-8") as f:
                 for e in w.events:
-                    f.write(json.dumps(e, ensure_ascii=False) + "\n")
+                    f.write(json.dumps(e, ensure_ascii=False, allow_nan=False) + "\n")
                 for a in w.audit:
-                    f.write(json.dumps(dict(a, _stream="audit"), ensure_ascii=False) + "\n")
+                    f.write(json.dumps(dict(a, _stream="audit"), ensure_ascii=False, allow_nan=False) + "\n")
         _retry_on_lock(_write_events)  # R61：终点导出瞬时锁重试（模拟已完成、世界已落盘）
     # 世界本体哈希：居民/计划/事件（跨干预不变量）；全量哈希另含审计与计费状态
     world_core = {"day": w.day, "abs_minute": w.abs_minute,

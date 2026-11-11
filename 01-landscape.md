@@ -61,7 +61,7 @@
 
 ### AgentSociety 1→2 [S07][S08][S09]
 - v1 证明规模：1 万代理、500 万交互、五个社会议题（极化/煽动信息/UBI/飓风/城市可持续）与真实实验对齐 [S07]。
-- v2 的架构是**通宵运行的教科书**：代理是无状态记录（workspace 绑定），执行是 Ray Tasks，环境/LLM/追踪/重放句柄统一走 ServiceProxy；任何 worker 死掉都不带走世界状态；JSONL catalog + DuckDB 支持事后重放与审计 [S08]。**`demos/distributed_replica.py` 用 stdlib multiprocessing 复刻了这一确定性内核**（无状态 worker + 焦点激活 + 并行==串行 + 检查点续跑，25 测试守卫），作为路线 B 可规模化性的最小实证。
+- v2 的架构是**通宵运行的教科书**：代理是无状态记录（workspace 绑定），执行是 Ray Tasks，环境/LLM/追踪/重放句柄统一走 ServiceProxy；任何 worker 死掉都不带走世界状态；JSONL catalog + DuckDB 支持事后重放与审计 [S08]。**`demos/distributed_replica.py` 用 stdlib multiprocessing 复刻了这一确定性内核**（无状态 worker + 焦点激活 + 并行==串行 + 检查点续跑，26 测试守卫），作为路线 B 可规模化性的最小实证。
 - v2 的双角色（AI 社会科学家 + 硅基被试）提示了 ROI 的「价值侧」：模拟不只是跑，还能自动产出假设→实验→解读→报告 [S09]。
 
 ### Concordia [S10][S11]

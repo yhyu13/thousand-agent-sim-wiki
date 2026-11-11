@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""distributed_replica 测试套件（25 项）：python -m unittest test_distributed_replica -v
+"""distributed_replica 测试套件（26 项）：python -m unittest test_distributed_replica -v
 守卫规模化路线的确定性基础：无状态 worker / 命名空间 RNG / 排序施加 / 并行==串行 / 检查点续跑。
 R36 硬化：续跑 focal_period 不匹配拒绝 / 损坏检查点拒绝 / 量级上限。
 R37 硬化：键齐全但值类型损坏拒绝（bool 不算整数）/ schema_version 读取校验 / focal_period 严格整数化（封 True==1、10.0==10 等值陷阱）。
@@ -9,7 +9,8 @@ R39 硬化：snap/world 未知键拒绝（封额外键深嵌套崩溃窗 W1/W2�
 R40 硬化：顶层兜底扩四家族对齐主 demo（ValueError/OSError/OverflowError/RecursionError；孤立代理对 UnicodeEncodeError ⊂ ValueError 干净拒绝）。
 R59 硬化：检查点原子替换 Windows 瞬时文件锁短重试（_atomic_replace，与 overnight_town 同模式；瞬时 PermissionError 退避重试/永久失败抛出/happy path，3 项）。
 R60 硬化：_atomic_replace attempts<1 守卫（raise ValueError 防静默丢检查点，+1 项）。
-R61 硬化：重试扩至全写点（_retry_on_lock 共享 helper，save tmp 写段+报告写瞬时锁重试，+tmp 写段重试 1 项）。"""
+R61 硬化：重试扩至全写点（_retry_on_lock 共享 helper，save tmp 写段+报告写瞬时锁重试，+tmp 写段重试 1 项）。
+R63 硬化：checkpoint/report json.dump 补 allow_nan=False（与 ot 对称，域外 NaN 再发射干净拒绝，+NaN energy 拒绝 1 项）。"""
 import copy
 import json
 import os
@@ -394,6 +395,20 @@ class TestAtomicReplaceRetry(unittest.TestCase):
             self.assertEqual(rc, 0)
             self.assertEqual(n["tmp"], 3)  # 2 次瞬时失败 + 1 次成功
             self.assertTrue(os.path.exists(os.path.join(d, "dist_ckpt.json")))
+
+    def test_resume_nan_energy_rejected_on_save(self):
+        # R63 项1：域外 NaN energy 检查点 remaining=0 再发射时 allow_nan=False 干净拒绝
+        # （硬化前静默 rc=0 发射非严格 JSON；residents 内部不深校验系明示域外）
+        with tempfile.TemporaryDirectory() as d:
+            ck = os.path.join(d, "dist_ckpt.json")
+            world = {"seed": 7, "n": 1, "tick": 5,
+                     "residents": [{"id": "r-0000", "role": "resident", "energy": float("nan")}]}
+            with open(ck, "w", encoding="utf-8") as f:
+                json.dump({"schema_version": 1, "focal_period": 10, "world": world}, f, allow_nan=True)
+            with self.assertRaises(SystemExit) as cm:
+                dr.main(["--seed", "7", "--agents", "1", "--ticks", "5",
+                         "--checkpoint-dir", d, "--resume", "--mode", "sequential"])
+            self.assertEqual(cm.exception.code, 2)
 
 
 if __name__ == "__main__":

@@ -272,7 +272,7 @@ def main(argv=None):
 
                 def _write_tmp():
                     with open(tmp, "w", encoding="utf-8") as f:
-                        json.dump({"schema_version": 1, "focal_period": a.focal_period, "world": world}, f, ensure_ascii=False)
+                        json.dump({"schema_version": 1, "focal_period": a.focal_period, "world": world}, f, ensure_ascii=False, allow_nan=False)
                         f.flush()
                         os.fsync(f.fileno())
                 _retry_on_lock(_write_tmp)  # R61：tmp 写段瞬时锁重试（与 replace 对称）
@@ -295,7 +295,7 @@ def main(argv=None):
             try:
                 def _write_report():
                     with open(a.out, "w", encoding="utf-8") as f:
-                        json.dump(report, f, ensure_ascii=False, indent=2)
+                        json.dump(report, f, ensure_ascii=False, indent=2, allow_nan=False)
                 _retry_on_lock(_write_report)  # R61：报告写瞬时锁重试
             except OSError as e:
                 p.error(f"报告写入失败（{a.out}）：{e}")

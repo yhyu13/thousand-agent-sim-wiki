@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""overnight_town 测试套件 v3.50（62 项）：python -m unittest test_overnight_town -v
+"""overnight_town 测试套件 v3.51（62 项）：python -m unittest test_overnight_town -v
 v2：别名污染回归、检查点隔离、from_dict 等价、边界、计划违例实弹、半开探针、审计顺序、
 体面停机、meta 崩溃安全；v3：存档相位 BLOCKER、回滚后崩溃窗口、分散注入、抽样互质、
 resume 五连、Config 校验；v3.2：语义损坏 ckpt、NaN/CLI 拒绝、记忆剪枝 TTL×3；
@@ -57,6 +57,7 @@ v3.47：R56（REQUEST_CHANGES 2 MINOR）修复——术语全库清扫（README 
 v3.48：R58（ACCEPT 跨文档完整性终审）后验证发现 Windows os.replace 瞬时文件锁（杀软/索引器，PermissionError WinError 5）致 resume 测试间歇 errors——R55 观察项②建议的硬化被实证触发：**save() 原子替换短重试**（_atomic_replace：瞬时 PermissionError 退避重试 5 次、永久失败仍抛、非 PermissionError 不重试，掉电安全语义不变，军规 4/5 通宵检查点可靠性）；test 55→59（+重试 4 项）；distributed_replica 同模式硬化 20→23。**happy path 不变、双哈希/成本/调用数逐位不变**。
 v3.49：R59（ACCEPT，51 断言+4 变异击杀+A/B 反证硬化承重）2 MINOR 修复——_atomic_replace 增 **attempts<1 守卫**（raise ValueError，封静默丢检查点边界，当前调用图不可达但防未来接线隐患）；test 59→60（+守卫）；distributed_replica 23→24；STATUS 运行记录表头 v3.47→v3.49 补同步（MINOR-1）。**happy path 不变、哈希不变**。
 v3.50：R61（ACCEPT，17 进程级探针全写点瞬时失败一律体面 rc=2 零裸崩）2 MINOR 修复——重试硬化扩至**全写点**：抽出 _retry_on_lock 共享 helper（_atomic_replace 委托），save() tmp 写段 + 事件流导出 + 报告写均加瞬时锁重试（MINOR-1 tmp 写段不对称 / MINOR-2 终点导出无重试）；NaN ValueError 不重试（allow_nan=False 安全）、永久失败仍体面 rc=2；test 60→62（+tmp 写段重试/ValueError 不重试）；distributed_replica 24→25。**happy path 不变、双哈希/成本/调用数逐位不变**。
+v3.51：R63（ACCEPT，5 观察项独立分诊均既有零动作，NaN CLI 不可达 AST+实跑证实）推荐硬化落实——**全 dump 点 allow_nan=False 对称**（ot 事件流/审计 json.dumps 补 allow_nan=False，与 ot save/report 及 dr 一致；域外 NaN 静默再发射转干净拒绝，契合「存档 allow_nan=False 最终闸门」哲学）；distributed_replica checkpoint/report 补 allow_nan=False + NaN 再发射拒绝测试 25→26。**happy path 不变、哈希不变**。
 可视化冒烟另见 vis_smoke.js（node vis_smoke.js .，38 项）；对比度实测 contrast_check.py（6 项含 RED）。"""
 import copy
 import json
