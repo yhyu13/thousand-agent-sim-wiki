@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""distributed_replica 测试套件（8 项）：python -m unittest test_distributed_replica -v
-守卫规模化路线的确定性基础：无状态 worker / 命名空间 RNG / 排序施加 / 并行==串行 / 检查点续跑。"""
+"""distributed_replica 测试套件（11 项）：python -m unittest test_distributed_replica -v
+守卫规模化路线的确定性基础：无状态 worker / 命名空间 RNG / 排序施加 / 并行==串行 / 检查点续跑。
+R36 硬化：续跑 focal_period 不匹配拒绝 / 损坏检查点拒绝 / 量级上限。"""
 import copy
 import json
 import os
@@ -93,6 +94,36 @@ class TestDistributedReplica(unittest.TestCase):
         """非法参数干净拒绝（rc=2）。"""
         for argv in (["--agents", "0"], ["--ticks", "-1"], ["--focal-period", "0"],
                      ["--workers", "0"], ["--resume"]):
+            with self.assertRaises(SystemExit) as cm:
+                dr.main(argv)
+            self.assertEqual(cm.exception.code, 2)
+
+    def test_resume_focal_period_mismatch(self):
+        """R36 MINOR-1：续跑 focal_period 不匹配须拒绝（防混合轨迹）。"""
+        with tempfile.TemporaryDirectory() as d:
+            dr.main(["--seed", "7", "--agents", "20", "--ticks", "10", "--focal-period", "10",
+                     "--checkpoint-dir", d, "--mode", "sequential", "--out", os.path.join(d, "a.json")])
+            with self.assertRaises(SystemExit) as cm:
+                dr.main(["--seed", "7", "--agents", "20", "--ticks", "20", "--focal-period", "5",
+                         "--checkpoint-dir", d, "--resume", "--mode", "sequential", "--out", os.path.join(d, "b.json")])
+            self.assertEqual(cm.exception.code, 2)
+
+    def test_resume_corrupt_checkpoint(self):
+        """R36 O-1：损坏检查点干净拒绝（rc=2，无裸 traceback）。"""
+        with tempfile.TemporaryDirectory() as d:
+            ck = os.path.join(d, "dist_ckpt.json")
+            for payload in ('{bad json', '', '{"schema_version":1}', '{"world":{"seed":7}}'):
+                with open(ck, "w", encoding="utf-8") as f:
+                    f.write(payload)
+                with self.assertRaises(SystemExit) as cm:
+                    dr.main(["--seed", "7", "--agents", "20", "--ticks", "20",
+                             "--checkpoint-dir", d, "--resume", "--out", os.path.join(d, "b.json")])
+                self.assertEqual(cm.exception.code, 2)
+
+    def test_cli_magnitude_caps(self):
+        """R36 O-5：量级上限拒绝。"""
+        for argv in (["--agents", str(10**6 + 1)], ["--ticks", str(10**7 + 1)],
+                     ["--focal-period", str(10**6 + 1)], ["--workers", "65"]):
             with self.assertRaises(SystemExit) as cm:
                 dr.main(argv)
             self.assertEqual(cm.exception.code, 2)

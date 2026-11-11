@@ -101,7 +101,8 @@ def focal_ids(world, focal_period: int):
 
 
 def apply_patches(world, patches):
-    """补丁按 id 排序施加 → 并行/串行结果一致（军规2）。"""
+    """补丁按 id 排序施加 → 并行/串行结果一致（军规2）。
+    前置条件：每 id 每 tick 恰一个补丁（流水线保证）；重复 id 会因稳定排序保留输入序而顺序敏感（域外输入）。"""
     by_id = {r["id"]: r for r in world["residents"]}
     focal_count = 0
     for p in sorted(patches, key=lambda x: x["id"]):
@@ -157,6 +158,8 @@ def main(argv=None):
     a = p.parse_args(argv)
     if a.agents < 1 or a.ticks < 0 or a.focal_period < 1 or a.workers < 1:
         p.error("agents/focal-period/workers 须 >= 1，ticks 须 >= 0")
+    if a.agents > 10**6 or a.ticks > 10**7 or a.focal_period > 10**6 or a.workers > 64:
+        p.error("量级上限：agents/focal-period <= 10^6、ticks <= 10^7、workers <= 64（防无界/挂死）")
 
     start_tick = 0
     if a.resume:
@@ -165,11 +168,20 @@ def main(argv=None):
         ck = os.path.join(a.checkpoint_dir, "dist_ckpt.json")
         if not os.path.exists(ck):
             p.error(f"--resume：未找到检查点 {ck}")
-        with open(ck, encoding="utf-8") as f:
-            snap = json.load(f)
+        try:
+            with open(ck, encoding="utf-8") as f:
+                snap = json.load(f)
+        except (ValueError, OSError) as e:
+            p.error(f"--resume：检查点读取失败（{ck}）：{e}")
+        if not isinstance(snap, dict) or not isinstance(snap.get("world"), dict):
+            p.error("--resume：检查点格式错误（缺 world 对象）")
         world = snap["world"]
+        if not all(k in world for k in ("seed", "n", "tick", "residents")):
+            p.error("--resume：检查点 world 缺必需字段（seed/n/tick/residents）")
         if world["seed"] != a.seed or world["n"] != a.agents:
-            p.error(f"--resume 配置不匹配：检查点 seed={world['seed']}/n={world['n']}")
+            p.error(f"--resume 配置不匹配：检查点 seed={world['seed']}/n={world['n']}，当前 seed={a.seed}/agents={a.agents}")
+        if snap.get("focal_period") != a.focal_period:
+            p.error(f"--resume 配置不匹配：检查点 focal_period={snap.get('focal_period')}，当前 {a.focal_period}（焦点周期改变会产生混合轨迹，须一致）")
         start_tick = world["tick"]
         if a.ticks < start_tick:
             p.error(f"--resume：ticks={a.ticks} 小于检查点进度 {start_tick}")
@@ -211,7 +223,7 @@ def main(argv=None):
         ck = os.path.join(a.checkpoint_dir, "dist_ckpt.json")
         tmp = ck + ".tmp"
         with open(tmp, "w", encoding="utf-8") as f:
-            json.dump({"schema_version": 1, "world": world}, f, ensure_ascii=False)
+            json.dump({"schema_version": 1, "focal_period": a.focal_period, "world": world}, f, ensure_ascii=False)
             f.flush()
             os.fsync(f.fileno())
         os.replace(tmp, ck)
@@ -219,7 +231,7 @@ def main(argv=None):
     print("=== 分布式复刻报告 ===")
     print("模式: %s · %d 代理 x %d ticks · 焦点周期 1/%d" %
           (report["mode"], a.agents, world["tick"], a.focal_period))
-    print("焦点调度总数: %d（其余走规则层，零 LLM 成本）" % report["focal_total"])
+    print("焦点调度总数（本次运行段，非累计）: %d（其余走规则层，零 LLM 成本）" % report["focal_total"])
     if a.mode == "both":
         print("并行 == 串行: %s" % report["parallel_equals_sequential"])
         print("  sequential_hash: %s" % report["sequential_hash"])

@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-11（v3.29，critic 迭代轮 36；R35 ACCEPT，新增分布式规模化路线最小复刻 demo + 8 测试）
+更新：2026-11-11（v3.30，critic 迭代轮 37；R36 ACCEPT 分布式复刻，轮 37 硬化 focal_period 校验/检查点校验/量级上限）
 
 ## 迭代模式
 
@@ -51,7 +51,8 @@
 | 33 | **REQUEST_CHANGES**（操作文档深审，25 次实跑 + 2 次 kill -9 + 3 官方页直抓）：05/07 整体质量高——19 CLI flag 全实存、标准/对照/ROI 命令实跑与权威产物逐字段乃至字节级一致、双语义哈希/真实 kill -9 冷重启/体面停机/TTL 剪枝 11/12 演练符合、07 平台事实三官方页直抓逐字核验、跨文档数字链全通；但 **MAJOR-1 05 §5 预算耗尽行预期与实测矛盾**：`--budget 0.05` 文档称「全规则运行」实测 degradations=67/refusals=0/conv_llm=235（T1 估价 0.001 成本渐近 0.048<0.049 拒绝线，全规则永不触发；安全断言成立但阶段描述错）；+MINOR-1 标准命令缺 --events-out / MINOR-2 风暴行缺「标准跑 breaker_*=0」caveat / MINOR-3「meta 靠异常传递」措辞不精确 / MINOR-4 07 output_format 废弃需区分 parse 助手；+观察项 demo:154 注释「events 含对话/反思」不准（反思不入 events） | wiki v3.27：05 §5 预算行改准确（@0.05 降档对话仍 T1 refusals=0 + 新增 @0.001 近全规则行 refusals≈295，**实测核验**）；标准命令补 --events-out；风暴行加 breaker_*=0 caveat；meta 措辞改「重试循环共享引用」；07 §4 output_format 区分原始请求参数（废弃）vs messages.parse 助手（现行）；demo:154 注释改「对话；反思计入 reflections_total 不入 events」（注释 only，哈希不变） | 55/55 + 38/38 + 6/6 AA；文档标准命令实跑产物逐字节一致；哈希不变 |
 | 34 | **ACCEPT**（6/6 修复到位，0 BLOCKER/MAJOR/MINOR）：预算两行预期与实测**逐值精确一致**（@0.05 degradations=67/refusals=0/conv_llm=235/cost 0.048094；@0.001 refusals=295/conv_llm=1/conv_degraded=251；机理 WORST_EST T1=0.001 拒绝线 0.049 结构性解释）；--events-out 实跑产出 63222B；风暴 caveat 两端实测（标准 breaker 0/0、探针 10 开/4 关）；meta 措辞代码吻合（run_overnight:997 循环外定义共享引用）；07 output_format 区分**官方页直抓三重证实**（Migrating from the beta 节）；demo:154 注释修正零行为变更；55/38 全绿 + 标准跑 31 字段逐位 + events 逐字节 + 双哈希不变 + 仓库 28/28 零污染。+2 零动作观察：O-1 sources S24 摘要可选补废弃细节（07:75 引 [S24]，已直抓证实）/O-2 03:67 通用治理阶梯与修复后 05 不矛盾 | wiki v3.28：O-1 落实——S24 补废弃参数区分细节（原始 output_format 请求参数废弃需 beta header/SDK v1.0+ 抛 TypeError vs messages.parse 现行助手 vs output_config.format 无需 header，轮 34 直抓核验）；sources only，demo 无变更 | 55/55 + 38/38 + 6/6 AA；哈希不变 |
 | 35 | **ACCEPT**（S24 补充五点与官方页逐字吻合、与 07:75 互洽、三层回归 + 字节级对照全绿、demo 零变更，0 BLOCKER/MAJOR/MINOR）：官方「Migrating from the beta」节直抓核验（output_format 废弃/beta header structured-outputs-2025-11-13/SDK TypeError/messages.parse recommended/output_config 无需 header）；+1 零动作观察 O-1（S24 缺「Python」限定，07 已正确）。**纯审查轮收益递减，转可选深化** | wiki v3.29：O-1 落实（S24 补 Python 限定）；**可选深化——新增分布式规模化路线最小复刻** `demos/distributed_replica.py`（stdlib multiprocessing 演示 AgentSociety 2 [S08] 无状态 worker + 确定性世界 + 焦点激活：纯函数 worker/命名空间 RNG/排序补丁 → **并行==串行实证** + 检查点续跑==全程）+ `test_distributed_replica.py` **8 测试全绿**；01 路线 B + AgentSociety 节引用、demos README 登记 | overnight_town 55/55 + distributed_replica 8/8 + 38/38 + 6/6 AA；overnight_town 哈希不变 |
-| 36 | 已派出：R36 critic 审查分布式复刻新 demo（无状态/确定性/并行==串行/续跑/CLI/与 [S08] 一致性） | 待报告 | — |
+| 36 | **ACCEPT**（分布式复刻核心声称全部独立实证，0 BLOCKER/MAJOR）：纯函数无副作用（5000 次调用命名空间快照不变 + 独立参考实现逐位）、命名空间 RNG（200tick×10id 零碰撞 + 与 overnight_town 逐位 + **跨语言 JS 实证**）、**并行==串行 48 组配置 + 随机反例搜寻无果**（w1/2/8 不变、真实多进程 PID 探针 3 子进程）、续跑==全程（四段混合链 10→20→30→40）、CLI rc=2、声称限定诚实（教学复刻非生产 Ray）、主 demo 三层回归 + 字节级基线全绿、仓库 33/33 零改动。+MINOR-1（resume 不记录/校验 focal_period，混配置静默接受混合轨迹）+O-1 损坏检查点裸 traceback/O-2 重复 id 补丁顺序敏感（域外）/O-3 focal_total 段统计语义/O-4 README 签名简写/O-5 无量级上限 | wiki v3.30：分布式复刻硬化——**检查点记录并校验 focal_period**（不匹配 rc=2，MINOR-1）、**resume 最小 schema 校验**（坏 JSON/缺 world/缺字段 rc=2，O-1）、量级上限（agents/focal-period≤10⁶/ticks≤10⁷/workers≤64，O-5）、apply_patches 唯一 id 前置条件注（O-2）、focal_total 段统计语义注（O-3）、README 签名对齐 (seed,tick,resident,focal)（O-4）；test_distributed_replica 8→**11 测试** | overnight_town 55/55 + distributed_replica 11/11（合 66）+ 38/38 + 6/6 AA；overnight_town 哈希不变 |
+| 37 | 已派出：R37 critic 复核分布式复刻硬化（focal_period 校验/损坏检查点/量级上限/无回归） | 待报告 | — |
 
 ## 进度
 
@@ -100,7 +101,8 @@
 - [x] 轮 33 critic（**REQUEST_CHANGES**，操作文档深审：MAJOR-1 预算演练预期与实测矛盾 + 4 MINOR）→ 轮 34 修复（v3.27：预算行准确化 + @0.001 近全规则行、--events-out、风暴 caveat、meta 措辞、07 output_format 区分、demo 注释）
 - [x] 轮 34 critic（**ACCEPT**，6/6 修复到位，预算两行逐值精确一致，output_format 官方页三重证实）→ 轮 35（v3.28：S24 补废弃参数区分细节，O-1 落实）
 - [x] 轮 35 critic（**ACCEPT**，S24 官方页逐字吻合）→ 轮 36 可选深化（v3.29：S24 补 Python 限定 + **分布式复刻 distributed_replica.py + 8 测试**，并行==串行实证）
-- [ ] 轮 36 critic（分布式复刻审查）
+- [x] 轮 36 critic（**ACCEPT**，分布式复刻核心声称全实证：并行==串行 48 组 + 跨语言 RNG + 真实多进程）→ 轮 37 硬化（v3.30：focal_period 校验、检查点 schema 校验、量级上限，test 8→11）
+- [ ] 轮 37 critic（分布式复刻硬化复核）
 - [ ] 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务
 
 ## 核验日志
@@ -115,23 +117,23 @@
 | 2026-11-11 轮3 | demo v3 存档相位 BLOCKER 修复（先体检后存档）；33/33 测试；标准跑数字逐位不变 |
 | 2026-11-11 轮4 | 07 两 MAJOR 修复（每夜 token 25.4k/5.9k、Ollama /v1 端点）；**DeepSeek 峰谷计价核验（S26）：北京夜间全 off-peak 半价——通宵天然 ROI 杠杆**；Qwen 现役模型换代确认（S27，qwen-plus/max 已 legacy，单价 ⏳ console） |
 
-## demo 运行记录（v3.29，2026-11-11，Python 3.13.12）
+## demo 运行记录（v3.30，2026-11-11，Python 3.13.12）
 
 | 项 | 结果 |
 | --- | --- |
-| 测试套件 | overnight_town Ran 55 tests OK + distributed_replica Ran 8 tests OK + vis_smoke.js 38/38（node）+ contrast_check.py 6/6 AA（Chromium 实测含 RED，需 playwright） |
+| 测试套件 | overnight_town Ran 55 tests OK + distributed_replica Ran 11 tests OK（合 66）+ vis_smoke.js 38/38（node）+ contrast_check.py 6/6 AA（Chromium 实测含 RED，需 playwright） |
 | 分布式复刻（R35） | 1000 代理×144 ticks 焦点 1/10：并行==串行（哈希 ec4a48e9…一致）、确定性双跑一致、检查点续跑==全程（resumed_from 72）；焦点调度 14400/144000 |
 | critic BLOCKER 复现案例（--corrupt-frac 0.2066，相位 X≡5 mod 6） | v2 RED → **v3 GREEN**（288/288，人口 200/200，回滚 1） |
 | 标准通宵（1000×3 夜，全注入） | GREEN ~2s；崩溃恢复1（重放≤6tick）/回滚1；335 次调用覆盖率 0.0775%；$0.205012 |
-| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.29 逐位不变） |
+| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.30 逐位不变） |
 | final_hash（v3.3） | ff7c76832d6e1145…（schema_version=2 所致；v3.2 为 736e8318…、v3 为 594f4f85…，历史记录） |
 | 30 夜×200 人增长跑 | GREEN 70s；记忆 6804（人均34）；检查点 2.09MB；对话 2520+反思 1200；$2.90；熔断开4关1 |
 | 剪枝跑（ttl=7×30 夜） | GREEN；剪枝 4548、存留 2256（-67%）；检查点 1.22MB（-42%）；$2.9013 |
 | ROI 估算器 | qwen-max ≈¥370.42（历史口径）；Haiku $2.01→缓存+Batch $0.50；DeepSeek Flash 谷时 $2.90→70%命中 $1.24 [S26]；Qwen 现价（轮 24，北京区）qwen3.8-max $30.56→Batch $15.28 / qwen3.7-flash $0.54（04 §1.5） |
 
-## 下一步（轮 37）
+## 下一步（轮 38）
 
-1. 轮 36 critic 报告 → 修复（分布式复刻审查）；
+1. 轮 37 critic 报告 → 修复（分布式复刻硬化复核）；
 2. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
 3. 可选深化：分布式最小复刻（Ray 路线 [S08]）、可视化增强（居民详情/记忆查看器）；
 4. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。
