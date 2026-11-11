@@ -175,9 +175,16 @@ def main(argv=None):
             p.error(f"--resume：检查点读取失败（{ck}）：{e}")
         if not isinstance(snap, dict) or not isinstance(snap.get("world"), dict):
             p.error("--resume：检查点格式错误（缺 world 对象）")
+        if snap.get("schema_version") != 1:
+            p.error(f"--resume：不支持的检查点 schema_version={snap.get('schema_version')}（仅支持 1）")
         world = snap["world"]
         if not all(k in world for k in ("seed", "n", "tick", "residents")):
             p.error("--resume：检查点 world 缺必需字段（seed/n/tick/residents）")
+        # 值类型校验（R37 O-1a/b）：键齐全但值损坏也须干净拒绝；type() is int 排除 bool。
+        # 域外说明：residents 元素内部结构不做逐条深校验（教学复刻，检查点由本程序自身写出）。
+        if (type(world["seed"]) is not int or type(world["n"]) is not int
+                or type(world["tick"]) is not int or not isinstance(world["residents"], list)):
+            p.error("--resume：检查点字段类型错误（seed/n/tick 须为整数，residents 须为列表；bool 不算整数）")
         if world["seed"] != a.seed or world["n"] != a.agents:
             p.error(f"--resume 配置不匹配：检查点 seed={world['seed']}/n={world['n']}，当前 seed={a.seed}/agents={a.agents}")
         if snap.get("focal_period") != a.focal_period:

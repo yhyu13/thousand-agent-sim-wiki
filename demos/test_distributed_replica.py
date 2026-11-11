@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""distributed_replica 测试套件（11 项）：python -m unittest test_distributed_replica -v
+"""distributed_replica 测试套件（13 项）：python -m unittest test_distributed_replica -v
 守卫规模化路线的确定性基础：无状态 worker / 命名空间 RNG / 排序施加 / 并行==串行 / 检查点续跑。
-R36 硬化：续跑 focal_period 不匹配拒绝 / 损坏检查点拒绝 / 量级上限。"""
+R36 硬化：续跑 focal_period 不匹配拒绝 / 损坏检查点拒绝 / 量级上限。
+R37 硬化：键齐全但值类型损坏拒绝（bool 不算整数）/ schema_version 读取校验。"""
 import copy
 import json
 import os
@@ -127,6 +128,45 @@ class TestDistributedReplica(unittest.TestCase):
             with self.assertRaises(SystemExit) as cm:
                 dr.main(argv)
             self.assertEqual(cm.exception.code, 2)
+
+    def test_resume_value_type_corruption(self):
+        """R37 O-1a/b：键齐全但值类型损坏 → 干净拒绝 rc=2（bool 不算整数）。"""
+        base = {"schema_version": 1, "focal_period": 10,
+                "world": {"seed": 7, "n": 20, "tick": 5,
+                          "residents": [{"id": "r-0000", "role": "resident", "energy": 60}]}}
+        forms = [("residents", "garbage"), ("residents", 123), ("residents", None),
+                 ("tick", "5"), ("tick", True), ("seed", "7"), ("n", None)]
+        with tempfile.TemporaryDirectory() as d:
+            ck = os.path.join(d, "dist_ckpt.json")
+            for key, bad in forms:
+                snap = copy.deepcopy(base)
+                snap["world"][key] = bad
+                with open(ck, "w", encoding="utf-8") as f:
+                    json.dump(snap, f)
+                with self.subTest(key=key, bad=repr(bad)):
+                    with self.assertRaises(SystemExit) as cm:
+                        dr.main(["--seed", "7", "--agents", "20", "--ticks", "20",
+                                 "--checkpoint-dir", d, "--resume", "--out", os.path.join(d, "b.json")])
+                    self.assertEqual(cm.exception.code, 2)
+
+    def test_resume_schema_version_unsupported(self):
+        """R37 O-1c：schema_version 读取校验（999/缺失 → rc=2，不再只写不读）。"""
+        base = {"focal_period": 10,
+                "world": {"seed": 7, "n": 20, "tick": 5,
+                          "residents": [{"id": "r-0000", "role": "resident", "energy": 60}]}}
+        with tempfile.TemporaryDirectory() as d:
+            ck = os.path.join(d, "dist_ckpt.json")
+            for sv in (999, None):
+                snap = copy.deepcopy(base)
+                if sv is not None:
+                    snap["schema_version"] = sv
+                with open(ck, "w", encoding="utf-8") as f:
+                    json.dump(snap, f)
+                with self.subTest(schema_version=sv):
+                    with self.assertRaises(SystemExit) as cm:
+                        dr.main(["--seed", "7", "--agents", "20", "--ticks", "20",
+                                 "--checkpoint-dir", d, "--resume", "--out", os.path.join(d, "b.json")])
+                    self.assertEqual(cm.exception.code, 2)
 
 
 if __name__ == "__main__":

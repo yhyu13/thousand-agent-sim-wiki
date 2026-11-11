@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-11（v3.30，critic 迭代轮 37；R36 ACCEPT 分布式复刻，轮 37 硬化 focal_period 校验/检查点校验/量级上限）
+更新：2026-11-11（v3.31，critic 迭代轮 38；R37 ACCEPT 硬化复核，轮 38 值类型校验/schema_version 读取校验）
 
 ## 迭代模式
 
@@ -52,7 +52,8 @@
 | 34 | **ACCEPT**（6/6 修复到位，0 BLOCKER/MAJOR/MINOR）：预算两行预期与实测**逐值精确一致**（@0.05 degradations=67/refusals=0/conv_llm=235/cost 0.048094；@0.001 refusals=295/conv_llm=1/conv_degraded=251；机理 WORST_EST T1=0.001 拒绝线 0.049 结构性解释）；--events-out 实跑产出 63222B；风暴 caveat 两端实测（标准 breaker 0/0、探针 10 开/4 关）；meta 措辞代码吻合（run_overnight:997 循环外定义共享引用）；07 output_format 区分**官方页直抓三重证实**（Migrating from the beta 节）；demo:154 注释修正零行为变更；55/38 全绿 + 标准跑 31 字段逐位 + events 逐字节 + 双哈希不变 + 仓库 28/28 零污染。+2 零动作观察：O-1 sources S24 摘要可选补废弃细节（07:75 引 [S24]，已直抓证实）/O-2 03:67 通用治理阶梯与修复后 05 不矛盾 | wiki v3.28：O-1 落实——S24 补废弃参数区分细节（原始 output_format 请求参数废弃需 beta header/SDK v1.0+ 抛 TypeError vs messages.parse 现行助手 vs output_config.format 无需 header，轮 34 直抓核验）；sources only，demo 无变更 | 55/55 + 38/38 + 6/6 AA；哈希不变 |
 | 35 | **ACCEPT**（S24 补充五点与官方页逐字吻合、与 07:75 互洽、三层回归 + 字节级对照全绿、demo 零变更，0 BLOCKER/MAJOR/MINOR）：官方「Migrating from the beta」节直抓核验（output_format 废弃/beta header structured-outputs-2025-11-13/SDK TypeError/messages.parse recommended/output_config 无需 header）；+1 零动作观察 O-1（S24 缺「Python」限定，07 已正确）。**纯审查轮收益递减，转可选深化** | wiki v3.29：O-1 落实（S24 补 Python 限定）；**可选深化——新增分布式规模化路线最小复刻** `demos/distributed_replica.py`（stdlib multiprocessing 演示 AgentSociety 2 [S08] 无状态 worker + 确定性世界 + 焦点激活：纯函数 worker/命名空间 RNG/排序补丁 → **并行==串行实证** + 检查点续跑==全程）+ `test_distributed_replica.py` **8 测试全绿**；01 路线 B + AgentSociety 节引用、demos README 登记 | overnight_town 55/55 + distributed_replica 8/8 + 38/38 + 6/6 AA；overnight_town 哈希不变 |
 | 36 | **ACCEPT**（分布式复刻核心声称全部独立实证，0 BLOCKER/MAJOR）：纯函数无副作用（5000 次调用命名空间快照不变 + 独立参考实现逐位）、命名空间 RNG（200tick×10id 零碰撞 + 与 overnight_town 逐位 + **跨语言 JS 实证**）、**并行==串行 48 组配置 + 随机反例搜寻无果**（w1/2/8 不变、真实多进程 PID 探针 3 子进程）、续跑==全程（四段混合链 10→20→30→40）、CLI rc=2、声称限定诚实（教学复刻非生产 Ray）、主 demo 三层回归 + 字节级基线全绿、仓库 33/33 零改动。+MINOR-1（resume 不记录/校验 focal_period，混配置静默接受混合轨迹）+O-1 损坏检查点裸 traceback/O-2 重复 id 补丁顺序敏感（域外）/O-3 focal_total 段统计语义/O-4 README 签名简写/O-5 无量级上限 | wiki v3.30：分布式复刻硬化——**检查点记录并校验 focal_period**（不匹配 rc=2，MINOR-1）、**resume 最小 schema 校验**（坏 JSON/缺 world/缺字段 rc=2，O-1）、量级上限（agents/focal-period≤10⁶/ticks≤10⁷/workers≤64，O-5）、apply_patches 唯一 id 前置条件注（O-2）、focal_total 段统计语义注（O-3）、README 签名对齐 (seed,tick,resident,focal)（O-4）；test_distributed_replica 8→**11 测试** | overnight_town 55/55 + distributed_replica 11/11（合 66）+ 38/38 + 6/6 AA；overnight_town 哈希不变 |
-| 37 | 已派出：R37 critic 复核分布式复刻硬化（focal_period 校验/损坏检查点/量级上限/无回归） | 待报告 | — |
+| 37 | **ACCEPT**（硬化复核全部成立，0 BLOCKER/MAJOR）：R36 六项修复逐项代码在位 + 独立实弹 52 断言全过（focal_period 9/9 含反向与旧格式、损坏检查点约定 4 形态+逐键缺失+6 加测共 13/13 干净 rc=2 无 Traceback、量级上限拒绝/接受边界双向 13/13 含真实 10⁶ 代理初始化与 64 进程池实跑）；核心声称零回归（w1/2/8 并行==串行且跨进程数哈希逐位、四段续跑链 15→30→45→60==全程、段 focal_total 之和==全程 240、R35 基线 ec4a48e9… 逐位复现、worker 纯函数 1000 次）；66 测试+38 冒烟+6/6 AA+标准跑 31 字段逐位+events 63222B 逐字节+双哈希不变；diff 范围核验计算内核零改动、overnight_town 零变更、仓库零污染。+3 域外观察项（非阻断，超出 R36「最小 schema」约定）：O-1a residents 字符串键齐全穿透→focal_ids 裸 TypeError rc=1 / O-1b tick 字符串→比较处裸 TypeError rc=1 / O-1c schema_version 只写不读（999 亦接受） | wiki v3.31：分布式复刻值类型硬化——**resume 值类型校验**（seed/n/tick 须 int，type() is int 排除 bool；residents 须 list；键齐全但值损坏干净 rc=2，O-1a/b）、**schema_version 读取校验**（仅支持 1，999/缺失 rc=2，O-1c）；域外说明注：residents 元素内部结构不逐条深校验（教学复刻，检查点由本程序自身写出）；test_distributed_replica 11→**13 测试**（值类型 7 形态 subTest + schema_version 2 形态） | overnight_town 55/55 + distributed_replica 13/13（合 68）+ 38/38 + 6/6 AA；标准跑 47 平铺字段逐位 + events 63222B 逐字节 + 双哈希不变；15 实弹探针全过（9 损坏形态 rc=2 无 Traceback + 合法续跑==全程 e60821fa…） |
+| 38 | 已派出：R38 critic 复核值类型/schema_version 硬化（O-1a/b/c 修复 + 无回归） | 待报告 | — |
 
 ## 进度
 
@@ -102,7 +103,8 @@
 - [x] 轮 34 critic（**ACCEPT**，6/6 修复到位，预算两行逐值精确一致，output_format 官方页三重证实）→ 轮 35（v3.28：S24 补废弃参数区分细节，O-1 落实）
 - [x] 轮 35 critic（**ACCEPT**，S24 官方页逐字吻合）→ 轮 36 可选深化（v3.29：S24 补 Python 限定 + **分布式复刻 distributed_replica.py + 8 测试**，并行==串行实证）
 - [x] 轮 36 critic（**ACCEPT**，分布式复刻核心声称全实证：并行==串行 48 组 + 跨语言 RNG + 真实多进程）→ 轮 37 硬化（v3.30：focal_period 校验、检查点 schema 校验、量级上限，test 8→11）
-- [ ] 轮 37 critic（分布式复刻硬化复核）
+- [x] 轮 37 critic（**ACCEPT**，硬化复核 52 断言全过 + 核心声称零回归 + 三层回归全绿）→ 轮 38 硬化（v3.31：值类型校验 + schema_version 读取校验，test 11→13）
+- [ ] 轮 38 critic（值类型/schema_version 硬化复核）
 - [ ] 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务
 
 ## 核验日志
@@ -117,23 +119,23 @@
 | 2026-11-11 轮3 | demo v3 存档相位 BLOCKER 修复（先体检后存档）；33/33 测试；标准跑数字逐位不变 |
 | 2026-11-11 轮4 | 07 两 MAJOR 修复（每夜 token 25.4k/5.9k、Ollama /v1 端点）；**DeepSeek 峰谷计价核验（S26）：北京夜间全 off-peak 半价——通宵天然 ROI 杠杆**；Qwen 现役模型换代确认（S27，qwen-plus/max 已 legacy，单价 ⏳ console） |
 
-## demo 运行记录（v3.30，2026-11-11，Python 3.13.12）
+## demo 运行记录（v3.31，2026-11-11，Python 3.13.12）
 
 | 项 | 结果 |
 | --- | --- |
-| 测试套件 | overnight_town Ran 55 tests OK + distributed_replica Ran 11 tests OK（合 66）+ vis_smoke.js 38/38（node）+ contrast_check.py 6/6 AA（Chromium 实测含 RED，需 playwright） |
+| 测试套件 | overnight_town Ran 55 tests OK + distributed_replica Ran 13 tests OK（合 68）+ vis_smoke.js 38/38（node）+ contrast_check.py 6/6 AA（Chromium 实测含 RED，需 playwright） |
 | 分布式复刻（R35） | 1000 代理×144 ticks 焦点 1/10：并行==串行（哈希 ec4a48e9…一致）、确定性双跑一致、检查点续跑==全程（resumed_from 72）；焦点调度 14400/144000 |
 | critic BLOCKER 复现案例（--corrupt-frac 0.2066，相位 X≡5 mod 6） | v2 RED → **v3 GREEN**（288/288，人口 200/200，回滚 1） |
 | 标准通宵（1000×3 夜，全注入） | GREEN ~2s；崩溃恢复1（重放≤6tick）/回滚1；335 次调用覆盖率 0.0775%；$0.205012 |
-| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.30 逐位不变） |
+| world_hash（注入跑=对照跑） | 2fe29e0a8fe988bd34c15d56f93a64521288185501d37828684c785a9ddce260（v2–v3.31 逐位不变） |
 | final_hash（v3.3） | ff7c76832d6e1145…（schema_version=2 所致；v3.2 为 736e8318…、v3 为 594f4f85…，历史记录） |
 | 30 夜×200 人增长跑 | GREEN 70s；记忆 6804（人均34）；检查点 2.09MB；对话 2520+反思 1200；$2.90；熔断开4关1 |
 | 剪枝跑（ttl=7×30 夜） | GREEN；剪枝 4548、存留 2256（-67%）；检查点 1.22MB（-42%）；$2.9013 |
 | ROI 估算器 | qwen-max ≈¥370.42（历史口径）；Haiku $2.01→缓存+Batch $0.50；DeepSeek Flash 谷时 $2.90→70%命中 $1.24 [S26]；Qwen 现价（轮 24，北京区）qwen3.8-max $30.56→Batch $15.28 / qwen3.7-flash $0.54（04 §1.5） |
 
-## 下一步（轮 38）
+## 下一步（轮 39）
 
-1. 轮 37 critic 报告 → 修复（分布式复刻硬化复核）；
+1. 轮 38 critic 报告 → 修复（值类型/schema_version 硬化复核）；
 2. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
 3. 可选深化：分布式最小复刻（Ray 路线 [S08]）、可视化增强（居民详情/记忆查看器）；
 4. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。

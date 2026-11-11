@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""overnight_town 测试套件 v3.30（55 项）：python -m unittest test_overnight_town -v
+"""overnight_town 测试套件 v3.31（55 项）：python -m unittest test_overnight_town -v
 v2：别名污染回归、检查点隔离、from_dict 等价、边界、计划违例实弹、半开探针、审计顺序、
 体面停机、meta 崩溃安全；v3：存档相位 BLOCKER、回滚后崩溃窗口、分散注入、抽样互质、
 resume 五连、Config 校验；v3.2：语义损坏 ckpt、NaN/CLI 拒绝、记忆剪枝 TTL×3；
@@ -37,6 +37,7 @@ v3.27：R33（操作文档深审 REQUEST_CHANGES）修复——05 预算演练�
 v3.28：R34（ACCEPT）O-1 落实——sources S24 补废弃参数区分细节（原始 output_format 废弃 vs messages.parse 现行 vs output_config.format 无需 header，官方页直抓核验）。sources only，**demo 无变更、哈希不变**。
 v3.29：R35（ACCEPT）可选深化——S24 补 Python 限定；新增分布式规模化路线最小复刻 distributed_replica.py + test_distributed_replica.py（8 测试，并行==串行实证 [S08]）。**overnight_town.py 无变更、哈希不变**。
 v3.30：R36（ACCEPT）分布式复刻硬化——检查点记录并校验 focal_period、resume schema 校验、量级上限、唯一 id/段统计语义注、README 签名对齐；test_distributed_replica 8→11。**overnight_town.py 无变更、哈希不变**。
+v3.31：R37（ACCEPT 硬化复核，52 断言全过）分布式复刻值类型硬化——resume 值类型校验（seed/n/tick 须 int 排除 bool、residents 须 list，键齐全但值损坏干净 rc=2）+ schema_version 读取校验（仅支持 1）；test_distributed_replica 11→13。**overnight_town.py 无变更、哈希不变**。
 可视化冒烟另见 vis_smoke.js（node vis_smoke.js .，38 项）；对比度实测 contrast_check.py（6 项含 RED）。"""
 import copy
 import json
