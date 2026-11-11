@@ -1,0 +1,100 @@
+{
+  "status": "GREEN",
+  "seed": 42,
+  "nights_planned": 30,
+  "agents": 1000,
+  "ticks_completed": 4320,
+  "ticks_planned": 4320,
+  "resumed_from_tick": 0,
+  "sim_days": 30.0,
+  "population_final": 1000,
+  "counters": {
+    "conversations_llm": 2520,
+    "conversations_degraded": 0,
+    "reflections_accepted": 1200,
+    "reflections_rejected": 0,
+    "reflections_degraded": 0,
+    "rate_limit_hits": 0,
+    "malformed_hits": 0,
+    "breaker_opens": 0,
+    "breaker_skips": 0,
+    "breaker_closes": 0,
+    "backoff_skips": 0,
+    "budget_degradations": 0,
+    "budget_refusals": 0,
+    "memories_pruned": 0
+  },
+  "conversations_total": 2520,
+  "reflections_total": 1200,
+  "llm_calls": 3720,
+  "llm_coverage_pct": 0.0861,
+  "tokens": {
+    "T1": [
+      1535089,
+      199180
+    ],
+    "T2": [
+      1150797,
+      262760
+    ]
+  },
+  "cost_usd": 2.996442,
+  "memory_ttl": null,
+  "memories_pruned": 0,
+  "budget_cap_usd": 20.0,
+  "budget_used_pct": 14.98,
+  "cost_per_event_usd": 0.000805,
+  "cost_per_llm_event_usd": 0.000805,
+  "interventions_rollbacks": 0,
+  "violations_detected": 0,
+  "violations_unresolved": [],
+  "audit_summary": {
+    "plan_patch": 1200
+  },
+  "audit_entries": 1200,
+  "sample_events": [
+    {
+      "type": "conversation",
+      "day": 0,
+      "minute": 720,
+      "a": "guard-002",
+      "b": "nurse-047",
+      "loc": "park",
+      "mode": "llm",
+      "text": "guard-002 对 nurse-047 说：「哈哈，guard总是这样。」"
+    },
+    {
+      "type": "conversation",
+      "day": 0,
+      "minute": 720,
+      "a": "guard-029",
+      "b": "nurse-047",
+      "loc": "park",
+      "mode": "llm",
+      "text": "guard-029 对 nurse-047 说：「我对guard有点新想法。」"
+    },
+    {
+      "type": "conversation",
+      "day": 29,
+      "minute": 1290,
+      "a": "student-013",
+      "b": "student-033",
+      "loc": "restaurant",
+      "mode": "llm",
+      "text": "student-013 对 student-033 说：「park这事，得问问家里人。」"
+    },
+    {
+      "type": "conversation",
+      "day": 29,
+      "minute": 1290,
+      "a": "elder-006",
+      "b": "elder-034",
+      "loc": "restaurant",
+      "mode": "llm",
+      "text": "elder-006 对 elder-034 说：「我对park有点新想法。」"
+    }
+  ],
+  "world_hash": "c3afbf024edbd8cb474f40d7b962d18489b7faa9dfe78d6a36b1e233889b3d39",
+  "final_hash": "f75ddfce50205c9de9669f39af435b0b590c49a7b50f1b5b44da680ed5010130",
+  "crashes_recovered": 0
+}
