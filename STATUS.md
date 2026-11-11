@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-11（v3.35，critic 迭代轮 43；R42 发布产物 fresh clone 端到端审计 ACCEPT，轮 43 修复 2 活体 stale 计数 MINOR）
+更新：2026-11-11（v3.35，critic 迭代轮 44；R43 ACCEPT 零新发现，轮 44 转冷读者任务式可用性审计）
 
 ## 迭代模式
 
@@ -60,7 +60,8 @@
 | 40 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，234 探针 + ~70 次上限二分 + 全量回归，域内零反例）：W1/W2 封死（world/snap 额外键 8 深度×3 模式 48 例全 rc=2：≤2996 闸门/2997 解析点）；三上限实测 deepcopy 495/496、world_hash dumps 999/1000、写盘 dump 993/994、load ~2998、repr≥load（**sv/fp 深值 repr 逃逸假设被实验证伪**）；元素深嵌套 44 例 rc∈{0,2} 零裸崩（rc=0 检查点深度逐位==输入，原样携带实证）；零误拒 48/48（fp1/10×agents1/1000×3 模式×fresh/resume）；R35 基线 w1/2/4/8 逐位 + 双 fp 链（ec4a48e9/8e6ee6ea）；新逃逸搜寻 84 例仅命中域外（巨整数 4301 位拒/4300 携带、NaN/Inf rc=0、宽列表 30 万 rc=0、BOM/非法 UTF-8/重复键 rc=2）；OverflowError 无域内路径/MemoryError 需 GB 级域外/json.dump ValueError 不可达；74 测试+38+6/6 AA+47 字段+events sha256 325d61c4…+双哈希；AST 10 内核 IDENTICAL、overnight_town blob 恒等；措辞三层限定逐句吻合。+O-1（域外非缺陷：孤立代理对 \ud800 经元素字符串→world_hash .encode UnicodeEncodeError rc=1 全模式，既有行为不被声称覆盖；建议扩顶层兜底四家族对齐主 demo）/O-2（措辞精度：「R13 同模式」对 RecursionError 增量准确，主 demo 四家族 vs 复刻单家族不对称提示） | wiki v3.34：**顶层兜底扩四家族**（ValueError/OSError/OverflowError/RecursionError，对齐 overnight_town main()；UnicodeEncodeError ⊂ ValueError → 孤立代理对全模式干净 rc=2；域外元素垃圾 TypeError/KeyError 不在兜底家族，保持 rc=1 文档行为不变）+ 域外注/README 措辞精化（编码类错误归兜底、TypeError/KeyError 明示域外）；test_distributed_replica 19→**20 测试**（孤立代理对 note 载体 both/sequential/parallel 3 模式） | overnight_town 55/55 + distributed_replica 20/20（合 75）+ 38/38 + 6/6 AA；标准跑 47 平铺字段逐位 + events 63222B 逐字节 + 双哈希不变；10 实弹探针全过（代理对 note/id 载体×3 模式 rc=2 无 Traceback + 垃圾元素 rc=1 域外行为不变 + 闸门 994 both rc=2 + 合法续跑==全程 + R35 基线复现） |
 | 41 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，150 项独立检查 + 全量回归，域内零反例）：O-1 闭合 36/36（12 载体×3 模式：note/id/role × \ud800/\udfff/分离混合对/多元素带毒/1000 代理仅第 777 带毒，全 rc=2 检查点字节恒不变；正对照相邻转义对合并 U+10000 与 emoji rc=0 round-trip）；**扩家族副作用搜寻 76/76**（域外垃圾 6 形态×3 模式全 rc=1 TypeError/KeyError 逐例核实、NaN/Inf/10^400/4300 位 rc=0 携带不变、**v3.33 父版本对照实跑：唯一行为增量=代理对 rc=1→rc=2 修复本身**、内层写路径文案优先级保持、零误拒 24 跑、元素深 400 原样携带逐位）；核心声称 14/14（R35 w1/2/4/8 逐位、双 fp 链、闸门矩阵）；75 测试+38+6/6 AA+47 字段+整份 deep-equal+events sha256 325d61c4…+双哈希；AST 10 内核 IDENTICAL、main 仅外层 handler 元组+注释、overnight_town blob 恒等；措辞逐句吻合（「四家族对齐」经 overnight_town:1072 同一元组核实为真）。+2 信息性观察（无需动作）：包络文案变更全库无旧引用/--out 文件名代理对 Windows W API rc=0 环境特性 | —（零缺陷，v3.34 不变） | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
 | 42 | **ACCEPT**（发布产物端到端审计，0 BLOCKER/MAJOR，2 MINOR+5 观察项）：公开 wiki fresh clone（HEAD 3ca0991，26 tracked 文件）实跑 75 测试 OK+38 冒烟+6/6 AA+标准跑双哈希/events 63222B sha256 325d61c4…/成本 0.205012/335 调用/0.0775% 全命中+47 字段对照+对照跑逐字节+R35 基线 ec4a48e9…+续跑链 18597c46…+ROI 14 行；文件完整性（18 链接全解析/out/ 6 产物齐全/.gitignore 零误排除/visualize.html 28176B 零外部引用自包含）；**SimCity --recurse-submodules fresh clone**（HEAD 4ce517e，.gitmodules 指向公开 repo，submodule 3ca0991，从 submodule checkout 实跑 75 OK；首次 DNS 瞬时失败 git 自动重试成功如实记录）；跨文档 v3.34 六处活体一致/轮号自洽/S01–S27 连续无缺；发布卫生（敏感模式零命中/私有路径零命中/Assisted-by 8/8）。+MINOR-1（01:64「8 测试守卫」初始提交固化漏网，现行 20）/MINOR-2（README:39「轮 1–28」轮范围滞后，计数本身当前）+观察项（STATUS:66 初始快照 24 项无轮号注/本地底稿锚点发布上下文不可解析属固有边界/.gitmodules SSH 非缺陷/test_replica 无版本标签系约定差异/DNS 瞬时） | wiki v3.35（编辑性，代码无变更）：01:64「8 测试」→**20 测试**（MINOR-1）；README:39「55 测试…轮 1–28」→**75 测试（主 55+复刻 20）…轮 1–41**（MINOR-2）；README 使用约定补**本地底稿不随公开 repo 分发**说明（观察项 2）；STATUS:66 初始快照行加「R32 演进至 38 项」注记（观察项 1）；版本标签全量同步 v3.35 | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变（代码零变更）；哈希/成本/调用数不变；活体 stale 计数全库 sweep 清零 |
-| 43 | 已派出：R43 critic 复核 v3.35 编辑性修复（2 MINOR + 观察项落实 + 活体计数全库 sweep + fresh clone 回归闸门） | 待报告 | — |
+| 43 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，5 信息性观察项无需动作）：fresh clone 回归闸门全数实跑（HEAD 0fe6ad6，75 测试 OK 零 Warning+38 冒烟+6/6 AA 真实 Chromium+标准跑 47 字段 0 diff 整份 deep-equal+双哈希+events 63222B sha256 325d61c4…+成本/调用/覆盖率/10.25% 全命中+R35 基线 ec4a48e9…+focal 14400）；2 MINOR 修复实证含证伪角度（01:64=20 与 AST 一致；README:39=75（55+20）/轮 1–41 三方吻合，**「覆盖 1–41」口径恰当**——R41 零发现回归点集==1–40，R42 文档 MINOR 非代码回归点不应计入）；观察项落实核对（README:46 本地底稿条目与 git ls-files 26 文件无 PRD/source 实证一致、STATUS:67「R32 演进至 38」与轮表 24→33→36→38 两种轮号读法均一致）；**独立 16 组模式全库 sweep 316 行逐命中语境判定**（旧计数/旧轮范围/120 处旧版本标签全历史豁免，v3.35 共 16 处一致，活体零 stale）；代码零变更 diff 实证（demos 唯一 diff=test docstring 两处，SimCity 仅 gitlink）；SimCity fresh clone（首次瞬时断连重试成功如实记录）submodule 0fe6ad6 树逐文件相同+实跑 75 OK；发布卫生（私有路径/email 零命中，api_key='ollama' 系文档占位符误报）；工作副本前后零变化 | —（零缺陷，v3.35 不变） | 75/75 + 38/38 + 6/6 AA；fresh clone 标准跑逐字节不变；哈希/成本/调用数不变 |
+| 44 | 已派出：R44 critic 冷读者任务式可用性审计（全新 agent 仅凭公开 wiki fresh clone 执行原始目标：理解路线/复现不变量/产出真实通宵运行计划+ROI，找误导/缺口/断链/不可操作处） | 待报告 | — |
 
 ## 进度
 
@@ -116,7 +117,8 @@
 - [x] 轮 40 critic（**ACCEPT**，234 探针域内零反例，W1/W2 封死 + 三上限实测 + 零误拒 48/48）→ 轮 41 硬化（v3.34：顶层兜底扩四家族对齐主 demo，孤立代理对干净拒绝，test 19→20）
 - [x] 轮 41 critic（**ACCEPT**，零 BLOCKER/MAJOR/MINOR，150 检查域内零反例，父版本对照证明唯一增量=修复本身）→ 无缺陷修复（v3.34 不变）
 - [x] 轮 42 critic（**ACCEPT**，发布产物 fresh clone 端到端真正可用：双 clone 75 测试全绿 + 全部哈希/字节不变量 + 零敏感信息）→ 轮 43 编辑性修复（v3.35：01 页 8→20 测试、README 轮范围 1–28→1–41 + 75 口径、本地底稿边界说明、初始快照注记）
-- [ ] 轮 43 critic（v3.35 编辑性修复复核 + 活体计数 sweep + fresh clone 回归）
+- [x] 轮 43 critic（**ACCEPT**，零 BLOCKER/MAJOR/MINOR，fresh clone 闸门全过 + 独立 16 组 sweep 活体零 stale + 措辞证伪角度审查准确）→ 无缺陷修复（v3.35 不变）
+- [ ] 轮 44 critic（冷读者任务式可用性审计：全新 agent 仅凭公开 wiki 执行原始目标）
 - [ ] 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务
 
 ## 核验日志
@@ -145,9 +147,9 @@
 | 剪枝跑（ttl=7×30 夜） | GREEN；剪枝 4548、存留 2256（-67%）；检查点 1.22MB（-42%）；$2.9013 |
 | ROI 估算器 | qwen-max ≈¥370.42（历史口径）；Haiku $2.01→缓存+Batch $0.50；DeepSeek Flash 谷时 $2.90→70%命中 $1.24 [S26]；Qwen 现价（轮 24，北京区）qwen3.8-max $30.56→Batch $15.28 / qwen3.7-flash $0.54（04 §1.5） |
 
-## 下一步（轮 44）
+## 下一步（轮 45）
 
-1. 轮 43 critic 报告 → 修复（v3.35 编辑性修复复核）；
+1. 轮 44 critic 报告 → 修复（冷读者任务式可用性审计）；
 2. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
 3. 可选深化：分布式最小复刻（Ray 路线 [S08]）、可视化增强（居民详情/记忆查看器）；
 4. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。
