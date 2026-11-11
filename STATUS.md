@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-11（v3.45，critic 迭代轮 54；R53 ACCEPT 恒等式=代码定理 11 配置全闭合，轮 54 基数显式化 + 第三退化路径）
+更新：2026-11-11（v3.45，critic 迭代轮 55；R54 ACCEPT 零 MINOR 核算式族收敛（代码定理），轮 55 转证据层整体可复现性审计）
 
 ## 迭代模式
 
@@ -71,7 +71,8 @@
 | 51 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，3 零动作观察项）：fresh clone（HEAD 1c22d53）新式从三入库报告 counters **独立代入精确成立**（247/287/260 降级和、199/232/224 失败和、3672/3665/3684）；**旧式按 03:37 口径确不可复现**（3548/3513/3542，证明校准必要）；**基数 3720 推导核实**（MAX_PAIRS_PER_SLOT=6 :92 × 14 社交时段 :519-520 + MAX_REFLECTIONS=40 :91 = 124/夜×30；clean 报告 2520+1200=3720 佐证）；每项代码语义逐行核实（限流 :271/:274 计费前 return 不计费、坏JSON :290-291 计费后判定、:356-357 仅 rate_limit 进重试、降级规则兜底 :552-555/:602-606）；**适用边界实证收获**：自跑 budget 0.05 零失败 3 夜 actual 286 vs 公式 220 偏差 66=ok-but-degraded 反思数（T2→T1 返回非 JSON ok 已计费却记 degraded，instrument 探针证实，修正恒等式精确闭合）——文档限定三种子未声称普适故非缺陷；种子顺序注逐值命中；96.6% 口径算术独立核实（96.634%→96.6%，净差口径会得 103.6%>100% 故补全有意义）；活体零残留；回归闸门 75/38/6AA/三产物逐字节 + inject s18 复跑逐字节 + 标准 3 夜亦满足新式（372−57+9+11=335）；diff 恰 6 文件 blob+AST 双证；v3.42 活体一致/轮号自洽；工作副本零污染。+观察项（零动作）：①核算式前提 budget_degradations=0（推广须补 ok-but-degraded 项）②键名缩写 conv_degraded/refl_degraded 宜用全称③「降级零调用」宜理解为规则兜底本身零调用（降级槽可能已消耗失败尝试，恰由加回项核算） | wiki v3.43：观察项①②落实——04 §3.1 核算式键名改全称（conversations_degraded/reflections_degraded）+ **适用前提 budget_degradations=0 注**（ok-but-degraded 机理 + 实证 286/220/66，作者独立复现精确吻合 + T1_TEMPLATES 纯文本代码核实）+ 基数 3720 推导入文（6×14+40=124/夜×30）；观察项③系解读提示无需改文 | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
 | 52 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，4 零动作观察项；instrument 探针加固）：fresh clone（HEAD 20a5197）边界复跑逐值命中（286/152=46+106/220/66/106/86）；代码核实（T1_TEMPLATES :229-234 纯文本、gateway 仅 T2→T1 :342-345、call 先计数 :272 计费 :287 后 ok :295、do_reflections 解析失败→degraded :581-583/:602-607）；**偏差归因 instrument 证实**（观察性 monkeypatch 零扰动，instrumented 报告与未 instrument deep-equal）：ok_but_degraded_refl=66=偏差，106 降级反思=66 ok-but-degraded+40 零调用拒绝，conv 46 全零调用拒绝（86=46+40 闭合），降档全在 minute 1320 sleep 锚点→全反思；**前提过宽/过窄证伪**：「降档全为对话」代码不可能（T2 仅反思 :576，对话 T1 :544 只拒不降）；**充分非必要反例**（p_bad=1.0+降阈值饱和探针：degradations 105>0 但 ok-but-degraded=0 偏差 0，文档措辞充分前提+修正项准确）；**一般情形强化**（budget 0.05+默认失败全开：cost 0.048094 与历史记录逐位吻合，actual 335 公式 269 偏差 66=ok-but-degraded，**无条件恒等式四探针全闭合**含失败并存）；键名全称/基数 6×14+40=124×30 程序化核实/句法无悬挂；缩写 sweep 05:81 活体演练表 conv_degraded 系预存非本轮范围外观察；回归闸门 75/38/6AA/三产物逐字节+标准跑公式 372−57+9+11=335+三 inject 代入精确；diff 恰 6 文件 blob+AST 双证 ZERO_CODE_CHANGE_PROVEN；v3.43 活体一致/轮号自洽；工作副本零污染。+观察项（零动作）：①前提充分非必要可选补注+无条件恒等式②05:81 预存缩写可选润色③有失败跑末项须 instrument 分解（偏差恒可算）④基数饱和前提已注明 | wiki v3.44：观察项①③落实——04 §3.1 前提注精化「**充分非必要**」+ **无条件恒等式**（llm_calls=基数−降级+限流+坏JSON+ok-but-degraded，R52 四探针闭合含失败语境）+ 末项为 0 退化条件（对话只拒不降档/T2 仅反思）+ 可计算性边界（有失败末项须 instrument，偏差恒可从报告算）+ R52 instrument 分解 106=66+40 入文 | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
 | 53 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，2 零动作观察项；重派——前次宿主退出中断无报告）：fresh clone（HEAD ce4dc8c）**独立推导恒等式为代码定理**（calls=OK_n+M_n+rate_limit_hits，D=Z+RL_n+M_n+okbd → calls=B−D+rate+mal+okbd，B=conv_total+refl_total 报告恒有，与配置无关）；**11 配置 instrument 双跑全闭合**（plain+instrument deep-equal 零扰动，okbd 双口径逐配置一致）：零失败 budget0.05（286）/失败并存（335 cost 0.048094 与 R52 逐位）/标准全注入（335）/**--batch**（372 okbd89）/**--memory-ttl 1**（286 基数不变）/**--p-invalid 1.0**（372 全 rejected D=0）/**--corrupt-plan-frac 0.5**（372 回滚重放恰计一次）/**--agents 20**（B=309 非饱和）/**--p-bad 1.0**（B=291 非饱和 okbd0）/p-invalid+budget/p-bad+降阈值（241 budget_deg105 okbd0）；**关键发现：基数=min(配额,实际需求) 非恒 124/夜**（文档已注饱和前提，千人语境正确）；全部网关终态路径实证覆盖（含 30 夜 inject breaker_skips 51/80/45）；充分非必要代码证实（gateway :342 仅 T2 降档、对话 :544 T1 只拒、T2 唯一调用点 :576）+反例精确复现（105/26>0 okbd0）；可计算性边界证实（counters 聚合无拆分 :698-704，偏差恒可算回滚不变）；措辞/版本/轮号全自洽；回归闸门 75/38/6AA/三产物逐字节/三 inject 代入精确；diff 恰 6 文件 blob+AST 双证 ZERO_CODE_CHANGE_PROVEN；工作副本零污染。+观察项（零动作）：①基数项显式化「=conversations_total+reflections_total（饱和时 124/夜×nights）」更具普适操作性②退化条件括注充分非穷尽——okbd=0 亦可经降档调用全 malformed/限流终态达成（探针 i/k），可选补第三路径 | wiki v3.45：观察项①②落实——04 §3.1 基数显式定义（报告恒有 conv_total+refl_total，min(配额,实际需求)，非饱和实证 agents20→309/p_bad1.0→291）+ 恒等式标注代码定理/11 配置/全终态路径 + **第三退化路径**（降档调用全 malformed/限流终态，充分非穷尽）+ 偏差回滚不变注 | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
-| 54 | 已派出：R54 critic 复核 v3.45（基数显式化非饱和配置代入 + 第三退化路径 + 无回归） | 待报告 | — |
+| 54 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，3 零动作观察项；14 配置 plain+instrument 双跑零扰动）：fresh clone（HEAD 813f6c6）**基数定义独立推导为代码定理**（gateway 恰 2 调用点 :544/:576、llm.call 恰 1 处 :355、每槽恰增一个结果计数器 :607 恒执行、报告字段即其和 :792-794、回滚/崩溃/续跑同时恢复 counters+llm :717-719/:774-776、save 深拷贝防别名 :471 → B=conv_total+refl_total=网关槽数重放恰计一次，与配置无关）；非饱和实证 agents20→B309（conv252+refl57）/p_bad1.0+budget0.05→B291（conv252+refl39）与 R53 逐值吻合；**证伪尝试全失败**（ttl=1 极短记忆/corrupt-plan 回滚/crash 恢复/冷重启 resume/p_invalid1.0 全拒绝/batch/**RED 体面停机**恒等式与基数全闭合，「报告恒有」不过宽；ttl=0 被 Config 校验拒绝系防御非反例）；第三退化路径证实（p_bad1.0+budget0.05 budget_deg26>0 okbd0 降档全 malformed，gateway :342-345 降档后走正常失败路径 :383/:368）；回滚不变直接证明（corrupt-plan0.5 物理 378 槽 vs 报告 372，重放 6 槽物理两次报告一次）；7 终态路径全覆盖（breaker_skip 由入库 inject 51/80/45 触发）；措辞/版本/轮号全自洽；回归闸门 75/38/6AA/三产物逐字节/三 inject 代入 3672/3665/3684 基数 3720=2520+1200；diff 恰 6 文件 7 blob 相同+test AST 去 docstring 相等 ZERO_CODE_CHANGE_PROVEN；工作副本零污染。+观察项（零动作）：①brief 预期 calls=291 仅 --p-rate 0 成立（默认 p_rate0.02→295），文档只声称 B=291 正确非缺陷②「min(配额,需求)」概念 gloss 精确为逐夜逐分量 min，操作性定义已精确③05 缩写预存域外。**核算式族收敛（R48–R54 七轮，终为代码定理+全终态路径覆盖）** | —（零缺陷，v3.45 不变） | 75/75 + 38/38 + 6/6 AA；标准跑逐字节不变；哈希/成本/调用数不变 |
+| 55 | 已派出：R55 critic 证据层整体可复现性审计（12 份入库实测报告 + events.jsonl fresh clone 批量复现 + 跨报告不变量 + 全量闸门） | 待报告 | — |
 
 ## 进度
 
@@ -138,7 +139,8 @@
 - [x] 轮 51 critic（**ACCEPT**，零 MINOR，新式独立可复现+旧式确不可复现+基数推导核实+边界实证收获）→ 轮 52（v3.43：适用前提 budget_degradations=0 注 + 键名全称 + 基数推导入文）
 - [x] 轮 52 critic（**ACCEPT**，零 MINOR，instrument 证实偏差 66=ok-but-degraded + 无条件恒等式四探针闭合含失败语境 + 充分非必要反例）→ 轮 53（v3.44：无条件恒等式 + 充分非必要 + 可计算性边界入文）
 - [x] 轮 53 critic（**ACCEPT**，零 MINOR，恒等式独立推导为代码定理 + 11 配置全闭合 + 基数=min(配额,需求) 关键发现；重派成功）→ 轮 54（v3.45：基数显式化 + 第三退化路径 + 回滚不变注）
-- [ ] 轮 54 critic（v3.45 基数显式化复核）
+- [x] 轮 54 critic（**ACCEPT**，零 MINOR，14 配置证伪全失败含 RED 停机/冷重启，基数=代码定理，核算式族 R48–R54 收敛）→ 无缺陷修复（v3.45 不变）
+- [ ] 轮 55 critic（证据层整体可复现性审计：12 报告 + events 批量复现 + 跨报告不变量）
 - [ ] 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务
 
 ## 核验日志
@@ -171,9 +173,9 @@
 | 剪枝跑（ttl=7×30 夜） | GREEN；剪枝 4548、存留 2256（-67%）；检查点 1.22MB（-42%）；$2.9013 |
 | ROI 估算器 | qwen-max ≈¥370.42（历史口径）；Haiku $2.01→缓存+Batch $0.50；DeepSeek Flash 谷时 $2.90→70%命中 $1.24 [S26]；Qwen 现价（轮 24，北京区）qwen3.8-max $30.56→Batch $15.28 / qwen3.7-flash $0.54（04 §1.5） |
 
-## 下一步（轮 55）
+## 下一步（轮 56）
 
-1. 轮 54 critic 报告 → 修复（v3.45 基数显式化复核）；
+1. 轮 55 critic 报告 → 修复（证据层整体可复现性审计）；
 2. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
 3. 可选深化：**Ray 版**分布式复刻（[S08]；stdlib 教学复刻 R35 已落地、R41 收敛，居民记忆查看器 R30 已落地、R32 收敛——两者不再列为待做）；
 4. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。
