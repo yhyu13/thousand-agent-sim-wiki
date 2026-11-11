@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""overnight_town 测试套件 v3.44（55 项）：python -m unittest test_overnight_town -v
+"""overnight_town 测试套件 v3.45（55 项）：python -m unittest test_overnight_town -v
 v2：别名污染回归、检查点隔离、from_dict 等价、边界、计划违例实弹、半开探针、审计顺序、
 体面停机、meta 崩溃安全；v3：存档相位 BLOCKER、回滚后崩溃窗口、分散注入、抽样互质、
 resume 五连、Config 校验；v3.2：语义损坏 ckpt、NaN/CLI 拒绝、记忆剪枝 TTL×3；
@@ -51,6 +51,7 @@ v3.41：R49（ACCEPT，反事实逐值命中+独立成本重算+调用核算 372
 v3.42：R50（ACCEPT，seed-only 重放探针证实 output 零 prompt 信息+唯一整数解成本重解）MINOR-1 修正——核算式内联定义（llm_calls=3720−降级事件+限流尝试+坏JSON尝试，三种子算例；坏JSON不重试仍计费须入式，「重试」仅指限流）；「重试加价」改「限流不计费、坏JSON仍计费」；三联数注种子顺序；STATUS 96.6% 补绝对贡献和口径。**代码无变更、哈希不变**。
 v3.43：R51（ACCEPT 零 MINOR，新式独立可复现+旧式确不可复现+基数推导核实）观察项落实——核算式键名全称 + **适用前提 budget_degradations=0 注**（ok-but-degraded 机理，实证 286/220/66 作者独立复现）+ 基数 3720 推导入文（6×14+40=124/夜×30）+ 句法重构。**代码无变更、哈希不变**。
 v3.44：R52（ACCEPT 零 MINOR，instrument 证实偏差 66=ok-but-degraded、无条件恒等式四探针闭合含失败语境、充分非必要反例）观察项落实——前提注精化「充分非必要」+ 无条件恒等式（llm_calls=基数−降级+限流+坏JSON+ok-but-degraded）+ 末项为 0 退化条件 + 可计算性边界（有失败末项须 instrument，偏差恒可算）+ 106=66+40 分解入文。**代码无变更、哈希不变**。
+v3.45：R53（ACCEPT 零 MINOR，恒等式独立推导为代码定理、11 配置全闭合、基数=min(配额,实际需求) 关键发现；重派成功）观察项落实——基数显式定义（conversations_total+reflections_total 报告恒有，非饱和实证 agents20→309/p_bad1.0→291）+ 恒等式标注代码定理/11 配置/全终态路径 + 第三退化路径（降档调用全 malformed/限流终态，充分非穷尽）+ 偏差回滚不变注。**代码无变更、哈希不变**。
 可视化冒烟另见 vis_smoke.js（node vis_smoke.js .，38 项）；对比度实测 contrast_check.py（6 项含 RED）。"""
 import copy
 import json
