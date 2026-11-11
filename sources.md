@@ -38,7 +38,7 @@
 | ID | 文件 | 关键事实（锚点） |
 | --- | --- | --- |
 | S15 | `../PRD-千人小镇Web引擎.md` | 千人小镇引擎化 PRD v0.1：可寻址+可复现+对象级 AI 改动+审计回滚；F-01 同种子逐位相等；F-05 点名改动其余 999 人快照不变；SEC-2 行走代理 ≤360 硬上限；C-05 禁 Math.random；§7.4 审计只追加；§7.5 校验失败拒绝写入/渲染异常自动回滚；Q-01 本地规则引擎 vs 外部 LLM 未决 |
-| S16 | `../source/`（YiHuiShiBY/thousand-town 本地克隆） | `city-life-ext/resident.js:29`「Census sums to exactly 1000」；`resident.js:291-297` 旧全局计数器方案下加 40 岗位**本会**（would have，反事实设计注释而非实测事故）重掷 ~760 人作息→命名空间 ID（`role-001`）把爆炸半径限制在被改行，注释明言这是「step two key an LLM-authored Plan」的前提；`sketch.js:217` `maxPeople:360`；`city-life-ext/daily-clock.js:13-27` 1440 分/天、0.625 s/模拟分（1 天=900 s）、9 锚点（dawn300/wake360/commute420/workStart480/lunch720/afternoon840/offWork1020/dinner1140/sleep1320）；`city-life-ext/resident-plan.js:50-60` FNV-1a `hash32`（0x811C9DC5/0x01000193）+ `dayRng(seed,id,day)` |
+| S16 | `../source/`（[YiHuiShiBY/thousand-town](https://github.com/YiHuiShiBY/thousand-town) 本地克隆；**仓库公开**，锚点可经该 URL 外部核验，行号以本地克隆为准、公开 HEAD 或有微小漂移） | `city-life-ext/resident.js:29`「Census sums to exactly 1000」；`resident.js:291-297` 旧全局计数器方案下加 40 岗位**本会**（would have，反事实设计注释而非实测事故）重掷 ~760 人作息→命名空间 ID（`role-001`）把爆炸半径限制在被改行，注释明言这是「step two key an LLM-authored Plan」的前提；`sketch.js:217` `maxPeople:360`；`city-life-ext/daily-clock.js:13-27` 1440 分/天、0.625 s/模拟分（1 天=900 s）、9 锚点（dawn300/wake360/commute420/workStart480/lunch720/afternoon840/offWork1020/dinner1140/sleep1320）；`city-life-ext/resident-plan.js:50-60` FNV-1a `hash32`（0x811C9DC5/0x01000193）+ `dayRng(seed,id,day)` |
 | S17 | `../meta.json` + 视频 BV1ArJ96CE3P | 作者仪绘士BY，304 秒教程《我用AI做了一个千人小镇》，站点 yihuishi.com；作者原话「技术的问题让 AI 去解决落地，最后我们再把结果一项项检查清楚」（转引自 PRD §1） |
 
 ## E. 待核验 / 待补（⏳，轮 2 刷新）

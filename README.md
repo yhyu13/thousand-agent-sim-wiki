@@ -2,7 +2,7 @@
 
 > 主题：**千人级 AI 模拟，如何通宵无人值守运行、世界不崩溃、且 ROI 为正。**
 > 服务对象：`bw-town` 千人小镇项目（PRD 见 `../PRD-千人小镇Web引擎.md`），以及未来任何想读这份资料的 LLM agent。
-> 建立日期：2026-11-11 · 状态：v3.35（critic 迭代轮 44；**R26 整体验收原始目标达成**，分布式复刻经 R36–R41 审查 + 硬化并收敛，发布产物经 R42/R43 fresh clone 端到端审计，进度见 [STATUS.md](STATUS.md)）
+> 建立日期：2026-11-11 · 状态：v3.36（critic 迭代轮 45；**R26 整体验收原始目标达成**，R44 冷读者审计确认立项目标达成，分布式复刻经 R36–R41 审查收敛，发布产物经 R42/R43 fresh clone 审计，进度见 [STATUS.md](STATUS.md)）
 
 ## TL;DR（五条快结论）
 
@@ -30,7 +30,7 @@
 ## Demo（动手验证，不是纸上谈兵）
 
 ```bash
-cd bw-town/wiki/demos
+cd <repo>/demos   # <repo> = 本仓库 clone 的根目录
 python -I overnight_town.py --seed 20260818 --nights 3 --agents 1000 --budget 2.0 --crash-frac 0.4
 python -m unittest test_overnight_town -v
 python -I roi_calculator.py --agents 1000 --steps 48 --activation 0.1

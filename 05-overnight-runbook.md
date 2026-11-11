@@ -22,7 +22,7 @@
 ## §2 启动
 
 ```bash
-cd bw-town/wiki/demos
+cd <repo>/demos   # <repo> = 本仓库 clone 的根目录
 
 # 标准通宵（mock）：3 夜 × 1000 人，含崩溃注入 + 限流/坏JSON风暴 + 名册污染注入
 python -I overnight_town.py --seed 20260818 --nights 3 --agents 1000 \
