@@ -60,8 +60,8 @@ python -I roi_calculator.py --agents 1000 --steps 48 --activation 0.1 --nights 1
 4. `conversations + reflections > 0`（社会还在生长）；
 5. **可复现（两种哈希口径）**：
    - `final_hash`（全量状态）与**同配置**重跑逐位一致；崩溃恢复不改变它（`test_crash_resume_equivalence`）；
-   - `world_hash`（世界本体：居民/计划/事件）与「同风暴、无崩溃/污染」对照跑一致；污染回滚只允许审计流多出 `rollback` 条目（干预留痕，军规 12）；
-   - 注意：风暴窗口改变 LLM 失败历史，属于种子世界的一部分——对照跑必须保留相同风暴配置；
+   - `world_hash`（世界本体：居民/计划/事件）与「同失败配置、无崩溃/污染」对照跑一致；污染回滚只允许审计流多出 `rollback` 条目（干预留痕，军规 12）；
+   - 注意：风暴窗口与基线失败概率（p_rate/p_bad/p_invalid）改变 LLM 失败历史，属于种子世界的一部分——对照跑必须保留相同失败配置（风暴窗口 + 基线 p_* 均同）；
 6. 审计流完整：每次熔断/降级/回滚/拒绝都有条目，时间戳为模拟时间。
 
 demo 的 `status: GREEN` 即按 1–4 判定；第 5 条由测试套件与双跑命令验证（实测记录见 demos/README.md）。

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""overnight_town 测试套件 v3.46（55 项）：python -m unittest test_overnight_town -v
+"""overnight_town 测试套件 v3.47（55 项）：python -m unittest test_overnight_town -v
 v2：别名污染回归、检查点隔离、from_dict 等价、边界、计划违例实弹、半开探针、审计顺序、
 体面停机、meta 崩溃安全；v3：存档相位 BLOCKER、回滚后崩溃窗口、分散注入、抽样互质、
 resume 五连、Config 校验；v3.2：语义损坏 ckpt、NaN/CLI 拒绝、记忆剪枝 TTL×3；
@@ -53,6 +53,7 @@ v3.43：R51（ACCEPT 零 MINOR，新式独立可复现+旧式确不可复现+基
 v3.44：R52（ACCEPT 零 MINOR，instrument 证实偏差 66=ok-but-degraded、无条件恒等式四探针闭合含失败语境、充分非必要反例）观察项落实——前提注精化「充分非必要」+ 无条件恒等式（llm_calls=基数−降级+限流+坏JSON+ok-but-degraded）+ 末项为 0 退化条件 + 可计算性边界（有失败末项须 instrument，偏差恒可算）+ 106=66+40 分解入文。**代码无变更、哈希不变**。
 v3.45：R53（ACCEPT 零 MINOR，恒等式独立推导为代码定理、11 配置全闭合、基数=min(配额,实际需求) 关键发现；重派成功）观察项落实——基数显式定义（conversations_total+reflections_total 报告恒有，非饱和实证 agents20→309/p_bad1.0→291）+ 恒等式标注代码定理/11 配置/全终态路径 + 第三退化路径（降档调用全 malformed/限流终态，充分非穷尽）+ 偏差回滚不变注。**代码无变更、哈希不变**。
 v3.46：R55（ACCEPT，证据层 13 产物全逐字节可复现+跨报告不变量全闭合+双哈希 ckpt 独立重算）观察项①衍生消歧——04 §3.1/demos README「干净跑」改「干净浸泡跑（growth_1000x30，--no-crash 保留风暴；非 clean_* 零失败跑——去风暴改变失败历史故 world_hash 不同）」，消除命名混淆（跨干预不变量限定同风暴配置）。**代码无变更、哈希不变**。
+v3.47：R56（REQUEST_CHANGES 2 MINOR）修复——术语全库清扫（README TL;DR#2 + STATUS 运行记录表「干净跑」→「干净浸泡跑」，活体零残留）；不变量限定收紧「同风暴配置」→「同失败配置（风暴窗口+基线 p_rate/p_bad/p_invalid 均同）」（04/demos README/05 §4），clean_* 差异改二维说明（既去风暴又零化基线概率）；probeB/C 作者独立复现（0fba076d/23ff455c）。**代码无变更、哈希不变**。
 可视化冒烟另见 vis_smoke.js（node vis_smoke.js .，38 项）；对比度实测 contrast_check.py（6 项含 RED）。"""
 import copy
 import json
