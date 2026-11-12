@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""换班工件（13 项）：python -m unittest test_shift_handoff -v
+"""换班工件（14 项）：python -m unittest test_shift_handoff -v
 
 功能清单不许增删或改描述；一班只把一条 passes 改成 true；进度只追加。
 不导入 overnight_town，因此不触碰世界哈希。
@@ -176,6 +176,15 @@ class TestShiftHandoff(unittest.TestCase):
         grade = (skill / "references" / "grade.md").read_text(encoding="utf-8")
         self.assertNotIn("references/", grade)
         self.assertIn("--feature-list", grade)
+
+    def test_sibling_skills_do_not_read_each_other(self):
+        root = Path(__file__).resolve().parent / "skills"
+        operator = (root / "overnight-operator" / "SKILL.md").read_text(encoding="utf-8")
+        guard = (root / "hash-guard" / "SKILL.md").read_text(encoding="utf-8")
+        self.assertTrue(guard.startswith("---\nname: hash-guard\n"))
+        self.assertFalse((root / "hash-guard" / "references").exists())
+        self.assertNotIn("hash-guard", operator)
+        self.assertNotIn("overnight-operator", guard)
 
     def _fresh(self):
         directory = tempfile.mkdtemp()
