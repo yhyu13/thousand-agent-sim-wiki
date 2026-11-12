@@ -2,7 +2,7 @@
 
 > 主题：**千人级 AI 模拟，如何通宵无人值守运行、世界不崩溃、且 ROI 为正。**
 > 服务对象：`bw-town` 千人小镇项目（PRD 见 `../PRD-千人小镇Web引擎.md`），以及未来任何想读这份资料的 LLM agent。
-> 建立日期：2026-11-11 · 状态：v3.53（critic 迭代轮 67；**R26 整体验收原始目标达成**，R44 冷读者审计确认立项目标达成，R55 证据层 13 产物全逐字节可复现，R58 跨文档完整性终审全绿，进度见 [STATUS.md](STATUS.md)）
+> 建立日期：2026-11-11 · 状态：v3.54（demo 仍 v3.53 / 90 测试；新增 08 技术底座。critic 迭代轮 67；**R26 整体验收原始目标达成**，R44 冷读者审计确认立项目标达成，R55 证据层 13 产物全逐字节可复现，R58 跨文档完整性终审全绿，进度见 [STATUS.md](STATUS.md)）
 
 ## TL;DR（五条快结论）
 
@@ -23,6 +23,7 @@
 | [05-overnight-runbook.md](05-overnight-runbook.md) | 通宵运行手册：起飞前检查单、监控、故障演练、早晨验收 |
 | [06-mapping-to-bw-town.md](06-mapping-to-bw-town.md) | 每条研究结论映射到千人小镇 PRD 条款与源码 file:line |
 | [07-integration.md](07-integration.md) | 真实 LLM 接入：Ollama/Batch 双路线、限流档位、结构化输出、中文 token 校准、内容闸门、Q-01 决策表 |
+| [08-substrate.md](08-substrate.md) | 技术底座：游戏人群 vs 语言模型、MCP/技能、父技能不是规范类型、迁移工具有没有专家团 |
 | [sources.md](sources.md) | 全部参考来源登记册（论文 / 代码仓 / 官方文档 / 本地底稿），含核验状态 |
 | [STATUS.md](STATUS.md) | 建设进度、核验日志、下一步 |
 | [demos/](demos/README.md) | 可运行 mock 演示（零依赖、零网络、mock LLM） |
@@ -42,7 +43,7 @@ python -I roi_calculator.py --agents 1000 --steps 48 --activation 0.1
 
 - 引用键 `[Sxx]` 一律指向 [sources.md](sources.md) 的登记条目；每条事实性陈述都应能落到一个 `[Sxx]` 或本地 `file:line`。
 - 标注「**假设，待验证**」的内容不是事实，是工程估算或待办（沿用 PRD 写作约定 [S15]）。
-- 页面 ID 稳定（`01`–`07`），小节用 `§` 编号；改内容不改 ID，方便交叉引用。
+- 页面 ID 稳定（`01`–`08`），小节用 `§` 编号；改内容不改 ID，方便交叉引用。
 - **本地底稿锚点**（`../PRD-千人小镇Web引擎.md`、`../source/`、`../meta.json`）指向作者 bw-town 工作布局，**不随公开 repo 分发**；外部研究声称均可经 `[Sxx]` 外源核验（如 S17 视频 BV1ArJ96CE3P 为公开外源），demos 完全自包含（零依赖/零网络）。
 - 本地底稿优先级：`../source/`（thousand-town 克隆）> `../PRD-千人小镇Web引擎.md` > 外部网页。外部网页核验日期见 sources.md。
 - demo 代码是**教学 mock**：LLM 是确定性假模型，价格表是真的（[S13]），行为模式对齐论文，但不要把 mock 输出当成真实模型能力证据。
