@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-13（v3.89，Prisma ORM 7 原生函数要写进迁移文件。换班 14 项，合计 104。无代码修复）
+更新：2026-11-13（v3.90，Prisma ORM 7 原生类型只映射 schema 里写得出的功能。换班 14 项，合计 104。无代码修复）
 
 ## 迭代模式
 
@@ -177,6 +177,7 @@
 | 2026-11-12 换班证据 | repro 需对照 world_hash + 重跑 final_hash；audit 需带 day/minute 的行且条数不少于计数。换班 8→11，合计 101。模拟未改 |
 | 2026-11-12 换班接线 | overnight_town `--feature-list` 可选。默认不写清单。换班 11→12，合计 102 |
 | 2026-11-12 哈希与技能 | 默认通宵 world_hash/final_hash/成本 0.205012/调用 335 与入库早晨报告一致。demos/skills/overnight-operator 只引用一层。换班 12→13，合计 103 |
+| 2026-11-13 S57 | Prisma ORM v7 原生类型：schema 里写得出的才映射。uuid() 与 cuid() 不进数据库。存储过程不能自动创建。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S56 | Prisma ORM v7 原生函数：PostgreSQL 扩展要写进迁移文件，影子库才有同一套。4.5.0 起可在 schema 声明。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S55 | Prisma ORM v7 向下迁移：失败后先 db execute 跑 down.sql，再 resolve --rolled-back。只退 schema。成功的 up 不走这条。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S54 | Prisma ORM v7 自定义迁移：migrate dev --create-only 先出草稿，手改 SQL 再应用。默认改名会建新列并丢掉旧列数据。无 MCP、无专家团。无新测试 |
