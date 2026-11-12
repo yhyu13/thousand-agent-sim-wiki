@@ -109,3 +109,4 @@ Agent Skills 规范定义的是一个目录加一份 SKILL.md，可选脚本和�
 - [01-landscape.md](01-landscape.md) §2 两条千人路线
 - [02-architecture.md](02-architecture.md) 世界层 / 认知层怎么拼
 - [03-stability.md](03-stability.md) 语言模型会写坏时怎么停
+- [05-overnight-runbook.md](05-overnight-runbook.md) §7 把跨会话规矩写成操作员换班，不假装 demo 已有进度文件
