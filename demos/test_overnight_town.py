@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""overnight_town 测试套件 v3.51（62 项）：python -m unittest test_overnight_town -v
+"""overnight_town 测试套件 v3.52（63 项）：python -m unittest test_overnight_town -v
 v2：别名污染回归、检查点隔离、from_dict 等价、边界、计划违例实弹、半开探针、审计顺序、
 体面停机、meta 崩溃安全；v3：存档相位 BLOCKER、回滚后崩溃窗口、分散注入、抽样互质、
 resume 五连、Config 校验；v3.2：语义损坏 ckpt、NaN/CLI 拒绝、记忆剪枝 TTL×3；
@@ -58,6 +58,7 @@ v3.48：R58（ACCEPT 跨文档完整性终审）后验证发现 Windows os.repla
 v3.49：R59（ACCEPT，51 断言+4 变异击杀+A/B 反证硬化承重）2 MINOR 修复——_atomic_replace 增 **attempts<1 守卫**（raise ValueError，封静默丢检查点边界，当前调用图不可达但防未来接线隐患）；test 59→60（+守卫）；distributed_replica 23→24；STATUS 运行记录表头 v3.47→v3.49 补同步（MINOR-1）。**happy path 不变、哈希不变**。
 v3.50：R61（ACCEPT，17 进程级探针全写点瞬时失败一律体面 rc=2 零裸崩）2 MINOR 修复——重试硬化扩至**全写点**：抽出 _retry_on_lock 共享 helper（_atomic_replace 委托），save() tmp 写段 + 事件流导出 + 报告写均加瞬时锁重试（MINOR-1 tmp 写段不对称 / MINOR-2 终点导出无重试）；NaN ValueError 不重试（allow_nan=False 安全）、永久失败仍体面 rc=2；test 60→62（+tmp 写段重试/ValueError 不重试）；distributed_replica 24→25。**happy path 不变、双哈希/成本/调用数逐位不变**。
 v3.51：R63（ACCEPT，5 观察项独立分诊均既有零动作，NaN CLI 不可达 AST+实跑证实）推荐硬化落实——**全 dump 点 allow_nan=False 对称**（ot 事件流/审计 json.dumps 补 allow_nan=False，与 ot save/report 及 dr 一致；域外 NaN 静默再发射转干净拒绝，契合「存档 allow_nan=False 最终闸门」哲学）；distributed_replica checkpoint/report 补 allow_nan=False + NaN 再发射拒绝测试 25→26。**happy path 不变、哈希不变**。
+v3.52：R64（ACCEPT，allow_nan 6 写盘点零遗漏+11 NaN 探针+变异击杀承重）O2 落实——**ot NaN-event 导出拒绝回归测试**（域外 NaN event 穿透 _validate_snapshot dict 形态校验→事件流 allow_nan=False 干净 rc=2；变异「移除 events allow_nan」→SystemExit not raised 精确击杀，测试侧对称 dr）；test 62→63（合 89）。**代码无变更、哈希不变**。
 可视化冒烟另见 vis_smoke.js（node vis_smoke.js .，38 项）；对比度实测 contrast_check.py（6 项含 RED）。"""
 import copy
 import json
@@ -712,6 +713,23 @@ class TestRound2Regressions(unittest.TestCase):
             with self.assertRaises(SystemExit) as cm:
                 main(["--seed", str(BASE["seed"]), "--agents", "200", "--nights", "1",
                       "--checkpoint-dir", d, "--resume", "--out", os.path.join(d, "r.json")])
+            self.assertEqual(cm.exception.code, 2)
+
+    def test_main_nan_event_export_rejected(self):
+        """R64 O2：域外 NaN event（_validate_snapshot 仅查 events 元素 dict 形态可穿透）→
+        事件流导出 allow_nan=False 干净拒绝 rc=2（测试侧对称 dr NaN 拒绝；杀「移除 events allow_nan」变异）。"""
+        from overnight_town import main
+        with tempfile.TemporaryDirectory() as d:
+            run_overnight(cfg(nights=1, checkpoint_dir=d))
+            p = os.path.join(d, "ckpt.json")
+            with open(p, encoding="utf-8") as f:
+                s = json.load(f)
+            s["world"]["events"].append({"minute": 0, "type": "nan_probe", "value": float("nan")})
+            with open(p, "w", encoding="utf-8") as f:
+                json.dump(s, f)  # allow_nan=True 默认写入 NaN
+            with self.assertRaises(SystemExit) as cm:
+                main(["--seed", str(BASE["seed"]), "--agents", "200", "--nights", "1",
+                      "--checkpoint-dir", d, "--resume", "--events-out", os.path.join(d, "ev.jsonl")])
             self.assertEqual(cm.exception.code, 2)
 
     def test_config_magnitude_caps(self):
