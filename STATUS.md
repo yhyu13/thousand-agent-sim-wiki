@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-13（v3.72，Liquibase 与 Alembic 官方页仍无 MCP。换班 14 项，合计 104。critic 迭代轮 67；R66 审计测试已补，轮 67 待复核）
+更新：2026-11-13（v3.73，轮 67 当场复核：审计 NaN 测试仍能杀死只摘审计 allow_nan 的变异。换班 14 项，合计 104。无代码修复）
 
 ## 迭代模式
 
@@ -164,7 +164,7 @@
 - [x] 轮 64 critic（**ACCEPT**，allow_nan 6 写盘点零遗漏 + 11 NaN 探针 + 变异击杀承重，ot NaN CLI 可构造证实；O2 建议补 ot 测试侧对称）→ 轮 65（v3.52：ot NaN-event 导出拒绝测试 62→63 合 89，变异精确击杀）
 - [x] 轮 65 critic（**ACCEPT**，零 MINOR，代码零变更，89 OK，事件+审计两处 allow_nan 联合变异 SystemExit not raised，三产物逐字节）→ 无缺陷修复（v3.52 不变）
 - [x] 轮 66 critic（**ACCEPT**，零 MINOR；只摘审计 allow_nan 时 89 仍绿，产品路径 rc=2。观察项同 R64 O2）→ 轮 67（v3.53：NaN-audit 测试 63→64 合 90，交叉变异各杀各的）
-- [ ] 轮 67 critic（v3.53 NaN-audit 测试复核）
+- [x] 轮 67 critic（2026-11-13 当场复核，不是另派评判。临时副本：干净事件+审计两项 Ran 2 tests in 1.261s OK，退出码 0，两条都打印 `Out of range float values are not JSON compliant: nan`。只删审计 dumps 的 `allow_nan=False` 后：事件测试仍 ok，审计测试 `SystemExit not raised`；该次跑完并打印 GREEN，审计类型含 `nan_audit: 1`。仓库文件未改，无代码修复）
 - [ ] 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务
 
 ## 核验日志
@@ -177,6 +177,7 @@
 | 2026-11-12 换班证据 | repro 需对照 world_hash + 重跑 final_hash；audit 需带 day/minute 的行且条数不少于计数。换班 8→11，合计 101。模拟未改 |
 | 2026-11-12 换班接线 | overnight_town `--feature-list` 可选。默认不写清单。换班 11→12，合计 102 |
 | 2026-11-12 哈希与技能 | 默认通宵 world_hash/final_hash/成本 0.205012/调用 335 与入库早晨报告一致。demos/skills/overnight-operator 只引用一层。换班 12→13，合计 103 |
+| 2026-11-13 轮67 | 临时副本复核审计 NaN。干净 2 项 1.261s OK。只摘审计 allow_nan：事件测试仍绿，审计测试 SystemExit not raised，并打印 GREEN、nan_audit 1。仓库未改，无新测试 |
 | 2026-11-13 S37 | Liquibase Secure 5.1 changeset 页与 Alembic 1.20.1 教程：版本脚本加历史表，已跑过的不再重跑。两页均无 MCP、skill、AI agent。无新测试 |
 | 2026-11-12 S36b | 仓库 README 人类段落：文档可能为假，正确性未核验，不建议使用。代理数与 $20,000 仍只出自博客。未编译该仓库 |
 | 2026-11-12 S36 | 16 个 Claude 用 git 锁并行写 C 编译器：近 2000 次会话，不到 $20,000，无编排代理。不计入千人一夜。无新测试 |
@@ -216,9 +217,8 @@
 | 剪枝跑（ttl=7×30 夜） | GREEN；剪枝 4548、存留 2256（-67%）；检查点 1.22MB（-42%）；$2.9013 |
 | ROI 估算器 | qwen-max ≈¥370.42（历史口径）；Haiku $2.01→缓存+Batch $0.50；DeepSeek Flash 谷时 $2.90→70%命中 $1.24 [S26]；Qwen 现价（轮 24，北京区）qwen3.8-max $30.56→Batch $15.28 / qwen3.7-flash $0.54（04 §1.5） |
 
-## 下一步（轮 68）
+## 下一步
 
-1. 轮 67 critic 报告 → 修复（v3.53 NaN-audit 测试复核）；
-2. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
-3. 可选深化：**Ray 版**分布式复刻（[S08]；stdlib 教学复刻 R35 已落地、R41 收敛，居民记忆查看器 R30 已落地、R32 收敛——两者不再列为待做）；
-4. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。
+1. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
+2. 可选深化：**Ray 版**分布式复刻（[S08]；stdlib 教学复刻 R35 已落地、R41 收敛，居民记忆查看器 R30 已落地、R32 收敛——两者不再列为待做）；
+3. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。没打开的迁移厂商页仍然不外推。
