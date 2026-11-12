@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-13（v3.79，Prisma MCP 工具全表 31 个名字，没有 db migrate。换班 14 项，合计 104。无代码修复）
+更新：2026-11-13（v3.80，Prisma ORM 7 自己的迁移页：SQL 历史加迁移表，不是 ORM 8 的图。换班 14 项，合计 104。无代码修复）
 
 ## 迭代模式
 
@@ -177,6 +177,7 @@
 | 2026-11-12 换班证据 | repro 需对照 world_hash + 重跑 final_hash；audit 需带 day/minute 的行且条数不少于计数。换班 8→11，合计 101。模拟未改 |
 | 2026-11-12 换班接线 | overnight_town `--feature-list` 可选。默认不写清单。换班 11→12，合计 102 |
 | 2026-11-12 哈希与技能 | 默认通宵 world_hash/final_hash/成本 0.205012/调用 335 与入库早晨报告一致。demos/skills/overnight-operator 只引用一层。换班 12→13，合计 103 |
+| 2026-11-13 S46 | Prisma ORM v7 总览、心智模型、历史页：prisma/migrations 的 SQL，migrate deploy 补 pending。表名前后两种写法都留下。没写事务。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S45 | Prisma MCP 工具全表 31 个名字。execute_sql_query 不改 schema。execute_prisma_postgres_schema_update 不是 db migrate。无 skill、无专家团。无新测试 |
 | 2026-11-13 S44 | Prisma MCP 页：`https://mcp.prisma.io/mcp` 管 Postgres、Compute、对象存储。工具全表未打开。migrate reset 拦截在 CLI，不在 MCP 调用。无专家团。无新测试 |
 | 2026-11-13 S43 | Prisma 技能页：ORM 8 只有 prisma-8，升级写在 references 与 prisma-8/upgrading，不是另一份技能。正文无 MCP、无专家团。MCP server 页未打开。无新测试 |
