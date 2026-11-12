@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-13（v3.74，Django 6.1 迁移页：事务不是每种库都有，MySQL 失败不能自动退回。换班 14 项，合计 104。无代码修复）
+更新：2026-11-13（v3.75，Rails 迁移指南：`schema_migrations` 记下已跑版本，不再重跑。事务不点名数据库。换班 14 项，合计 104。无代码修复）
 
 ## 迭代模式
 
@@ -177,6 +177,7 @@
 | 2026-11-12 换班证据 | repro 需对照 world_hash + 重跑 final_hash；audit 需带 day/minute 的行且条数不少于计数。换班 8→11，合计 101。模拟未改 |
 | 2026-11-12 换班接线 | overnight_town `--feature-list` 可选。默认不写清单。换班 11→12，合计 102 |
 | 2026-11-12 哈希与技能 | 默认通宵 world_hash/final_hash/成本 0.205012/调用 335 与入库早晨报告一致。demos/skills/overnight-operator 只引用一层。换班 12→13，合计 103 |
+| 2026-11-13 S40 | Rails 当前迁移指南：`schema_migrations.version` 记下已跑时间戳，`db:migrate` 只跑还没跑的。DDL 事务不点名数据库。正文无 MCP、skill、专家团。无新测试 |
 | 2026-11-13 S39 | Django 6.1 迁移主题页：DDL 事务默认只在 SQLite 与 PostgreSQL；MySQL、Oracle 不包事务，MySQL 失败要手工拆。正文无 MCP、skill、专家团。无新测试 |
 | 2026-11-13 轮67 | 临时副本复核审计 NaN。干净 2 项 1.261s OK。只摘审计 allow_nan：事件测试仍绿，审计测试 SystemExit not raised，并打印 GREEN、nan_audit 1。仓库未改，无新测试 |
 | 2026-11-13 S37 | Liquibase Secure 5.1 changeset 页与 Alembic 1.20.1 教程：版本脚本加历史表，已跑过的不再重跑。两页均无 MCP、skill、AI agent。无新测试 |
