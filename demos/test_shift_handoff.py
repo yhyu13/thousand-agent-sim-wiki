@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""换班工件（11 项）：python -m unittest test_shift_handoff -v
+"""换班工件（12 项）：python -m unittest test_shift_handoff -v
 
 功能清单不许增删或改描述；一班只把一条 passes 改成 true；进度只追加。
 不导入 overnight_town，因此不触碰世界哈希。
@@ -150,6 +150,23 @@ class TestShiftHandoff(unittest.TestCase):
             self.assertIn("audit", proven)
         bad = [{"day": 0, "type": "rollback"}, {"day": 0, "minute": 20, "type": "patch_rejected"}]
         self.assertNotIn("audit", sh.apply_report(self._fresh(), report, audit_rows=bad))
+
+    def test_main_writes_feature_list_only_when_asked(self):
+        from overnight_town import main
+        with tempfile.TemporaryDirectory() as directory:
+            features = str(Path(directory) / "features.json")
+            events = str(Path(directory) / "ev.jsonl")
+            report = str(Path(directory) / "r.json")
+            code = main([
+                "--seed", "20260818", "--agents", "200", "--nights", "1",
+                "--no-crash", "--no-storm", "--budget", "2",
+                "--out", report, "--events-out", events, "--feature-list", features,
+            ])
+            self.assertEqual(code, 0)
+            flags = {item["id"]: item["passes"]
+                     for item in json.loads(Path(features).read_text(encoding="utf-8"))}
+            self.assertTrue(flags["ticks"] is True)
+            self.assertTrue(flags["repro"] is False)
 
     def _fresh(self):
         directory = tempfile.mkdtemp()

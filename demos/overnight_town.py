@@ -1076,6 +1076,12 @@ def main(argv=None):
     p.add_argument("--events-out", default=None,
                    help="事件流 JSONL 导出路径（events+audit），供 visualize.html 时间轴")
     p.add_argument("--out", default=None)
+    p.add_argument("--feature-list", default=None,
+                   help="跑完后把早晨报告勾进换班清单（默认不写，不改变模拟）")
+    p.add_argument("--control-report", default=None,
+                   help="对照报告 JSON。与 --rerun-report 同时给出才允许勾 repro")
+    p.add_argument("--rerun-report", default=None,
+                   help="同配置重跑的报告 JSON，只用来比对 final_hash")
     a = p.parse_args(argv)
     if a.budget < 0 or a.agents < 0 or a.nights < 0 or a.corrupt_times < 1:
         p.error("budget/agents/nights 必须非负，corrupt-times 必须 >= 1")
@@ -1135,7 +1141,47 @@ def main(argv=None):
         except (OSError, ValueError) as e:
             p.error(f"报告写盘失败：{e}")
         print("报告已写入: %s" % a.out)
+    if a.feature_list:
+        _write_feature_grade(p, a, rep)
     return 0 if rep["status"] == "GREEN" else 1
+
+
+def _write_feature_grade(parser, args, report):
+    """可选。模拟已经结束，这里只写换班清单。"""
+    import shift_handoff
+    try:
+        if not os.path.exists(args.feature_list):
+            shift_handoff.write_feature_list(args.feature_list)
+        control = _read_json_object(args.control_report) if args.control_report else None
+        rerun = _read_json_object(args.rerun_report) if args.rerun_report else None
+        audit_rows = _audit_rows(args.events_out) if args.events_out else None
+        shift_handoff.apply_report(
+            args.feature_list, report,
+            control=control, rerun=rerun, audit_rows=audit_rows,
+        )
+    except (OSError, ValueError) as exc:
+        parser.error("换班清单写入失败：%s" % exc)
+
+
+def _read_json_object(path):
+    with open(path, encoding="utf-8") as handle:
+        data = json.load(handle)
+    if not isinstance(data, dict):
+        raise ValueError("报告必须是对象：%s" % path)
+    return data
+
+
+def _audit_rows(path):
+    rows = []
+    with open(path, encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line:
+                continue
+            item = json.loads(line)
+            if isinstance(item, dict) and item.get("_stream") == "audit":
+                rows.append(item)
+    return rows
 
 
 if __name__ == "__main__":
