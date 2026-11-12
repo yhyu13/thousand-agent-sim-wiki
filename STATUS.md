@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-12（v3.58，demo 仍 v3.53；通宵手册 §7 写入换班规矩。critic 迭代轮 67；R66 审计测试已补，轮 67 待复核）
+更新：2026-11-12（v3.59，模拟仍 v3.53；换班工具 5 项，合计 95。critic 迭代轮 67；R66 审计测试已补，轮 67 待复核）
 
 ## 迭代模式
 
@@ -172,6 +172,7 @@
 | 时间 | 事件 |
 | --- | --- |
 | 2026-11-11 轮1 | Web Search 插件设置被取消；DDG 三域名 DNS 失败 → 全部核验走 arXiv/GitHub/官方文档直抓 |
+| 2026-11-12 换班工具 | demos/shift_handoff.py：6 条验收先失败，5 项测试拒绝删改。Ran 5 tests OK。模拟代码未改 |
 | 2026-11-12 手册 | 05 §7：S34 换班工件对照到检查点/早晨报告/短跑门禁；标明没有进度文件和功能清单 JSON。demo 未改 |
 | 2026-11-12 底座四 | 行为树导论 S33（arXiv:1709.00084）与跨会话 harness S34（2025-11-26）：功能清单先标失败、每班一条、进度文件+git。多专门代理是否更好，原文标未决。demo 未改 |
 | 2026-11-12 底座三 | Managed Agents（S32，2026-04-08）：session / harness / sandbox 三接口；MCP 是手的一种；崩溃后续跑靠外部日志。延迟百分比只属于原文自报，不外推。demo 未改 |
@@ -188,7 +189,7 @@
 
 | 项 | 结果 |
 | --- | --- |
-| 测试套件 | overnight_town Ran 64 tests OK + distributed_replica Ran 26 tests OK（合 90）+ vis_smoke.js 38/38（node）+ contrast_check.py 6/6 AA（Chromium 实测含 RED，需 playwright） |
+| 测试套件 | overnight_town Ran 64 tests OK + distributed_replica Ran 26 tests OK + shift_handoff Ran 5 tests OK（合 95）+ vis_smoke.js 38/38（node）+ contrast_check.py 6/6 AA（Chromium 实测含 RED，需 playwright） |
 | 分布式复刻（R35） | 1000 代理×144 ticks 焦点 1/10：并行==串行（哈希 ec4a48e9…一致）、确定性双跑一致、检查点续跑==全程（resumed_from 72）；焦点调度 14400/144000 |
 | critic BLOCKER 复现案例（--corrupt-frac 0.2066，相位 X≡5 mod 6） | v2 RED → **v3 GREEN**（288/288，人口 200/200，回滚 1） |
 | 标准通宵（1000×3 夜，全注入） | GREEN ~2s；崩溃恢复1（重放≤6tick）/回滚1；335 次调用覆盖率 0.0775%；$0.205012 |
