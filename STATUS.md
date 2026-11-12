@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-12（v3.56，demo 仍 v3.53；08 补 Managed Agents 三接口。critic 迭代轮 67；R66 审计测试已补，轮 67 待复核）
+更新：2026-11-12（v3.57，demo 仍 v3.53；08 补行为树与跨会话 harness。critic 迭代轮 67；R66 审计测试已补，轮 67 待复核）
 
 ## 迭代模式
 
@@ -172,6 +172,7 @@
 | 时间 | 事件 |
 | --- | --- |
 | 2026-11-11 轮1 | Web Search 插件设置被取消；DDG 三域名 DNS 失败 → 全部核验走 arXiv/GitHub/官方文档直抓 |
+| 2026-11-12 底座四 | 行为树导论 S33（arXiv:1709.00084）与跨会话 harness S34（2025-11-26）：功能清单先标失败、每班一条、进度文件+git。多专门代理是否更好，原文标未决。demo 未改 |
 | 2026-11-12 底座三 | Managed Agents（S32，2026-04-08）：session / harness / sandbox 三接口；MCP 是手的一种；崩溃后续跑靠外部日志。延迟百分比只属于原文自报，不外推。demo 未改 |
 | 2026-11-12 底座补 | Flyway 概念页补核验（S31）：版本化脚本、schema history、Migrate 幂等、出错回滚；该页无 MCP/skill/agent。行为树工业教程页仍打不开。demo 未改 |
 | 2026-11-12 底座 | 新增 [08-substrate.md](08-substrate.md)：游戏规则代理 vs 语言模型（S01 相关工作直引）、MCP 宿主/客户端/服务器（S28）、技能渐进披露与「无父技能类型」（S29）、workflow/agent 与编排器-工人（S30）。gamedeveloper.com DNS 失败、Flyway 入门 URL 404，不登记未核验产品。demo 与测试计数未改 |
