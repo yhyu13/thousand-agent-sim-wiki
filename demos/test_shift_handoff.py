@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""换班工件（5 项）：python -m unittest test_shift_handoff -v
+"""换班工件（8 项）：python -m unittest test_shift_handoff -v
 
 功能清单不许增删或改描述；一班只把一条 passes 改成 true；进度只追加。
 不导入 overnight_town，因此不触碰世界哈希。
@@ -67,6 +67,42 @@ class TestShiftHandoff(unittest.TestCase):
             self.assertEqual(text, "班次 1：短跑哈希一致\n班次 2：只验收 budget\n")
             with self.assertRaises(ValueError):
                 sh.append_progress(path, "两行\n不行")
+
+    def test_report_marks_only_what_one_file_can_prove(self):
+        report = {
+            "ticks_completed": 432, "ticks_planned": 432,
+            "violations_unresolved": [],
+            "cost_usd": 0.2, "budget_cap_usd": 2.0,
+            "conversations_total": 10, "reflections_total": 4,
+            "world_hash": "abc", "final_hash": "def",
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "features.json"
+            sh.write_feature_list(path)
+            proven = sh.apply_report(path, report)
+            self.assertEqual(proven, ["ticks", "structure", "budget", "society"])
+            data = json.loads(path.read_text(encoding="utf-8"))
+            flags = {item["id"]: item["passes"] for item in data}
+            self.assertTrue(flags["ticks"] and flags["structure"] and flags["budget"] and flags["society"])
+            self.assertTrue(flags["repro"] is False and flags["audit"] is False)
+
+    def test_short_run_does_not_pass_ticks(self):
+        report = {
+            "ticks_completed": 10, "ticks_planned": 432,
+            "violations_unresolved": ["I3"],
+            "cost_usd": 3.0, "budget_cap_usd": 2.0,
+            "conversations_total": 0, "reflections_total": 0,
+        }
+        self.assertEqual(sh.passing_from_report(report), [])
+
+    def test_bool_budget_is_not_a_number(self):
+        report = {
+            "ticks_completed": 1, "ticks_planned": 1,
+            "violations_unresolved": [],
+            "cost_usd": True, "budget_cap_usd": True,
+            "conversations_total": 1, "reflections_total": 0,
+        }
+        self.assertNotIn("budget", sh.passing_from_report(report))
 
 
 if __name__ == "__main__":
