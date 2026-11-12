@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""换班工件（12 项）：python -m unittest test_shift_handoff -v
+"""换班工件（13 项）：python -m unittest test_shift_handoff -v
 
 功能清单不许增删或改描述；一班只把一条 passes 改成 true；进度只追加。
 不导入 overnight_town，因此不触碰世界哈希。
@@ -167,6 +167,15 @@ class TestShiftHandoff(unittest.TestCase):
                      for item in json.loads(Path(features).read_text(encoding="utf-8"))}
             self.assertTrue(flags["ticks"] is True)
             self.assertTrue(flags["repro"] is False)
+
+    def test_operator_skill_references_one_level(self):
+        skill = Path(__file__).resolve().parent / "skills" / "overnight-operator"
+        text = (skill / "SKILL.md").read_text(encoding="utf-8")
+        self.assertTrue(text.startswith("---\nname: overnight-operator\n"))
+        self.assertIn("references/grade.md", text)
+        grade = (skill / "references" / "grade.md").read_text(encoding="utf-8")
+        self.assertNotIn("references/", grade)
+        self.assertIn("--feature-list", grade)
 
     def _fresh(self):
         directory = tempfile.mkdtemp()
