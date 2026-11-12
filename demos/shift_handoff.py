@@ -4,7 +4,8 @@
 对应跨会话 harness：功能清单用 JSON，条目先失败；只允许把某一条的
 passes 改成 true。删条目、改描述、改字段集合都拒绝。进度文件只追加。
 单份早晨报告只能自动勾 ticks / structure / budget / society。
-repro 要对照跑，audit 要审计流，这两条不从一份报告里勾。
+repro 还要对照报告的 world_hash，以及同配置重跑的 final_hash。
+audit 还要审计行本身：每行有整数 day/minute，且回滚、降级、熔断、拒绝的条数不少于报告里的计数。
 """
 import json
 from pathlib import Path
@@ -103,9 +104,50 @@ def passing_from_report(report):
     return passed
 
 
-def apply_report(path, report):
-    """只把报告证明了的自动条目标成通过。repro / audit 保持原样。"""
-    proven = passing_from_report(report)
+def apply_report(path, report, control=None, rerun=None, audit_rows=None):
+    """勾上有证据的条目。缺对照或审计行时，repro / audit 保持原样。"""
+    proven = list(passing_from_report(report))
+    if _repro_holds(report, control, rerun):
+        proven.append("repro")
+    if audit_rows is not None and _audit_holds(report, audit_rows):
+        proven.append("audit")
     for feature_id in proven:
         set_passing(path, feature_id)
     return proven
+
+
+def _same_hash(left, right, key):
+    a = left.get(key) if isinstance(left, dict) else None
+    b = right.get(key) if isinstance(right, dict) else None
+    return isinstance(a, str) and a != "" and a == b
+
+
+def _repro_holds(report, control, rerun):
+    return _same_hash(report, control, "world_hash") and _same_hash(report, rerun, "final_hash")
+
+
+def _audit_holds(report, rows):
+    if not isinstance(report, dict) or not isinstance(rows, list):
+        return False
+    for row in rows:
+        if not isinstance(row, dict):
+            return False
+        if type(row.get("day")) is not int or type(row.get("minute")) is not int:
+            return False
+    counters = report.get("counters")
+    if counters is None:
+        counters = {}
+    if not isinstance(counters, dict):
+        return False
+    needed = (
+        (report.get("interventions_rollbacks", 0), "rollback"),
+        (counters.get("budget_degradations", 0), "budget_downgrade"),
+        (counters.get("breaker_opens", 0), "breaker_open"),
+        (counters.get("reflections_rejected", 0), "patch_rejected"),
+    )
+    for count, kind in needed:
+        if type(count) is not int:
+            return False
+        if count > 0 and sum(1 for row in rows if row.get("type") == kind) < count:
+            return False
+    return True

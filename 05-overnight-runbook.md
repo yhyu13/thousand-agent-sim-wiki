@@ -99,7 +99,7 @@ demo 的 `status: GREEN` 即按 1–4 判定；第 5 条由测试套件与双跑
 
 | [S34] 的工件 | 这里已经有的 | 还没有，不要写成已有 |
 | --- | --- | --- |
-| 功能清单，每条先标失败；不许删测试，只改通过标记 | `demos/shift_handoff.py` 写出 6 条先失败的 JSON（对应 §4）。`set_passing` 一次只把一条改成 true。`apply_report` 只根据一份早晨报告勾 ticks/structure/budget/society；repro 与 audit 仍要人工。删条目、改描述、用 0/1 代替布尔都会拒绝。8 项测试。不在模拟循环里 | 模拟器不会自己读这份清单 |
+| 功能清单，每条先标失败；不许删测试，只改通过标记 | `demos/shift_handoff.py` 写出 6 条先失败的 JSON（对应 §4）。`set_passing` 一次只把一条改成 true。`apply_report` 用一份报告勾四条。repro 还要对照报告的 world_hash 和同配置重跑的 final_hash。audit 还要审计行，每行有整数 day/minute，回滚/降级/熔断/拒绝条数不少于报告计数。删条目、改描述、用 0/1 代替布尔都会拒绝。11 项测试。不在模拟循环里 | 模拟器不会自己读这份清单 |
 | 进度文件 + git 提交 | [STATUS.md](STATUS.md) 的轮次记录；模拟侧是检查点与早晨报告。`append_progress` 只追加一行，前缀必须还在 | 没有固定名叫 `claude-progress.txt` 的文件；路径由操作员传入 |
 | 每班只做一条 | critic 一轮收一件 | 不是模拟里的一个 tick |
 | 开班先读日志、先跑基本测试 | §1 第 10 项同种子短跑；§4 的 GREEN 必须五条都过，不许看见哈希对了就宣布没崩 | — |

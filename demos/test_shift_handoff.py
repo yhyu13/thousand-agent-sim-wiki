@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""换班工件（8 项）：python -m unittest test_shift_handoff -v
+"""换班工件（11 项）：python -m unittest test_shift_handoff -v
 
 功能清单不许增删或改描述；一班只把一条 passes 改成 true；进度只追加。
 不导入 overnight_town，因此不触碰世界哈希。
@@ -103,6 +103,59 @@ class TestShiftHandoff(unittest.TestCase):
             "conversations_total": 1, "reflections_total": 0,
         }
         self.assertNotIn("budget", sh.passing_from_report(report))
+
+    def _base(self):
+        return {
+            "ticks_completed": 4, "ticks_planned": 4,
+            "violations_unresolved": [],
+            "cost_usd": 0.1, "budget_cap_usd": 2.0,
+            "conversations_total": 1, "reflections_total": 1,
+            "world_hash": "world", "final_hash": "final",
+            "interventions_rollbacks": 1,
+            "counters": {"budget_degradations": 0, "breaker_opens": 0, "reflections_rejected": 1},
+        }
+
+    def test_repro_needs_both_hashes(self):
+        report = self._base()
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "features.json"
+            sh.write_feature_list(path)
+            self.assertNotIn("repro", sh.apply_report(path, report, control={"world_hash": "world"}))
+            sh.write_feature_list(path)
+            proven = sh.apply_report(
+                path, report,
+                control={"world_hash": "world"},
+                rerun={"final_hash": "final"},
+            )
+            self.assertIn("repro", proven)
+            flags = {item["id"]: item["passes"] for item in json.loads(path.read_text(encoding="utf-8"))}
+            self.assertTrue(flags["repro"] is True)
+            self.assertTrue(flags["audit"] is False)
+
+    def test_repro_rejects_mismatched_world(self):
+        report = self._base()
+        self.assertNotIn("repro", sh.apply_report(
+            self._fresh(), report, control={"world_hash": "other"}, rerun={"final_hash": "final"}))
+
+    def test_audit_needs_timestamped_rows(self):
+        report = self._base()
+        rows = [
+            {"day": 0, "minute": 10, "type": "rollback"},
+            {"day": 0, "minute": 20, "type": "patch_rejected"},
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "features.json"
+            sh.write_feature_list(path)
+            proven = sh.apply_report(path, report, audit_rows=rows)
+            self.assertIn("audit", proven)
+        bad = [{"day": 0, "type": "rollback"}, {"day": 0, "minute": 20, "type": "patch_rejected"}]
+        self.assertNotIn("audit", sh.apply_report(self._fresh(), report, audit_rows=bad))
+
+    def _fresh(self):
+        directory = tempfile.mkdtemp()
+        path = Path(directory) / "features.json"
+        sh.write_feature_list(path)
+        return path
 
 
 if __name__ == "__main__":
