@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-12（v3.52，critic 迭代轮 65；R64 ACCEPT allow_nan 对称承重零 MINOR，轮 65 补 ot NaN-event 导出拒绝测试达测试侧对称）
+更新：2026-11-12（v3.52，critic 迭代轮 66；R65 ACCEPT NaN-event 测试承重零 MINOR，轮 66 证伪审计 dumps allow_nan 是否被测试独立钉死）
 
 ## 迭代模式
 
@@ -82,7 +82,8 @@
 | 62 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，5 零动作观察项均既有；233+118+3+20 断言 + A/B + 变异击杀）：fresh clone（HEAD c22b42c）**委托无回归 A/B 233 断言**（_retry_on_lock 直测返回值/瞬时 N=1..4/永久 bare raise 同实例/非 PermissionError 五类立即传播/子类重试/attempts<1 守卫/sleep 中断传播；旧版 4696b3d _atomic_replace 同矩阵逐项一致，两模块 helper inspect 逐字一致）；**全写点 118+3 探针**（ot/dr tmp/ev/mr 瞬时 2 败吸收 rc=0 逐字节==基线、open 计数精确、fsync 每成功写段恰 1 次；永久 8 场景 rc=2 零 Traceback 世界保全；残留 ckpt --resume 除 resumed_from_tick 外全字段==基线；**NaN save→ValueError 立即传播 tmp open 1 次 0 sleep 上档保全**；**幂等：中段 write 写一半抛→重试 open 'w' 截断全量重写逐字节==基线无重复/截断残留**；fsync 瞬时失败整段重执行）；happy path 20 断言（三产物+ckpt 双跑逐字节零漂移 sha 9aca8fb5/325d61c4/e26d3a9b）；87 双跑 exit=0 AST 62+25=87 + 38 + 6/6 AA；**变异击杀 M1 ot tmp 去包裹/M3 dr tmp 去包裹/M2 helper 改捕 Exception 全杀**新测试承重；版本计数轮号活体一致 stale 零；diff 恰 10 文件 5 写点全包裹无残留裸写点；工作副本零污染。+观察项（零动作均既有）：①dr checkpoint json.dump 无 allow_nan=False（与 ot 不对称，旧版同，CLI 不可达 energy 恒整数）②ot save 先更新 self.latest 后写盘（既有顺序，永久失败 rc=2 退出无可观察影响）③事件流部分写后永久锁留 83B 撕裂 ev.jsonl（硬化前单次失败同样留残片重试未更糟，ckpt 权威可 --resume 再生）④dr mp time.sleep(0) 混入全局 sleep 观测（探针层，退避恒≥0.05）⑤工作副本 LF vs clone CRLF 环境性归一化一致 | —（零缺陷，v3.50 不变） | 87/87 双跑 OK + 38/38 + 6/6 AA；标准跑+ckpt 逐字节零漂移；双哈希/成本/调用数不变 |
 | 63 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR 必须项；5 观察项独立分诊均既有零动作 + 1 新域外观察 O-new）：fresh clone（HEAD 2e67721）基线全绿（87 OK+38+6AA+三产物双口径逐字节 sha 9aca8fb5/ae0ffdfe/325d61c4+权威数字全命中）；**项1 dr allow_nan 不对称**：既有核实（git log -S 全历史空，ot 初始即有）+**AST 穷举 dr 零 float 源 CLI 不可达**（唯一 float 字面量退避 0.05 不入序列化）+域外实证（NaN energy ckpt remaining=0 静默再发射 rc=0、remaining>0 经 max/min 自愈整数 100、1e999→inf）+A/B 补 allow_nan=False 域外 rc=2 干净 happy 逐字节同→**推荐顺手硬化（可选 MINOR 零风险契合最终闸门哲学）**；项2 save 先 latest 后写盘既有顺序永久失败 rc=2 无可观察影响；**项3 撕裂 ev**：独立实证 207B 严格前缀残片 ckpt 完好 tick144 --resume 逐字节再生、硬化前 A/B 残片逐字节同 opens=1「重试未更糟」成立、原子替代 A/B 消除目标撕裂+掉电安全→**真实但收益有限（派生非权威可再生）保持现状可接受**；项4 mp sleep(0) 探针层退避恒≥0.05；项5 工作副本混合行尾（16 CRLF/17 LF，R62「纯 LF」措辞偏松纠正）归一化三方一致；**O-new（域外既有零动作）：allow_nan 不对称不止 dr——ot 事件 dumps 同样无 allow_nan=False，域外 NaN event 发射 NaN + ot 报告 NaN 触发撕裂 1323B**；完整一致包=全 dump 点 allow_nan=False + 派生导出 tmp 原子替换（整体可选）；版本轮号自洽代码零变更两仓零污染 | wiki v3.51：落实 R63 推荐硬化——**全 dump 点 allow_nan=False 对称**（dr checkpoint/report + ot 事件流/审计 dumps 补 allow_nan=False，域外 NaN 静默再发射转干净拒绝，契合「存档 allow_nan=False 最终闸门」哲学；ot save/report 既有）；dr +NaN energy 再发射拒绝测试 25→**26**（合 **88**）；派生导出原子化（项3）记为可选未来项保持现状（派生非权威可再生）；版本/计数全库同步 v3.51 | 88/88 OK exit=0 + NaN 拒绝测试 + 38/38 + 6/6 AA；标准跑逐字节不变（allow_nan 不改 happy path）；双哈希/成本/调用数不变 |
 | 64 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR，5 观察项零动作/可选；11 NaN 探针 + 变异击杀）：fresh clone（HEAD 302aaab）**allow_nan 覆盖完整零遗漏**（穷举 open/.write：dr L274/297、ot L499/834/1132 全 "w" 无追加无 pickle/csv；6 写盘 dump 点 allow_nan=False 全在位 dr L275/298 新增 + ot L500/1133 既有 + ot L836/838 新增；非写盘 dumps 正确未动 ot L322/494/527 + canonical_hash dr L82/ot L537 diff 零）；**NaN 拒绝 11/11 探针承重**（dr NaN energy ckpt remaining=0 seq/both rc=2 干净拒绝原 ckpt 逐字节未改；**ot CLI 可构造** _validate_snapshot L957-959 仅查 events/audit dict 形态 NaN 穿透→NaN event/audit 导出 rc=2、无 events-out 经 sample_events 报告闸门 rc=2；**变异去 4 处 allow_nan→dr 新测试恰 1 failure 非恒真特异 + dr/ot 探针 rc=0 NaN 字面量发射复现** O-new 闭合）；happy path 三产物+ckpt 逐字节零漂移（sha 325d61c4/9aca8fb5/e26d3a9b）+ dr R35 ec4a48e9 不变；88 双跑 exit=0 AST 62+26=88 + 38 + 6/6 AA；版本计数轮号活体一致 stale 仅历史；diff 恰 10 文件代码仅 4 处 allow_nan+dr 测试+docstring canonical_hash 零改动；工作副本零污染。+观察项（零动作）：①dr report 闸门 NaN CLI 不可达（report 全 int/str/bool，NaN world 先触 ckpt 闸门）纯防御对称②**ot 事件/审计新硬化无专属回归测试**（变异 ot 套件仍 62 OK，11 套件外探针实证承重；建议补 1 ot NaN-event 测试达测试侧对称）③NaN 拒绝派生导出留残片（ot ev 0B/dr .tmp 143B）权威 ckpt 完好可再生（与原子化可选未来项一致，优于硬化前）④canonical_hash 内存容 NaN（仅内存无盘上非严格 JSON，动它改 world_hash 未动正确）⑤dr 新测试归 TestAtomicReplaceRetry 类与 demos README:15 分组一致 | wiki v3.52：O2 落实——**ot NaN-event 导出拒绝回归测试**（域外 NaN event 穿透 dict 形态校验→事件流 allow_nan=False rc=2；作者变异「移除 events allow_nan」→SystemExit not raised 精确击杀非恒真）；test 62→**63**（合 **89**）；版本/计数全库同步 v3.52 | 89/89 OK exit=0 + 新测试变异击杀 + 38/38 + 6/6 AA；标准跑逐字节不变；双哈希/成本/调用数不变 |
-| 65 | 已派出：R65 critic 复核 v3.52（ot NaN-event 测试独立证伪 + 89 测试 + 无回归） | 待报告 | — |
+| 65 | **ACCEPT**（0 BLOCKER/MAJOR/MINOR）：fresh clone（HEAD 1a83949）**代码零变更**（diff 仅 6 文件测试+文档；overnight_town/distributed_replica/visualize/contrast/vis_smoke blob 与 302aaab 相同）；**89 测试 OK**（63+26，27.6s exit=0）；**变异击杀**：只去掉事件流/审计两处 allow_nan=False（:836/:838，检查点 :500 与报告 :1133 保留）→ 新测试 FAIL `SystemExit not raised` 且 stdout 已打出 GREEN 早晨报告（不靠 --out 报告闸门、检查点闸门未先杀）；未变异同测试 OK，stderr 含 `Out of range float values are not JSON compliant: nan`；标准/对照三产物逐字节（sha 9aca8fb5/325d61c4/ae0ffdfe）world_hash `2fe29e0a…` final_hash `ff7c7683…` 成本 0.205012/调用 335；vis_smoke 38/38（contrast 本轮未跑，html/脚本 blob 未变，文档 6/6 为版本标签沿用）；活体 v3.52/63/26/89 自洽，v3.51/88 仅历史行；工作副本零污染。 | —（零缺陷，v3.52 不变） | 89/89 OK + 变异 SystemExit not raised + 38/38；标准跑逐字节不变；双哈希/成本/调用数不变 |
+| 66 | 已派出：R66 critic 证伪「只去掉审计 dumps :838 的 allow_nan=False」时现有 89 测试是否仍全绿（事件 NaN 测试是否掩盖审计闸门），以及 audit NaN 有无独立回归 | 待报告 | — |
 
 ## 进度
 
@@ -160,7 +161,8 @@
 - [x] 轮 62 critic（**ACCEPT**，零 MINOR，233+118+20 断言+A/B 委托无回归+3 变异击杀+NaN 安全+幂等逐字节，全写点重试承重）→ 无缺陷修复（v3.50 不变）
 - [x] 轮 63 critic（**ACCEPT**，5 观察项独立分诊均既有零动作，NaN CLI 不可达 AST+实跑证实，撕裂 ev 重试未更糟 ckpt 权威可再生；推荐 allow_nan 对称硬化）→ 轮 64（v3.51：全 dump 点 allow_nan=False 对称 + dr NaN 拒绝测试 25→26 合 88）
 - [x] 轮 64 critic（**ACCEPT**，allow_nan 6 写盘点零遗漏 + 11 NaN 探针 + 变异击杀承重，ot NaN CLI 可构造证实；O2 建议补 ot 测试侧对称）→ 轮 65（v3.52：ot NaN-event 导出拒绝测试 62→63 合 89，变异精确击杀）
-- [ ] 轮 65 critic（v3.52 ot NaN-event 测试复核）
+- [x] 轮 65 critic（**ACCEPT**，零 MINOR，代码零变更，89 OK，事件+审计两处 allow_nan 联合变异 SystemExit not raised，三产物逐字节）→ 无缺陷修复（v3.52 不变）
+- [ ] 轮 66 critic（审计 dumps allow_nan 是否被现有测试独立钉死）
 - [ ] 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务
 
 ## 核验日志
@@ -193,9 +195,9 @@
 | 剪枝跑（ttl=7×30 夜） | GREEN；剪枝 4548、存留 2256（-67%）；检查点 1.22MB（-42%）；$2.9013 |
 | ROI 估算器 | qwen-max ≈¥370.42（历史口径）；Haiku $2.01→缓存+Batch $0.50；DeepSeek Flash 谷时 $2.90→70%命中 $1.24 [S26]；Qwen 现价（轮 24，北京区）qwen3.8-max $30.56→Batch $15.28 / qwen3.7-flash $0.54（04 §1.5） |
 
-## 下一步（轮 66）
+## 下一步（轮 67）
 
-1. 轮 65 critic 报告 → 修复（v3.52 ot NaN-event 测试复核）；
+1. 轮 66 critic 报告 → 修复（审计 allow_nan 是否被测试独立钉死）；
 2. 07 ⏳ 实测项（Ollama 吞吐、中文 token 密度、审核阈值、质量抽检）——需真实模型环境，列为用户侧任务；
 3. 可选深化：**Ray 版**分布式复刻（[S08]；stdlib 教学复刻 R35 已落地、R41 收敛，居民记忆查看器 R30 已落地、R32 收敛——两者不再列为待做）；
 4. demo 已收敛，后续代码改动以三层回归 + 字节对照 + 变异抽查为闸门。
