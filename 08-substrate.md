@@ -1,6 +1,6 @@
 # 08 · 技术底座：游戏人群、语言模型、MCP 与技能
 
-> 结论先行：千人系统以前的游戏就做过，差的不是人数，是**决策从人手写的规则变成了会出错的语言模型**。现在的底座不是「一千个 MCP」，而是三层：确定性世界（本仓库 demo 已有）、少量被激活的语言模型（[01](01-landscape.md) 的焦点激活）、以及一个宿主把窄工具和窄技能接进来。规范里没有「父 skill」这种类型；专家团是编排方式，不是协议功能。本页 2026-11-12 起直抓原文，2026-11-13 补了 Liquibase 与 Alembic。没打开的厂商页仍然不写成已核验。
+> 结论先行：千人系统以前的游戏就做过，差的不是人数，是**决策从人手写的规则变成了会出错的语言模型**。现在的底座不是「一千个 MCP」，而是三层：确定性世界（本仓库 demo 已有）、少量被激活的语言模型（[01](01-landscape.md) 的焦点激活）、以及一个宿主把窄工具和窄技能接进来。规范里没有「父 skill」这种类型；专家团是编排方式，不是协议功能。本页 2026-11-12 起直抓原文，2026-11-13 补了 Liquibase、Alembic 与 Django 6.1。没打开的厂商页仍然不写成已核验。
 
 ## §1 电子游戏里的千人，和现在差在哪
 
@@ -108,15 +108,17 @@ Liquibase Secure 5.1 的 changeset 页（Last updated: August 12, 2026）把 cha
 
 Alembic 1.20.1 教程把迁移写成随应用源码一起维护的脚本目录。`versions/` 里的文件不用递增整数，顺序写在脚本自己的 `down_revision` 上。每份脚本有 `upgrade()` 和 `downgrade()`。`alembic upgrade head` 会先看库里有没有 `alembic_version` 表，没有就建；再从表里读当前版本，算出到目标版本的路径，按文件调用 `upgrade()`。教程里的日志写着 “Will assume transactional DDL”。`downgrade base` 则按 `downgrade()` 退回起点 [S38]。
 
+Django 6.1 的迁移主题页不能并进上一句。原文把迁移定义成把模型改动传播进数据库 schema，并把它比作 schema 的版本控制：makemigrations 打成迁移文件（analogous to commits），migrate 应用到库。文件放在各应用的 “migrations” 目录里，随代码提交。事务不是每种库都有：支持 DDL 事务的只有 SQLite 和 PostgreSQL，默认全部操作放进一个事务；MySQL 和 Oracle 不支持，操作不包事务。MySQL 上 schema 变更没有事务，失败了要手工拆开再试，“it’s impossible to roll back to an earlier point.” 文件名里的数字只给人看，顺序靠文件里的 dependencies。回退是再跑 `migrate books 0002`，或 `migrate books zero`；不可逆操作抛 `IrreversibleError`。`--fake-initial` 只在初始迁移、表已经存在时把那份迁移标成已经应用，不是「扫描历史表、跳过一切已跑过的脚本」。压扁迁移时页上出现 “Django’s migrations table”，但没有写出表名，也没有 Flyway 那种比对后补齐的步骤 [S39]。
+
 这些工具有没有 MCP、skill、专家团？分开答：
 
-- **MCP：** 规范只规定服务器可以暴露 tools [S28]。Flyway 概念页、Liquibase 这份 changeset 页、Alembic 1.20.1 教程全文，都没有 MCP、skill 或 AI agent [S31][S37][S38]。所以「官方文档自带 MCP」在这三页上不成立。有人另写一个服务器去调用它们，那是包装，不是产品本身。没打开的厂商页仍然不外推。
+- **MCP：** 规范只规定服务器可以暴露 tools [S28]。Flyway 概念页、Liquibase 这份 changeset 页、Alembic 1.20.1 教程全文，以及 Django 6.1 迁移主题页正文，都没有 MCP、skill 或专家团 [S31][S37][S38][S39]。所以「官方文档自带 MCP」在这四页上不成立。Django 页脚赞助广告写着 “Seer an AI agent for debugging”，那不是迁移步骤。有人另写一个服务器去调用它们，那是包装，不是产品本身。没打开的厂商页仍然不外推。
 - **Skill：** 有，但是技能规范里的写法，不是 Flyway 的插件名。脆弱迁移被写成不可改旗标的固定命令 [S29]。Flyway 自己的门是另一套：出错回滚、部署前可以做 dry run 和漂移检查 [S31]。
-- **专家团：** 迁移脚本不需要专家团。需要的是「能不能执行」——先比对已应用的版本，再按序补齐。那是脚本和历史表，不是一组互相看不见的服务器在讨论 [S28][S30][S31][S37][S38]。
+- **专家团：** 迁移脚本不需要专家团。需要的是「能不能执行」——先比对已应用的版本，再按序补齐。那是脚本和历史表，不是一组互相看不见的服务器在讨论 [S28][S30][S31][S37][S38]。Django 6.1 这篇正文同样没有描述专家团 [S39]。上一句的「先比对再补齐」只覆盖前三家，不套到 Django。
 
 ## §6 本轮边界
 
-- 直抓成功：MCP 规范 2025-06-18 [S28]；Agent Skills [S29]；《Building effective agents》[S30]；Managed Agents（2026-04-08）[S32]；长期运行 harness（2025-11-26）[S34]；长时应用 harness（2026-03-24）[S35]；16 代理并行写编译器（2026-02-05）[S36]；行为树导论 arXiv:1709.00084 [S33]；Generative Agents HTML [S01]；Flyway 概念页 [S31]；Liquibase Secure 5.1 changeset 页 [S37]；Alembic 1.20.1 教程 [S38]。
+- 直抓成功：MCP 规范 2025-06-18 [S28]；Agent Skills [S29]；《Building effective agents》[S30]；Managed Agents（2026-04-08）[S32]；长期运行 harness（2025-11-26）[S34]；长时应用 harness（2026-03-24）[S35]；16 代理并行写编译器（2026-02-05）[S36]；行为树导论 arXiv:1709.00084 [S33]；Generative Agents HTML [S01]；Flyway 概念页 [S31]；Liquibase Secure 5.1 changeset 页 [S37]；Alembic 1.20.1 教程 [S38]；Django 6.1 迁移主题页 [S39]。
 - `www.gamedeveloper.com` 与英文维基行为树页仍打不开。行为树的定义改以 [S33] 为准，不再等那两个站。
 - demo 代码、测试计数、哈希均未改。
 
