@@ -90,6 +90,8 @@ Agent Skills 规范定义的是一个目录加一份 SKILL.md，可选脚本和�
 
 16 个编码代理加 git 锁，仍然不是 1000 个居民。居民社会要的是焦点激活和确定性世界，见 [01-landscape.md](01-landscape.md)。$20,000 这笔同样不要加进千人一夜的公式，见 [04-roi.md](04-roi.md)。
 
+仓库 README 不能把博客的数字再证实一遍，反而多了一层不可靠 [S36]。`anthropics/claudes-c-compiler` 的 README 没有写 16 个代理，也没有写 $20,000。人类只写了一段：除此以外，仓库里的代码和文档都是 Claude Opus 4.6 写的；人写过测试，但没有交互式结对调试；「I do not recommend you use this code! None of it has been validated for correctness」；「The docs may be wrong and make claims that are false」。因此 README 里「默认可单独产出 ELF、可当 GCC 替代、PostgreSQL 237 项回归全过」这些句子，不能当成已核验能力。博客则说演示视频仍用 GCC 的汇编器和链接器，16 位实模式会调用 GCC。两处不一致时，代理数和花费以博客为准，仓库能力先停在人类那句警告上。本轮没有编译这个仓库。
+
 ## §5 迁移系统的工具长什么样
 
 这里的「迁移」有两件不同的事，不要合成一个产品。
