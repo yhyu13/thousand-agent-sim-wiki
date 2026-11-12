@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-13（v3.86，Prisma ORM 7 基线把已有库的初始迁移标成已应用。换班 14 项，合计 104。无代码修复）
+更新：2026-11-13（v3.87，Prisma ORM 7 自定义迁移要在应用前改 SQL。换班 14 项，合计 104。无代码修复）
 
 ## 迭代模式
 
@@ -177,6 +177,7 @@
 | 2026-11-12 换班证据 | repro 需对照 world_hash + 重跑 final_hash；audit 需带 day/minute 的行且条数不少于计数。换班 8→11，合计 101。模拟未改 |
 | 2026-11-12 换班接线 | overnight_town `--feature-list` 可选。默认不写清单。换班 11→12，合计 102 |
 | 2026-11-12 哈希与技能 | 默认通宵 world_hash/final_hash/成本 0.205012/调用 335 与入库早晨报告一致。demos/skills/overnight-operator 只引用一层。换班 12→13，合计 103 |
+| 2026-11-13 S54 | Prisma ORM v7 自定义迁移：migrate dev --create-only 先出草稿，手改 SQL 再应用。默认改名会建新列并丢掉旧列数据。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S53 | Prisma ORM v7 基线：resolve --applied 0_init 把初始迁移标成已应用，deploy 跳过它。同一页又写开发库可以重置。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S52 | Prisma ORM v7 热修：migrate resolve 只改历史表，不跑 SQL，也不自动退回已执行的 SQL。失败未恢复前后续 migrate deploy 不可能。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S51 | Prisma ORM v7 开发/生产：migrate dev 与 migrate reset 不得用于生产。migrate deploy 不检测 drift、不 reset、不用影子库。咨询锁 10 秒。无 MCP、无专家团。无新测试 |
