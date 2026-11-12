@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-13（v3.82，Prisma ORM 7 限制页：非交互环境不支持 migrate dev。换班 14 项，合计 104。无代码修复）
+更新：2026-11-13（v3.83，Prisma ORM 7 的 db push 不写迁移历史。换班 14 项，合计 104。无代码修复）
 
 ## 迭代模式
 
@@ -177,6 +177,7 @@
 | 2026-11-12 换班证据 | repro 需对照 world_hash + 重跑 final_hash；audit 需带 day/minute 的行且条数不少于计数。换班 8→11，合计 101。模拟未改 |
 | 2026-11-12 换班接线 | overnight_town `--feature-list` 可选。默认不写清单。换班 11→12，合计 102 |
 | 2026-11-12 哈希与技能 | 默认通宵 world_hash/final_hash/成本 0.205012/调用 335 与入库早晨报告一致。demos/skills/overnight-operator 只引用一层。换班 12→13，合计 103 |
+| 2026-11-13 S50 | Prisma ORM v7 原型页：db push 不创建、不更新 _prisma_migrations，也不生成迁移文件。可能丢数据就报错。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S49 | Prisma ORM v7 限制页：MongoDB connector 不支持。换 provider 报 P3014。重置会丢数据。非交互环境不支持 migrate dev。PgBouncer 变通页未打开。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S48 | Prisma ORM v7 影子库：migrate dev 自动建删的临时库。migrate deploy 不用。改过的文件靠 _prisma_migrations.checksum。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S46 | Prisma ORM v7 总览、心智模型、历史页：prisma/migrations 的 SQL，migrate deploy 补 pending。表名前后两种写法都留下。没写事务。无 MCP、无专家团。无新测试 |
