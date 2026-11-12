@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""overnight_town 测试套件 v3.52（63 项）：python -m unittest test_overnight_town -v
+"""overnight_town 测试套件 v3.53（64 项）：python -m unittest test_overnight_town -v
 v2：别名污染回归、检查点隔离、from_dict 等价、边界、计划违例实弹、半开探针、审计顺序、
 体面停机、meta 崩溃安全；v3：存档相位 BLOCKER、回滚后崩溃窗口、分散注入、抽样互质、
 resume 五连、Config 校验；v3.2：语义损坏 ckpt、NaN/CLI 拒绝、记忆剪枝 TTL×3；
@@ -59,6 +59,7 @@ v3.49：R59（ACCEPT，51 断言+4 变异击杀+A/B 反证硬化承重）2 MINOR
 v3.50：R61（ACCEPT，17 进程级探针全写点瞬时失败一律体面 rc=2 零裸崩）2 MINOR 修复——重试硬化扩至**全写点**：抽出 _retry_on_lock 共享 helper（_atomic_replace 委托），save() tmp 写段 + 事件流导出 + 报告写均加瞬时锁重试（MINOR-1 tmp 写段不对称 / MINOR-2 终点导出无重试）；NaN ValueError 不重试（allow_nan=False 安全）、永久失败仍体面 rc=2；test 60→62（+tmp 写段重试/ValueError 不重试）；distributed_replica 24→25。**happy path 不变、双哈希/成本/调用数逐位不变**。
 v3.51：R63（ACCEPT，5 观察项独立分诊均既有零动作，NaN CLI 不可达 AST+实跑证实）推荐硬化落实——**全 dump 点 allow_nan=False 对称**（ot 事件流/审计 json.dumps 补 allow_nan=False，与 ot save/report 及 dr 一致；域外 NaN 静默再发射转干净拒绝，契合「存档 allow_nan=False 最终闸门」哲学）；distributed_replica checkpoint/report 补 allow_nan=False + NaN 再发射拒绝测试 25→26。**happy path 不变、哈希不变**。
 v3.52：R64（ACCEPT，allow_nan 6 写盘点零遗漏+11 NaN 探针+变异击杀承重）O2 落实——**ot NaN-event 导出拒绝回归测试**（域外 NaN event 穿透 _validate_snapshot dict 形态校验→事件流 allow_nan=False 干净 rc=2；变异「移除 events allow_nan」→SystemExit not raised 精确击杀，测试侧对称 dr）；test 62→63（合 89）。**代码无变更、哈希不变**。
+v3.53：R66 实测只摘审计 dumps allow_nan 时 89 测试仍全绿（事件测试覆盖不到 :838）——**ot NaN-audit 导出拒绝回归测试**（域外 NaN audit → rc=2；只摘审计 allow_nan → SystemExit not raised）。test 63→64（合 90）。**模拟代码无变更、哈希不变**。
 可视化冒烟另见 vis_smoke.js（node vis_smoke.js .，38 项）；对比度实测 contrast_check.py（6 项含 RED）。"""
 import copy
 import json
@@ -726,6 +727,24 @@ class TestRound2Regressions(unittest.TestCase):
                 s = json.load(f)
             s["world"]["events"].append({"minute": 0, "type": "nan_probe", "value": float("nan")})
             with open(p, "w", encoding="utf-8") as f:
+                json.dump(s, f)  # allow_nan=True 默认写入 NaN
+            with self.assertRaises(SystemExit) as cm:
+                main(["--seed", str(BASE["seed"]), "--agents", "200", "--nights", "1",
+                      "--checkpoint-dir", d, "--resume", "--events-out", os.path.join(d, "ev.jsonl")])
+            self.assertEqual(cm.exception.code, 2)
+
+
+    def test_main_nan_audit_export_rejected(self):
+        """R66：域外 NaN audit（校验只查 dict 形态）→ 审计导出 allow_nan=False 干净 rc=2。
+        只摘审计 dumps 的 allow_nan 时事件测试仍绿，本测试须 SystemExit not raised。"""
+        from overnight_town import main
+        with tempfile.TemporaryDirectory() as d:
+            run_overnight(cfg(nights=1, checkpoint_dir=d))
+            pth = os.path.join(d, "ckpt.json")
+            with open(pth, encoding="utf-8") as f:
+                s = json.load(f)
+            s["world"]["audit"].append({"day": 0, "minute": 0, "type": "nan_audit", "value": float("nan")})
+            with open(pth, "w", encoding="utf-8") as f:
                 json.dump(s, f)  # allow_nan=True 默认写入 NaN
             with self.assertRaises(SystemExit) as cm:
                 main(["--seed", str(BASE["seed"]), "--agents", "200", "--nights", "1",
