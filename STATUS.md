@@ -1,6 +1,6 @@
 # STATUS · 建设进度与核验日志
 
-更新：2026-11-13（v3.94，Prisma Schema 索引页：部分索引 where 要开 partialIndexes preview，MySQL 不支持。换班 14 项，合计 104。无代码修复）
+更新：2026-11-13（v3.95，Prisma Schema models 页：内省时 Unsupported("POLYGON")，MongoDB 不用这种类型。换班 14 项，合计 104。无代码修复）
 
 ## 迭代模式
 
@@ -177,6 +177,7 @@
 | 2026-11-12 换班证据 | repro 需对照 world_hash + 重跑 final_hash；audit 需带 day/minute 的行且条数不少于计数。换班 8→11，合计 101。模拟未改 |
 | 2026-11-12 换班接线 | overnight_town `--feature-list` 可选。默认不写清单。换班 11→12，合计 102 |
 | 2026-11-12 哈希与技能 | 默认通宵 world_hash/final_hash/成本 0.205012/调用 335 与入库早晨报告一致。demos/skills/overnight-operator 只引用一层。换班 12→13，合计 103 |
+| 2026-11-13 S62 | Prisma Schema models：内省关系库时不支持类型写成 Unsupported("POLYGON")，不进生成的 Client，可用 raw 查。MongoDB 不支持 Unsupported，也不支持 @@id。uuid() 只列为默认函数。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S61 | Prisma Schema 索引：部分索引 where 要开 partialIndexes preview，MySQL 不支持，CockroachDB 只建得 introspect 不出。raw() 与对象字面量两种写法。全文索引 @@fulltext 在 MySQL/MongoDB，MongoDB 全文搜索命令未启用。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S60 | Prisma Schema PostgreSQL 扩展：例子 citext，migrate dev --create-only 建空迁移、写 CREATE EXTENSION、用 migrate deploy 应用（不是 migrate dev）。特殊类型用 Unsupported 兜底。本页无 preview-feature 声明语法。无 MCP、无专家团。无新测试 |
 | 2026-11-13 S59 | Prisma Migrate 工作流不支持特性：存储过程、触发器、视图写不进 schema，应用前手改 migration.sql。例子是 notify_on_insert 函数，没有 CREATE TRIGGER。MongoDB 不适用。无 MCP、无专家团。无新测试 |
