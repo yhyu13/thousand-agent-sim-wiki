@@ -15,6 +15,10 @@ Park 等人把自己的沙盒直接放在游戏谱系里：图注写的是 “re
 
 所以「千人」本身不是新的。本仓库的千人小镇就是游戏底座：1000 居民、街上最多 360 个行走代理、作息是种子纯函数、运行时零 LLM [S16]。它和 OASIS / AgentSociety 的差别已经写在 [01 §2](01-landscape.md)。
 
+乐高式 agent 游戏不是再给每个积木一个模型。Park 等人的做法是：外观仍是精灵小镇，每人只给一段自然语言当种子记忆；办派对只告诉 Isabella 一个人 [S63]。邀请传到另外 12 个代理，五个在 17:00 到场。论文自己列出失败点：忘记邀请、忘记到场、决定不去。积木感来自「一段种子 + 可观察的社会结果」，不是来自每人一套对话服务器。本页没有把这写成乐高积木说明书，论文里也没有这个词 [S63]。
+
+生成式 rogue 世界更不能并成同一句。英文维基把传统 roguelike 写成四件：程序生成的关卡、回合制、格子移动、永久死亡；名字来自 1980 年的 *Rogue* [S65]。2008 年 Berlin Interpretation 用这份清单把 *Rogue* / *NetHack* / *Angband* 和 *Diablo* 分开。后来只留程序生成和永久死亡、再混进别的类型的，维基叫 roguelite，市场上仍常标 roguelike，例子包括 *Spelunky*、*Hades* [S65]。维基是二手汇编，不是设计规范。它没有语言模型。和本仓库能对上的只有一件：同一种子必须能重放出同一张地图，这已经是路线 B 的世界层 [S16]。永久死亡、回合制、格子移动都还没有，不要写成已有。
+
 现在多出来的是决策程序：语言模型按自然语言记忆流生成行为，因此会检索失败、给记忆添油加醋、说话过度正式——这是论文自己列出的三种主要错误，不是本页的推测 [S01]。游戏规则写错是作者的 bug；语言模型写错是每一步都可能发生的采样。军规（校验、回滚、存档拒绝 NaN）是为第二种错误准备的，见 [03-stability.md](03-stability.md)。
 
 行为树本身有一本 2017 年的导论可以核对，不必再等游戏网站 [S33]。Colledanchise 与 Ögren 写：行为树是在游戏业里为 NPC 的模块化长出来的；有限状态机的转移是单向跳转，要反应快就得加很多转移，加多了就难维护。行为树是有根的有向树，根按固定频率向下发 tick，子节点回 Running、Success 或 Failure。控制节点是 Sequence、Fallback、Parallel、Decorator，叶子是 Action 和 Condition。他们用吃豆人演示：先只管吃豆，再在「鬼靠近」时接上躲避，再在「鬼被吓到」时接上追击，旧树不用重接。这仍是人手写的切换结构。它解决的是规则怎么拼，不解决「没写过的手续从哪来」[S01][S33]。
@@ -152,9 +156,9 @@ models 页也在 Data Model。副题是 “building your data model”。这份 
 
 ## §6 本轮边界
 
-- 直抓成功：MCP 规范 2025-06-18 [S28]；Agent Skills [S29]；《Building effective agents》[S30]；Managed Agents（2026-04-08）[S32]；长期运行 harness（2025-11-26）[S34]；长时应用 harness（2026-03-24）[S35]；16 代理并行写编译器（2026-02-05）[S36]；行为树导论 arXiv:1709.00084 [S33]；Generative Agents HTML [S01]；Flyway 概念页 [S31]；Liquibase Secure 5.1 changeset 页 [S37]；Alembic 1.20.1 教程 [S38]；Django 6.1 迁移主题页 [S39]；Rails 当前迁移指南 [S40]；Prisma ORM 8 迁移图 [S41]；Prisma ORM 8 应用迁移 [S42]；Prisma 技能页 [S43]；Prisma MCP 服务器页 [S44]；Prisma MCP 工具全表 [S45]；Prisma ORM v7 迁移心智模型 [S46]；Prisma ORM v7 迁移历史 [S47]；Prisma ORM v7 影子库 [S48]；Prisma ORM v7 限制与已知问题 [S49]；Prisma ORM v7 原型 `db push` [S50]；Prisma ORM v7 开发与生产 [S51]；Prisma ORM v7 热修 [S52]；Prisma ORM v7 基线 [S53]；Prisma ORM v7 自定义迁移 [S54]；Prisma ORM v7 向下迁移 [S55]；Prisma ORM v7 原生函数 [S56]；Prisma ORM v7 原生类型 [S57]；Prisma Schema 不支持特性 [S58]；Prisma Migrate 工作流不支持特性 [S59]；Prisma Schema PostgreSQL 扩展 [S60]；Prisma Schema 索引 [S61]；Prisma Schema models [S62]。
+- 直抓成功：MCP 规范 2025-06-18 [S28]；Agent Skills [S29]；《Building effective agents》[S30]；Managed Agents（2026-04-08）[S32]；长期运行 harness（2025-11-26）[S34]；长时应用 harness（2026-03-24）[S35]；16 代理并行写编译器（2026-02-05）[S36]；行为树导论 arXiv:1709.00084 [S33]；Generative Agents HTML [S01]；Flyway 概念页 [S31]；Liquibase Secure 5.1 changeset 页 [S37]；Alembic 1.20.1 教程 [S38]；Django 6.1 迁移主题页 [S39]；Rails 当前迁移指南 [S40]；Prisma ORM 8 迁移图 [S41]；Prisma ORM 8 应用迁移 [S42]；Prisma 技能页 [S43]；Prisma MCP 服务器页 [S44]；Prisma MCP 工具全表 [S45]；Prisma ORM v7 迁移心智模型 [S46]；Prisma ORM v7 迁移历史 [S47]；Prisma ORM v7 影子库 [S48]；Prisma ORM v7 限制与已知问题 [S49]；Prisma ORM v7 原型 `db push` [S50]；Prisma ORM v7 开发与生产 [S51]；Prisma ORM v7 热修 [S52]；Prisma ORM v7 基线 [S53]；Prisma ORM v7 自定义迁移 [S54]；Prisma ORM v7 向下迁移 [S55]；Prisma ORM v7 原生函数 [S56]；Prisma ORM v7 原生类型 [S57]；Prisma Schema 不支持特性 [S58]；Prisma Migrate 工作流不支持特性 [S59]；Prisma Schema PostgreSQL 扩展 [S60]；Prisma Schema 索引 [S61]；Prisma Schema models [S62]；Generative Agents 种子意图段 [S63]；AI Town 三份源码 [S64]；英文维基 Roguelike [S65]。
 - `www.gamedeveloper.com` 与英文维基行为树页仍打不开。行为树的定义改以 [S33] 为准，不再等那两个站。
-- demo 代码、测试计数、哈希均未改。
+- demo 代码、测试计数、哈希均未改。S63、S64、S65 是游戏与过夜运行的来源，不改模拟代码。
 
 ## 参见
 
